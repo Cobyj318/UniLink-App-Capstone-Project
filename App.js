@@ -1,20 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import logo from './logo.svg';
+import './App.css';
+// Routing for React - pages
+import React from "react";
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 
-export default function App() {
+
+const App = () => {
+    
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Home
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+          <Link to="/">Home</Link>
+          <Link to="/">CreatePost</Link>
+      </header>
+          
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Home = () => {
+    return <div>
+    <h1>Home</h1>
+    </div>
+};
+
+const CreatePost = () => {
+    return <div>
+    <h1>CreatePost</h1>
+    </div>
+};
+
+export default App;
+
