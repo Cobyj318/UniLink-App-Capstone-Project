@@ -1,5 +1,5 @@
 import * as React from 'react' ;
-import {View, Text} from 'react-native';
+import {View, Text,Pressable} from 'react-native';
 
 export default function EventsScreen({navigation}){
     return(
@@ -9,6 +9,13 @@ export default function EventsScreen({navigation}){
             style={{ fontSize:26, fontWeight:'bold'}}>
                 Events screen
         </Text>    
+        
+            <Text
+            onPress={()=> alert('You have RSVP')}
+            style={{ fontSize:26, fontWeight:'bold'}}>
+                RSVP
+            </Text>
+        
     </View>
     )
 }
