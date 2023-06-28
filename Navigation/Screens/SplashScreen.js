@@ -1,7 +1,7 @@
 import * as React from 'react' ;
 import {View, Text} from 'react-native';
-import MainContainer from '../MainContainer';
-import ProfileScreen from './ProfileScreen';
+import MainContainer from './MainContainer';
+import ProfileScreen from './Screens/ProfileScreen';
 
 export default function SplashScreen({navigation}){
     return(

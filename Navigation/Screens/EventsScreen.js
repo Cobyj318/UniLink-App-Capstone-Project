@@ -9,13 +9,13 @@ export default function EventsScreen({navigation}){
             style={{ fontSize:26, fontWeight:'bold'}}>
                 Events screen
         </Text>    
-        
-            <Text
-            onPress={()=> alert('You have RSVP')}
-            style={{ fontSize:26, fontWeight:'bold'}}>
-                RSVP
-            </Text>
-        
+    
+        <Text
+        onPress={()=> alert('You have RSVP')}
+        style={{ fontSize:26, fontWeight:'bold'}}>
+            RSVP
+        </Text>
+    
     </View>
     )
 }
