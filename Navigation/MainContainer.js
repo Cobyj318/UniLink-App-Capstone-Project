@@ -9,7 +9,7 @@ import EventsScreen from './Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MessageScreen from './Screens/MessageScreen';
 import NewsScreen from './Screens/NewsScreen';
-
+import SplashScreen from './Screens/SplashScreen';
 
 //Screen names 
 const homeName='Home';
@@ -17,12 +17,13 @@ const eventsName='Events';
 const profileName='Profile';
 const messageName='Message';
 const newsName='News';
+const splashName='Splash';
 
 const Tab=createBottomTabNavigator();
 
 export default function MainContainer(){
     return(
-        <NavigationContainer>
+        <NavigationContainer independent={true}>
             <Tab.Navigator
             initialRouteName={homeName}
             screenOptions={({route})=>({
@@ -39,8 +40,10 @@ export default function MainContainer(){
                         iconName=focused?'settings':'settings-outline'
                     }else if (rn ===newsName){
                         iconName=focused?'settings':'settings-outline'
+                    }else if (rn===splashName){
+                        tabBarStyle: { display: "none" }
                     }
-                    return <Ionicons name={iconName} size ={size} color={colore}/>
+                    return <Ionicons name={iconName} size ={size} color={color}/>
 
                 },
                 tabBarActiveTintColor:'red',
@@ -57,8 +60,8 @@ export default function MainContainer(){
                 ],
                   
             })}
-            
             >
+            
             <Tab.Screen name={homeName} component={HomeScreen}/>
             <Tab.Screen name={eventsName} component={EventsScreen}/>
             <Tab.Screen name={newsName} component={NewsScreen}/>

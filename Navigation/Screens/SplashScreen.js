@@ -1,13 +1,15 @@
 import * as React from 'react' ;
 import {View, Text} from 'react-native';
+import MainContainer from '../MainContainer';
+import ProfileScreen from './ProfileScreen';
 
-export default function HomeScreen({navigation}){
+export default function SplashScreen({navigation}){
     return(
     <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
         <Text 
-            onPress={()=> alert('This is the "Home" screen')}
+            onPress={()=> navigation.navigate('Main')}
             style={{ fontSize:26, fontWeight:'bold'}}>
-            Home screen  </Text>    
+            Splash Screen </Text>    
     </View>
     );
 }
