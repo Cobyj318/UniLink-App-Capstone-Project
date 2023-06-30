@@ -1,7 +1,16 @@
 import * as React from 'react';
 import MainContainer from './Navigation/MainContainer';
+import handleSubmit from './src/firebase_init/handlesubmit';
+import { useRef } from 'react';
 
 function App(){
+  const dataRef = useRef()
+ 
+  const submithandler = (e) => {
+    e.preventDefault()
+    handleSubmit(dataRef.current.value)
+    dataRef.current.value = ""
+  }
   return(
     <MainContainer/>
   );
@@ -19,14 +28,3 @@ export default App;
 
 // const Stack = createStackNavigator();
 
-// function App() {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator>
-//         <Stack.Screen name="Splash" component={SplashScreen} />
-//         <Stack.Screen name="Main" component={MainContainer} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }
-// export default App;
