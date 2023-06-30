@@ -1,9 +1,18 @@
 import * as React from 'react';
 import MainContainer from './Navigation/MainContainer';
+import { addDoc, collection } from "@firebase/firestore"
+import { firestore, db } from "./src/firebase_init/firebase"
+import { ref, onValue } from 'firebase/database'
+import SplashScreen from './Navigation/Screens/SplashScreen';
+/*
+For copying in other pages
 import handleSubmit from './src/firebase_init/handlesubmit';
 import { useRef } from 'react';
+*/
 
 function App(){
+  
+  /* For copying in other pages 
   const dataRef = useRef()
  
   const submithandler = (e) => {
@@ -11,20 +20,10 @@ function App(){
     handleSubmit(dataRef.current.value)
     dataRef.current.value = ""
   }
+  */
   return(
-    <MainContainer/>
+    <SplashScreen/>
   );
 }
 
 export default App;
-
-
-// import * as React from 'react';
-// import MainContainer from './Navigation/MainContainer';
-// import {View, Text} from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import SplashScreen from './Navigation/Screens/SplashScreen';
-
-// const Stack = createStackNavigator();
-
