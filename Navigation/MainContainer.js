@@ -24,7 +24,7 @@ const Tab=createBottomTabNavigator();
 export default function MainContainer(){
     return(
         <NavigationContainer independent={true}>
-            <Tab.Navigator
+            <Tab.Navigator gestureEnabled={false}
             initialRouteName={homeName}
             screenOptions={({route})=>({
                 tabBarIcons:({focused,color,size})=>{

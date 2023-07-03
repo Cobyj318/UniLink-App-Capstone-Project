@@ -4,6 +4,7 @@ import { addDoc, collection } from "@firebase/firestore"
 import { firestore, db } from "./src/firebase_init/firebase"
 import { ref, onValue } from 'firebase/database'
 import SplashScreen from './Navigation/Screens/SplashScreen';
+import LogInContainer from './Navigation/LogInContainer';
 /*
 For copying in other pages
 import handleSubmit from './src/firebase_init/handlesubmit';
@@ -22,7 +23,7 @@ function App(){
   }
   */
   return(
-    <SplashScreen/>
+    <LogInContainer/>
   );
 }
 
