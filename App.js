@@ -1,9 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import MainContainer from './Navigation/MainContainer';
+import { addDoc, collection } from "@firebase/firestore"
+import { firestore, db } from "./src/firebase_init/firebase"
+import { ref, onValue } from 'firebase/database'
+import SplashScreen from './Navigation/Screens/SplashScreen';
+/*
+For copying in other pages
 import handleSubmit from './src/firebase_init/handlesubmit';
 import { useRef } from 'react';
+*/
 
-export default function App() {
+function App(){
+  
+  /* For copying in other pages 
   const dataRef = useRef()
  
   const submithandler = (e) => {
@@ -11,24 +20,10 @@ export default function App() {
     handleSubmit(dataRef.current.value)
     dataRef.current.value = ""
   }
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-      <form onSubmit={submithandler}>
-        <input type= "text" ref={dataRef} />
-        <button type = "submit">Save</button>
-      </form>
-    </View>
+  */
+  return(
+    <MainContainer/>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
+export default App;
