@@ -1,75 +1,83 @@
 import * as React from 'react' ;
-import {StyleSheet,View} from 'react-native';
-import * as eva from '@eva-design/eva';
-import { ApplicationProvider,Card, Layout, Text, Input,Button, Modal  } from '@ui-kitten/components';
+import {StyleSheet,
+        SafeAreaView,
+        ScrollView,
+        StatusBar} 
+from 'react-native';
+import EventCard from '../Compoenents/EventCard';
+import { Modal, Portal,FAB, Text, Button,TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+};
 
 
-export default function EventsScreen({navigation}){
-    
-  const [value, setValue] = React.useState('');
-  const [value1,setValue2] = React.useState('');
-
+export default function NewsScreen({navigation}){
+  
   const [visible, setVisible] = React.useState(false);
-    return(
-<ApplicationProvider {...eva} theme={eva.light}>
-    <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            
-            <Text
-            onPress={()=> alert('This is the "Events" screen')}
-            style={{ fontSize:50, fontWeight:'bold'}}>
-                Events screen
-            </Text>  
-            
-    
-        <Button style={{ fontSize:26, fontWeight:'bold'}}>
-            RSVP
-        </Button> 
-           
-        <Button 
-            onPress={() => setVisible(true)} 
-            style={{ fontSize:26, fontWeight:'bold'}}>
-                Create Event
-        </Button> 
-        <Modal
-        visible={visible}
-        backdropStyle={styles.backdrop}
-        onBackdropPress={() => setVisible(false)}
-        > 
-            <Card disabled={true}>
-            <Text 
-                style={{ fontSize:25, fontWeight:'bold'}}>
-                Input event details!
-            </Text>
+  const [title, setTitle] = React.useState("");
+  const [desc, setDesc] = React.useState("");
+  const hideModal = () => setVisible(false);
+  const containerStyle = {backgroundColor: 'white', padding: 20};  
+  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>
+  
+  );
+  return(
+    <PaperProvider theme={theme}>
+    <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+            <EventCard/>
+            <EventCard/>
+            <EventCard/>
+            <EventCard/>
+            <EventCard/>
+            <EventCard/>       
+        </ScrollView>
+        <FloatingButton/>
+        <Portal>
+          <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle} dismissable={false} >
+            <Text>Enter Details for your event.</Text>
+            <TextInput label="Title" value={title} onChangeText={title => setTitle(title)}  />
+            <TextInput label="Description" value={desc} onChangeText={desc => setDesc(desc)}  />
 
-            <Input
-            placeholder='Name of your event'
-            value={value}
-            onChangeText={nextValue => setValue(nextValue)}
-            />
-             <Input
-            placeholder='Details'
-            value={value1}
-            onChangeText={nextValue => setValue2(nextValue)}
-            />
-            <Button onPress={() => setVisible(false)}>
-                Enter
-            </Button>
-            <Button onPress={() => setVisible(false)}>
-                DISMISS
-            </Button>
-            </Card>
-        </Modal>
-    </View>
-</ApplicationProvider>
-    )
+            <Button onPress={hideModal}>Enter</Button>
+            <Button onPress={hideModal}>Dismiss</Button>
+          </Modal>
+        </Portal>
+    </SafeAreaView>
+    </PaperProvider>
+    );
 }
 
-
 const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingTop: StatusBar.currentHeight,
+    },
+    scrollView: {
+      backgroundColor: 'white',
+      marginHorizontal: 20,
+    },
+    text: {
+      fontSize: 42,
+    },
     container: {
       minHeight: 192,
     },
     backdrop: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    fab: {
+    
+      position: 'absolute',
+      margin: 16,
+      right: 0,
+      bottom: 0,
     },
   });
