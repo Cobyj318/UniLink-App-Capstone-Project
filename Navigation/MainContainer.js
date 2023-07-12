@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 //
 import HomeScreen from './Screens/HomeScreen';
@@ -17,12 +18,22 @@ const eventsName='Events';
 const profileName='Profile';
 const messageName='Message';
 const newsName='News';
-//const splashName='Splash';
+const theme = {
+    ...DefaultTheme,
+    roundness: 2,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#3498db',
+      accent: '#f1c40f',
+    },
+  };
+
 
 const Tab=createBottomTabNavigator();
 
 export default function MainContainer(){
     return(
+        <PaperProvider theme={theme}>
         <NavigationContainer independent={true}>
             <Tab.Navigator gestureEnabled={false}
             initialRouteName={homeName}
@@ -68,5 +79,6 @@ export default function MainContainer(){
 
             </Tab.Navigator>
         </NavigationContainer>
+        </PaperProvider>
     );
 }

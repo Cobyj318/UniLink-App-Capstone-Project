@@ -1,9 +1,5 @@
 import * as React from 'react';
-import MainContainer from './Navigation/MainContainer';
-import { addDoc, collection } from "@firebase/firestore"
-import { firestore, db } from "./src/firebase_init/firebase"
-import { ref, onValue } from 'firebase/database'
-import SplashScreen from './Navigation/Screens/SplashScreen';
+
 import LogInContainer from './Navigation/LogInContainer';
 /*
 For copying in other pages
