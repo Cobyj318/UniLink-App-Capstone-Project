@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 import { Avatar, Button, Card, Text } from 'react-native-paper';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
+
 const theme = {
     ...DefaultTheme,
     roundness: 2,
@@ -16,6 +17,7 @@ const theme = {
 const LeftContent = props => <Avatar.Icon {...props} icon="circle" />
 
 const EventCard = () => (
+  
   <PaperProvider theme={theme}>
   <Card>
     <Card.Title title="Event Going On" subtitle="Description of Event" left={LeftContent} />
