@@ -1,21 +1,9 @@
 import * as React from 'react' ;
-import {StyleSheet,
-        SafeAreaView,
-        ScrollView,
-        StatusBar} 
-from 'react-native';
-import EventCard from '../Compoenents/EventCard';
+import {StyleSheet,SafeAreaView,ScrollView,StatusBar} from 'react-native';
 import { Modal, Portal,FAB, Text, Button,TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
-  },
-};
+import EventCard from '../Compoenents/EventCard';
+import getUserEvents from '../../src/firebase_init/getUserEvents';
+import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
 
 
 export default function NewsScreen({navigation}){
@@ -24,10 +12,12 @@ export default function NewsScreen({navigation}){
   const [title, setTitle] = React.useState("");
   const [desc, setDesc] = React.useState("");
   const hideModal = () => setVisible(false);
+  const submithandler = (Title, Description) => {
+        HandleUserEvents(Title, Description);}
   const containerStyle = {backgroundColor: 'white', padding: 20};  
-  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>
-  
-  );
+  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>);
+  console.log("Hello World");
+  getUserEvents();
   return(
     <PaperProvider theme={theme}>
     <SafeAreaView style={styles.container}>
@@ -46,7 +36,7 @@ export default function NewsScreen({navigation}){
             <TextInput label="Title" value={title} onChangeText={title => setTitle(title)}  />
             <TextInput label="Description" value={desc} onChangeText={desc => setDesc(desc)}  />
 
-            <Button onPress={hideModal}>Enter</Button>
+            <Button onPress={() => {submithandler(title,desc);hideModal();}}>Enter</Button>
             <Button onPress={hideModal}>Dismiss</Button>
           </Modal>
         </Portal>
@@ -54,6 +44,17 @@ export default function NewsScreen({navigation}){
     </PaperProvider>
     );
 }
+
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+};
 
 const styles = StyleSheet.create({
     container: {
