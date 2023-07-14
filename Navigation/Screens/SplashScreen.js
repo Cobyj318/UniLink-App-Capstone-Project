@@ -37,9 +37,10 @@ const theme = {
         bottom:300,
     },
     SplashscreenText: {
-         fontSize:40, 
+         fontSize:60, 
          fontWeight:'bold', 
          color:'white',
+         bottom:80,
     },
     ViewStyle: {
         flex: 1, 
