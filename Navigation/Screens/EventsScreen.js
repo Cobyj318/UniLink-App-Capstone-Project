@@ -1,33 +1,48 @@
 import * as React from 'react' ;
-import {StyleSheet,SafeAreaView,ScrollView,StatusBar} from 'react-native';
+import {StyleSheet,SafeAreaView,ScrollView,StatusBar,FlatList} from 'react-native';
 import { Modal, Portal,FAB, Text, Button,TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import EventCard from '../Compoenents/EventCard';
-
+import { useState,useEffect } from 'react';
 import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
-
+import { collection, getDocs } from "firebase/firestore"; 
+import { firestore } from "../../src/firebase_init/firebase"
 
 export default function NewsScreen({navigation}){
-  
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const querySnapshot = await getDocs(collection(firestore, "Event_data"));
+      const usersData = [];
+      querySnapshot.forEach((doc) => {
+        const {Title,Description,Sponser,Date} = doc.data();
+        usersData.push({
+          id:doc.id,
+          Title,
+          Description,
+          Sponser,
+          Date,
+        });
+      });
+      setUsers(usersData);
+    };
+    fetchData();
+  }, []);
+
   const [visible, setVisible] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [desc, setDesc] = React.useState("");
+  const [sponser, setSponser] = React.useState("");
+  const [date, setDate] = React.useState("");
   const hideModal = () => setVisible(false);
-  const submithandler = (Title, Description) => {
-        HandleUserEvents(Title, Description);}
+  
   const containerStyle = {backgroundColor: 'white', padding: 20};  
   const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>);
-  console.log("Hello World");
   
   return(
     <PaperProvider theme={theme}>
     <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>       
+            <EventCard users={users}/>     
         </ScrollView>
         <FloatingButton/>
         <Portal>
@@ -35,7 +50,9 @@ export default function NewsScreen({navigation}){
             <Text>Enter Details for your event.</Text>
             <TextInput label="Title" value={title} onChangeText={title => setTitle(title)}  />
             <TextInput label="Description" value={desc} onChangeText={desc => setDesc(desc)}  />
-            <Button onPress={() => {submithandler(title,desc);hideModal();}}>Enter</Button>
+            <TextInput label="Sponser" value={sponser} onChangeText={sponser => setSponser(sponser)}  />
+            <TextInput label="Date" value={date} onChangeText={date => setDate(date)}  />
+            <Button onPress={() => {HandleUserEvents(title,desc,sponser,date);hideModal();}}>Enter</Button>
             <Button onPress={hideModal}>Dismiss</Button>
           </Modal>
         </Portal>
