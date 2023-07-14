@@ -1,23 +1,9 @@
 import * as React from 'react';
-
 import LogInContainer from './Navigation/LogInContainer';
-/*
-For copying in other pages
-import handleSubmit from './src/firebase_init/handlesubmit';
-import { useRef } from 'react';
-*/
+import getUserEvents from './src/firebase_init/getUserEvents'
 
 function App(){
-  
-  /* For copying in other pages 
-  const dataRef = useRef()
- 
-  const submithandler = (e) => {
-    e.preventDefault()
-    handleSubmit(dataRef.current.value)
-    dataRef.current.value = ""
-  }
-  */
+  getUserEvents();  
   return(
     <LogInContainer/>
   );

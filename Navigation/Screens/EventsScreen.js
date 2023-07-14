@@ -2,7 +2,7 @@ import * as React from 'react' ;
 import {StyleSheet,SafeAreaView,ScrollView,StatusBar} from 'react-native';
 import { Modal, Portal,FAB, Text, Button,TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import EventCard from '../Compoenents/EventCard';
-import getUserEvents from '../../src/firebase_init/getUserEvents';
+
 import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
 
 
@@ -17,7 +17,7 @@ export default function NewsScreen({navigation}){
   const containerStyle = {backgroundColor: 'white', padding: 20};  
   const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>);
   console.log("Hello World");
-  getUserEvents();
+  
   return(
     <PaperProvider theme={theme}>
     <SafeAreaView style={styles.container}>
@@ -35,7 +35,6 @@ export default function NewsScreen({navigation}){
             <Text>Enter Details for your event.</Text>
             <TextInput label="Title" value={title} onChangeText={title => setTitle(title)}  />
             <TextInput label="Description" value={desc} onChangeText={desc => setDesc(desc)}  />
-
             <Button onPress={() => {submithandler(title,desc);hideModal();}}>Enter</Button>
             <Button onPress={hideModal}>Dismiss</Button>
           </Modal>
@@ -75,7 +74,6 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     fab: {
-    
       position: 'absolute',
       margin: 16,
       right: 0,
