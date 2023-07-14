@@ -21,7 +21,7 @@ export default function LogInContainer(){
                 <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={OldUser} component={MainContainer} options={{headerShown: false, gestureEnabled: false}}/>
-                <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={Cams} component={CamScreen} options={{}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

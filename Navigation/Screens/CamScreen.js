@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera, CameraType, } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+import { shareAsync } from 'expo-sharing';
 
 const CamScreen = ( {navigation} ) => {
 
@@ -20,12 +21,19 @@ const CamScreen = ( {navigation} ) => {
             })();
         }, []);
 
+    if(camPermitted === undefined){
+        return <Text>Testing Camera</Text>
+    } else if (!camPermitted) {
+        return <Text>Denied</Text>
+    }
+
     let takePic = async () => {
         let options ={
             quality: 1,
             base64: true,
             exif: false
         };
+        
         let newPhoto = await camRef.current.takePictureAsync(options);
         setPhoto(newPhoto);
     }
@@ -42,24 +50,20 @@ const CamScreen = ( {navigation} ) => {
                 setPhoto(undefined);
             });
         };
-        return(<SafeAreaView style={{ flex: 1 }}>
-            <Image source={{ uri: "data:image/photo.base64," + photo.base64}}/>
+        return(
+        <SafeAreaView style={{ flex: 1 }}>
+            <Image style={{ flex: 1 }} source={{ uri: "data:image/jpg;base64," + photo.base64}}/>
             <Button title="Share" onPress={sharePic}/>
             {camRollPermitted ? <Button title="Save" onPress={savePhoto}/> : undefined}
             <Button title="Discard" onPress={() => setPhoto(undefined)}/>
         </SafeAreaView>);}
-        
-    if(camPermitted === undefined){
-        return <Text>Testing Camera</Text>
-    } else if (!camPermitted) {
-        return <Text>Denied</Text>
-    }
     
     return(
-        <Camera style={{flex:1}}>
+        <Camera style={{flex:1}} ref ={camRef}>
             <View>
                 <Button title={"Take Pic"} onPress={takePic} style={{ flex:1}}/>
             </View>
+            <StatusBar/>
         </Camera>
     )
 }
