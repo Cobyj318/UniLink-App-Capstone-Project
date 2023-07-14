@@ -2,6 +2,7 @@ import * as React from 'react' ;
 import {View, Text,StyleSheet} from 'react-native';
 import MainContainer from '../MainContainer';
 import NewUserScreen from './NewUserScreen';
+
 import {Button,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 export default function SplashScreen( {navigation} ){
@@ -13,6 +14,7 @@ export default function SplashScreen( {navigation} ){
             <Button onPress={()=> navigation.navigate(MainContainer)} mode="contained" style={styles.Existinguser}>Existing User</Button>
         </View>
     </PaperProvider>
+
     );
 }
 
