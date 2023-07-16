@@ -61,7 +61,6 @@ export default function NewsScreen({navigation}){
     );
 }
 
-
 const theme = {
   ...DefaultTheme,
   roundness: 2,
