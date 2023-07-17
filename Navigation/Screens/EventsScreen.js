@@ -1,13 +1,15 @@
 import * as React from 'react' ;
 import {StyleSheet,SafeAreaView,ScrollView,StatusBar,FlatList} from 'react-native';
 import { Modal, Portal,FAB, Text, Button,TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import EventCard from '../Compoenents/EventCard';
+import EventCard from '../Components/EventCard';
 import { useState,useEffect } from 'react';
 import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
 import { collection, getDocs } from "firebase/firestore"; 
 import { firestore } from "../../src/firebase_init/firebase"
+import NewUserScreen from './NewUserScreen';
+import InnerScreenB from './InnerScreenB';
 
-export default function NewsScreen({navigation}){
+export default function EventsScreen({navigation}){
   const [users, setUsers] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +38,7 @@ export default function NewsScreen({navigation}){
   const hideModal = () => setVisible(false);
   
   const containerStyle = {backgroundColor: 'white', padding: 20};  
-  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>);
+  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={()=> navigation.navigate(InnerScreenB)}/>);
   
   return(
     <PaperProvider theme={theme}>

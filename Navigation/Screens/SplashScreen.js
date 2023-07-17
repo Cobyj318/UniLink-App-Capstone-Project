@@ -16,7 +16,6 @@ export default function SplashScreen( {navigation} ){
             <Portal>
             <Image style={styles.logo} source={Logo}/>
                 <View style={styles.TopMenu}>
-                    
                     <Text style={styles.SplashscreenText}>Uni-Link</Text>
                     <Button onPress={()=> navigation.navigate(NewUserScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
                     <Button onPress={()=> navigation.navigate(MainContainer)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
