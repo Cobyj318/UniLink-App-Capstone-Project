@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-ionicons';
+
 import HomeScreen from './Screens/HomeScreen';
 import EventsScreen from './Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MessageScreen from './Screens/MessageScreen';
 import NewsScreen from './Screens/NewsScreen';
+import EventContainer from './EventContainer.js';
 
 //Screen names 
 const homeName='Home';
@@ -31,7 +32,7 @@ export default function MainContainer(){
             })}
             >
             <Tab.Screen name={homeName} component={HomeScreen}/>
-            <Tab.Screen name={eventsName} component={EventsScreen}/>
+            <Tab.Screen name={eventsName} component={EventContainer}/>
             <Tab.Screen name={newsName} component={NewsScreen}/>
             <Tab.Screen name={messageName} component={MessageScreen}/>
             <Tab.Screen name={profileName} component={ProfileScreen}/>

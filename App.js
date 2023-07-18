@@ -1,11 +1,12 @@
 import * as React from 'react';
 import LogInContainer from './Navigation/LogInContainer';
-import getUserEvents from './src/firebase_init/getUserEvents'
+import getUserEvents from './src/firebase_init/getUserEvents';
+import MainStack from './Navigation/MainStack';
 
-function App(){
-  getUserEvents();  
+function App(){  
   return(
-    <LogInContainer/>
+    <MainStack/>
+//    <LogInContainer/>
   );
 }
 

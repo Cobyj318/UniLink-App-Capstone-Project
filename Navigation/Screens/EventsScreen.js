@@ -1,49 +1,73 @@
 import * as React from 'react' ;
-import {StyleSheet,SafeAreaView,ScrollView,StatusBar} from 'react-native';
+import {StyleSheet,SafeAreaView,ScrollView,StatusBar,RefreshControl} from 'react-native';
 import { Modal, Portal,FAB, Text, Button,TextInput,DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import EventCard from '../Compoenents/EventCard';
+import EventCard from '../Components/EventCard';
+import { useState,useEffect } from 'react';
+import { collection, getDocs } from "firebase/firestore"; 
+import { firestore } from "../../src/firebase_init/firebase"
+import InnerScreenB from './InnerScreenB';
 
-import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
+export default function EventsScreen({navigation}){
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const querySnapshot = await getDocs(collection(firestore, 'Event_data'));
+      const usersData = [];
+      querySnapshot.forEach((doc) => {
+        const { Title, Description, Sponser, Date } = doc.data();
+        usersData.push({
+          id: doc.id,
+          Title,
+          Description,
+          Sponser,
+          Date,
+        });
+      });
+      setUsers(usersData);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 500);
+    }
+  }, []);
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const querySnapshot = await getDocs(collection(firestore, "Event_data"));
+      const usersData = [];
+      querySnapshot.forEach((doc) => {
+        const {Title,Description,Sponser,Date} = doc.data();
+        usersData.push({
+          id:doc.id,
+          Title,
+          Description,
+          Sponser,
+          Date,
+        });
+      });
+      setUsers(usersData);
+    };
+    fetchData();
+  }, []);
 
-
-export default function NewsScreen({navigation}){
-  
-  const [visible, setVisible] = React.useState(false);
-  const [title, setTitle] = React.useState("");
-  const [desc, setDesc] = React.useState("");
-  const hideModal = () => setVisible(false);
-  const submithandler = (Title, Description) => {
-        HandleUserEvents(Title, Description);}
   const containerStyle = {backgroundColor: 'white', padding: 20};  
-  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => setVisible(true)}/>);
-  console.log("Hello World");
+  const FloatingButton = () => (<FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={()=> navigation.navigate(InnerScreenB)}/>);
   
   return(
     <PaperProvider theme={theme}>
     <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>
-            <EventCard/>       
+        <ScrollView style={styles.scrollView} refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <EventCard users={users}/>     
         </ScrollView>
-        <FloatingButton/>
-        <Portal>
-          <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle} dismissable={false} >
-            <Text>Enter Details for your event.</Text>
-            <TextInput label="Title" value={title} onChangeText={title => setTitle(title)}  />
-            <TextInput label="Description" value={desc} onChangeText={desc => setDesc(desc)}  />
-            <Button onPress={() => {submithandler(title,desc);hideModal();}}>Enter</Button>
-            <Button onPress={hideModal}>Dismiss</Button>
-          </Modal>
-        </Portal>
+        <FloatingButton/> 
     </SafeAreaView>
     </PaperProvider>
     );
 }
-
 
 const theme = {
   ...DefaultTheme,

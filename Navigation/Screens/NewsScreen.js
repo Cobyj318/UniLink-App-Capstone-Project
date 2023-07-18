@@ -4,7 +4,7 @@ import {StyleSheet,
         ScrollView,
         StatusBar} 
 from 'react-native';
-import NewsCard from '../Compoenents/NewsCard';
+import NewsCard from '../Components/NewsCard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
