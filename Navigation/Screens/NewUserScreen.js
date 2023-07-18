@@ -5,8 +5,9 @@ import MainContainer from '../MainContainer';
 import { ref, onValue } from 'firebase/database'
 import { ref, onValue, push, update, remove } from 'firebase/database';
 import { addDoc, collection } from "@firebase/firestore"
-import { firestore, db } from "../../src/firebase_init/firebase"
 */
+import { storage, db } from "../../src/firebase_init/firebase"
+import { ref, uploadBytes } from "firebase/storage"
 import HandleUserSubmit from '../../src/firebase_init/handleUserSubmit'
 import CamScreen from './CamScreen'
 
@@ -18,12 +19,16 @@ const NewUserScreen = ( {navigation} ) => {
     const [User, setUser] = React.useState('');
     const [Pass, setPass] = React.useState('');
     const [Email, setEmail] = React.useState('');
+    const [Image, setImage] = React.useState("");
+
+    const storageRef = ref(storage, "Test-Files");
 
     const submitHandler = (Username, Password, Email) => {
         if (Username === "" || Password === "" || Email === ""){
-            Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK', onPress: () => console.log('OK Pressed')},]);
+            Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK',},]);
         } else{
             HandleUserSubmit(Username, Password, Email);
+            uploadBytes(storageRef, file).then((snapshot) => {console.log(Uploaded)})
         }
     }
 
@@ -37,5 +42,4 @@ const NewUserScreen = ( {navigation} ) => {
         </View>
     );
 };
-//<Text onPress={}>Something</Text>
 export default NewUserScreen;
