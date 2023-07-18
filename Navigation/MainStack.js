@@ -36,8 +36,8 @@ const newsName='News';
 const InnerStack = createStackNavigator();
 const EventStack = () => (
     <InnerStack.Navigator >
-    <InnerStack.Screen name="InnerScreenA" component={EventsScreen} options={{headerShown: false}} />
-    <InnerStack.Screen name="InnerScreenB" component={InnerScreenB} options={{headerShown: true}}/>
+    <InnerStack.Screen name={"InnerScreenA"} component={EventsScreen} options={{headerShown: false}} />
+    <InnerStack.Screen name={"InnerScreenB"} component={InnerScreenB} options={{headerShown: false}}/>
   </InnerStack.Navigator>  
 );
 ////////////////////////////////////////////////////////////////////////////////////////
