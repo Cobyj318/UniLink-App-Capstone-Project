@@ -7,9 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/Louisiana_Tech_University_Logo.png",
+      "image": "./assets/LaTechLogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#4d5f80"
+      "backgroundColor": "#003087"
     },
     "assetBundlePatterns": [
       "**/*"
