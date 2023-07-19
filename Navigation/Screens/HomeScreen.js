@@ -3,9 +3,26 @@ import { View, ScrollView, StyleSheet, StatusBar, SafeAreaView, Text } from 'rea
 import HomeEventCard from '../Components/HomeEventCard';
 import { useState, useEffect } from 'react';
 import { fetchData } from '../DBFunctions/FetchData';
-import onRefresh from '../DBFunctions/refreshFunctions';
+//import onRefresh from '../DBFunctions/refreshFunctions';
 import { RefreshControl } from 'react-native';
+
+
+
 const HomeScreen = ({ navigation }) => {
+    
+const onRefresh = async (setRefreshing, setUsers) => {
+  setRefreshing(true);
+  try {
+    const usersData = await fetchData(); // Call the fetchData function
+    setUsers(usersData);
+  } catch (error) {
+    console.error('Error refreshing data:', error);
+  } finally {
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 500);
+  }
+};
     // State to store the fetched event data
     const [users, setUsers] = useState([]);
     // State to manage the refreshing status of the ScrollView
