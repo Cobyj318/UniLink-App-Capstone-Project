@@ -22,9 +22,10 @@ export default function MessageScreen({navigation}){
       },
       client.devToken('vadim1')
       );
-  
-      const channel = client.channel("messaging", "public", {
+      const channelId = 'my_channel_id'
+      const channel = client.channel("messaging", channelId, {
         name: "Public Chat Room",
+        members: ["vadim1"]
       });
       await channel.watch();
   
@@ -40,7 +41,8 @@ export default function MessageScreen({navigation}){
 
   if (!isLoadingComplete || !isReady) {
     return null;
-  } else {
+  } else {  
+    
 
     return(
     <SafeAreaProvider>
