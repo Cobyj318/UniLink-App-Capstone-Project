@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import logo from './logo.svg';
 import './App.css';
 // Routing for React - pages
@@ -43,6 +44,16 @@ const App = () => {
       </header>
           
     </div>
+=======
+import LogInContainer from './Navigation/LogInContainer';
+import React, {useEffect, useState} from "react";
+import MainStack from './Navigation/MainStack';
+
+function App(){
+  return(
+        <MainStack/>
+    // <LogInContainer/>
+>>>>>>> Stashed changes
   );
 }
 
