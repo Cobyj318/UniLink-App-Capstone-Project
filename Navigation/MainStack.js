@@ -15,7 +15,7 @@ import EventsScreen from './Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MessageScreen from './Screens/MessageScreen';
 import NewsScreen from './Screens/NewsScreen';
-import InnerScreenB from './Screens/InnerScreenB';
+import CreateEventScreen from './Screens/InnerScreenB';
 import HomeScreen from './Screens/HomeScreen';
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
@@ -37,7 +37,7 @@ const InnerStack = createStackNavigator();
 const EventStack = () => (
     <InnerStack.Navigator >
     <InnerStack.Screen name={"InnerScreenA"} component={EventsScreen} options={{headerShown: false}} />
-    <InnerStack.Screen name={"InnerScreenB"} component={InnerScreenB} options={{headerShown: false}}/>
+    <InnerStack.Screen name={"CreateEventScreen"} component={CreateEventScreen} options={{headerShown: false}}/>
   </InnerStack.Navigator>  
 );
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
 
-export default function InnerScreenB({ navigation }) {
+export default function CreateEventScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [sponser, setSponser] = useState("");
