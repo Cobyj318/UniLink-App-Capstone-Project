@@ -3,26 +3,10 @@ import { View, ScrollView, StyleSheet, StatusBar, SafeAreaView, Text } from 'rea
 import HomeEventCard from '../Components/HomeEventCard';
 import { useState, useEffect } from 'react';
 import { fetchData } from '../DBFunctions/FetchData';
-//import onRefresh from '../DBFunctions/refreshFunctions';
+import onRefresh from '../DBFunctions/RefreshFunctions';
 import { RefreshControl } from 'react-native';
 
-
-
 const HomeScreen = ({ navigation }) => {
-    
-const onRefresh = async (setRefreshing, setUsers) => {
-  setRefreshing(true);
-  try {
-    const usersData = await fetchData(); // Call the fetchData function
-    setUsers(usersData);
-  } catch (error) {
-    console.error('Error refreshing data:', error);
-  } finally {
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 500);
-  }
-};
     // State to store the fetched event data
     const [users, setUsers] = useState([]);
     // State to manage the refreshing status of the ScrollView
@@ -40,6 +24,7 @@ const onRefresh = async (setRefreshing, setUsers) => {
     return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh(setRefreshing, setUsers)} />}>
+        <Text style={{ fontSize:30, fontWeight:'bold'}}>Events</Text>
         <ScrollView horizontal style={styles.topScroll}>
           {/* Map through the users array to create horizontal cards */}
           {users.map((user) => (
@@ -49,7 +34,7 @@ const onRefresh = async (setRefreshing, setUsers) => {
             </View>
           ))}
         </ScrollView>
-
+        <Text style={{ fontSize:30, fontWeight:'bold'}}>News</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
           {/* Map through the users array to create horizontal cards */}
           {users.map((user) => (
@@ -58,8 +43,8 @@ const onRefresh = async (setRefreshing, setUsers) => {
               <HomeEventCard user={user} />
             </View>
           ))}
-          
         </ScrollView>
+        <Text style={{ fontSize:30, fontWeight:'bold'}}>Clubs</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
           {/* Map through the users array to create horizontal cards */}
           {users.map((user) => (
@@ -89,6 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
+    backgroundColor: 'lightblue',
   },
   scrollView: {
     backgroundColor: 'lightblue',
