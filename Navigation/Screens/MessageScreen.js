@@ -6,6 +6,7 @@ import getUserEvents from '../../src/firebase_init/getUserEvents'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useCachedResources from "../../hooks/useCachedResources";
 
+
 export default function MessageScreen({navigation}){
     const API_KEY = "52h96fb6ezvf"
     const client = StreamChat.getInstance(API_KEY);
