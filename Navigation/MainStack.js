@@ -23,7 +23,7 @@ import HomeScreen from './Screens/HomeScreen';
 const OldUser = "MainContainer";
 const NewUser = "NewUserScreen";
 const Splash = "SplashScreen";
-const Cams = "CamScreen"
+const Cams = "CamScreen";
 const homeName='Home';
 const eventsName='Events';
 const profileName='Profile';
@@ -79,7 +79,6 @@ const MainStack = () => (
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: false}}/>
         <Stack.Screen name={OldUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
-        <Stack.Screen name={Cams} component={CamScreen} options={{}}/>
     </Stack.Navigator>
   </NavigationContainer>
 );

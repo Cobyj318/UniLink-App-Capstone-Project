@@ -9,7 +9,7 @@ import { addDoc, collection } from "@firebase/firestore"
 import { storage, db } from "../../src/firebase_init/firebase"
 import { ref, uploadBytes } from "firebase/storage"
 import HandleUserSubmit from '../../src/firebase_init/handleUserSubmit'
-import CamScreen from './CamScreen'
+import UploadThing from '../Components/uploadThing';
 
 
 
@@ -34,7 +34,7 @@ const NewUserScreen = ( {navigation} ) => {
 
     return(
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            <Button onPress={() => navigation.navigate(CamScreen)} title={"Image"} />
+            <UploadThing isEditing={true}/>
             <TextInput onChangeText={((val) => setUser(val))} placeholder="Username"/>
             <TextInput onChangeText={((val) => setPass(val))} placeholder="Password"/>
             <TextInput onChangeText={((val) => setEmail(val))} placeholder="Email"/>
