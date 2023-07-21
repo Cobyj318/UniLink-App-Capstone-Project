@@ -23,3 +23,28 @@ export const fetchData = async () => {
     return [];
   }
 };
+
+
+
+export const fetchNewsData = async () => {
+  try {
+    const eventsRef = collection(firestore, 'emails/payload');
+    //const eventsQuery = query(eventsRef, orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(eventsRef);
+    const usersData = [];
+    querySnapshot.forEach((doc) => {
+      const { Title, Description, Sponser, Date } = doc.data();
+      usersData.push({
+        id: doc.id,
+        Title,
+        Description,
+        Sponser,
+        Date,
+      });
+    });
+    return usersData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+};
