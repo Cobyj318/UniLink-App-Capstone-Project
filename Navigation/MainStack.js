@@ -18,6 +18,7 @@ import MessageScreen from './Screens/MessageScreen';
 import NewsScreen from './Screens/NewsScreen';
 import CreateEventScreen from './Screens/InnerScreenB';
 import HomeScreen from './Screens/HomeScreen';
+import ChannelScreen from './Screens/ChannelScreen';
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ const eventsName='Events';
 const profileName='Profile';
 const messageName='Message';
 const newsName='News';
-
+const ChanScreen = 'ChannelScreen';
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////// Creating the Event Stack navigator for the Event tab//////////////////////
@@ -83,6 +84,7 @@ const MainStack = () => (
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: false}}/>
         <Stack.Screen name={OldUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
         <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: false}}/>
+        <Stack.Screen name={ChanScreen} component={ChannelScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );
