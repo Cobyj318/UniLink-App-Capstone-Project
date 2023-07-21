@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: uploadThing.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: uploadThing.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
+import { Image, View, Platform, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import ActionSheet from './ActionSheet';
+import CamScreen from '../Screens/CamScreen';
+import * as ImagePicker from 'expo-image-picker';
+
+/**
+ * @property {string} uri - The URI of the selected image.
+
+ * A React component representing an image uploader with options to take a photo or upload an image from the camera roll.
+ *
+ * @param {boolean} props.isEditing - Indicates whether the component is in editing mode.
+ * @returns {JSX.Element} The JSX representation of the image uploader.
+ */
+
+export default function UploadThing( {isEditing} ) {
+
+  /**
+   * @type {Array&lt;Object>} actionItems - An array of action items to be displayed in the action sheet.
+   */
+  const actionItems = [
+    {
+      id: 1,
+      label: 'Take a Photo',
+      onPress: () => {}
+    },
+    {
+      id: 2,
+      label: 'Upload Image',
+      onPress: () => {addImage()}
+    }
+  ];
+
+  /**
+   * @type {boolean} actionSheet - changes the state of the action sheet.
+   */
+  const [actionSheet, setActionSheet] = useState(false);
+
+  /**
+   * Closes the action sheet.
+   *
+   * @function closeActionSheet
+   * @returns {void}
+   */
+  const closeActionSheet = () => setActionSheet(false);
+
+  /**
+   * @type {string | null} image - The URI of the selected image or null if no image is selected.
+   */
+  const [image, setImage] = useState(null);
+  useEffect(() => {
+    checkForCameraRollPermission()
+  }, []);
+  
+  /**
+   * Opens the image picker to select an image from the camera roll.
+   *
+   * @async
+   * @function addImage
+   * @returns {Promise&lt;void>}
+   */
+  const addImage = async () => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4,3],
+        quality: 1,
+      });
+    if (!_image.canceled) {
+        setImage(_image.uri);
+    }
+    closeActionSheet();
+  };
+
+  /**
+   * Checks if camera roll permissions are granted and alerts the user if they are not.
+   *
+   * @async
+   * @function checkForCameraRollPermission
+   * @returns {Promise&lt;void>}
+   */
+  const  checkForCameraRollPermission = async()=>{
+    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert("Please grant camera roll permissions inside your system's settings");
+    }else{
+      //console.log('Media Permissions are granted')
+    }
+  }; 
+  if(isEditing === true){
+    return (
+              &lt;View style={imageUploaderStyles.container}>
+                  {image  &amp;&amp; &lt;Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                      &lt;View style={imageUploaderStyles.uploadBtnContainer}>
+                          &lt;TouchableOpacity onPress={() => setActionSheet(true)} style={imageUploaderStyles.uploadBtn} >
+                              &lt;Text>{image ? 'Edit' : 'Upload'} Image&lt;/Text>
+                              &lt;AntDesign name="camera" size={20} color="black" />
+                          &lt;/TouchableOpacity>
+                &lt;Modal isVisible={actionSheet}
+                  style={{margin: 0, justifyContent: 'flex-end'}}>
+                  &lt;ActionSheet actionItems={actionItems} onCancel={closeActionSheet}/>
+                &lt;/Modal>
+                      &lt;/View>
+              &lt;/View>
+    );
+  }
+  else if(isEditing === false){
+    return (
+      &lt;View style={imageUploaderStyles.container}>
+          {image  &amp;&amp; &lt;Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      &lt;/View>
+    );
+  };
+}
+const imageUploaderStyles=StyleSheet.create({
+    container:{
+        elevation:2,
+        height:200,
+        width:200,
+        backgroundColor:'#c1c9d6',
+        position:'relative',
+        borderRadius:999,
+        overflow:'hidden',
+    },
+    uploadBtnContainer:{
+        opacity:0.7,
+        position:'absolute',
+        right:0,
+        bottom:0,
+        backgroundColor:'lightgrey',
+        width:'100%',
+        height:'25%',
+    },
+    uploadBtn:{
+        display:'flex',
+        alignItems:"center",
+        justifyContent:'center'
+    }
+})</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addImage">addImage</a></li><li><a href="global.html#checkForCameraRollPermission">checkForCameraRollPermission</a></li><li><a href="global.html#closeActionSheet">closeActionSheet</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Jul 21 2023 09:37:18 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CamScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CamScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as React from 'react';
+import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar } from 'react-native';
+import { Camera, CameraType, } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
+import { shareAsync } from 'expo-sharing';
+import NewUserScreen from './NewUserScreen';
+
+/**
+ * @typedef {Object} PhotoObject
+ * @property {string} uri - The URI of the photo.
+ * @property {string} base64 - The base64 representation of the photo.
+ */
+
+/**
+ * @typedef {Object} CamScreenProps
+ * @property {Object} navigation - The React Navigation object for navigation purposes.
+ */
+
+/**
+ * A React component representing the camera screen.
+ *
+ * @param {CamScreenProps} props - The props passed to the component.
+ * @returns {JSX.Element} The JSX representation of the camera screen.
+ */
+
+const CamScreen = ( {navigation} ) => {
+
+    let camRef = React.useRef();
+    
+    /**
+     * @type {boolean} camPermitted - checks and changes camera permissions.
+     */
+    const [camPermitted, setCamPermits] = React.useState();
+    
+    /**
+     * @type {boolean} camRollPermitted - checks and changes camera roll permissions.
+     */
+    const [camRollPermitted, setCamRollPermits] = React.useState();
+    
+    /**
+     * @type {PhotoObject} photo - The photo object captured by the camera.
+     */
+    const [photo, setPhoto] = React.useState()
+    //const nameFrom = nameFrom.params
+
+    React.useEffect(() => 
+            {(async() => {
+                const camPermissions = await Camera.requestCameraPermissionsAsync();
+                //const micPermissions = await Camera.requestMicrophonePermissionsAsync();
+                const camRollPermissions = await MediaLibrary.requestPermissionsAsync();
+                setCamPermits(camPermissions.status === "granted")
+                setCamRollPermits(camRollPermissions.status === "granted")
+            })();
+        }, []);
+
+    if(camPermitted === undefined){
+        return &lt;Text>Testing Camera&lt;/Text>
+    } else if (!camPermitted) {
+        return &lt;Text>Denied&lt;/Text>
+    }
+
+    /**
+     * Takes a picture using the camera and sets the photo state.
+     *
+     * @async
+     * @function takePic
+     * @returns {Promise&lt;void>}
+     */
+    let takePic = async () => {
+        let options ={
+            quality: 1,
+            base64: true,
+            exif: false
+        };
+        
+        let newPhoto = await camRef.current.takePictureAsync(options);
+        setPhoto(newPhoto);
+    }
+
+    if (photo){
+
+        /**
+         * Shares the captured photo.
+         *
+         * @function sharePic
+         * @returns {void}
+         */
+        let sharePic = () => {
+            shareAsync(photo.uri).then(() => {
+                setPhoto(undefined);
+            })
+        };
+
+        /**
+         * Saves the captured photo to the device's camera roll and navigates to the Sign Up screen.
+         *
+         * @function savePhoto
+         * @returns {void}
+         */
+        let savePhoto = () => {
+            MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+                setPhoto(undefined);
+                navigation.navigate(NewUserScreen);
+            });
+
+        };
+
+        /**
+         * Disposes of the taken photo and returns to camera screen to retake it.
+         *
+         * @function retakePick
+         * @returns {void}
+         */
+        let retakePick = () => {
+            setPhoto(undefined);
+            takePic()
+        }
+        return(
+        &lt;SafeAreaView style={{ flex: 1 }}>
+            &lt;Image style={{ flex: 1 }} source={{ uri: "data:image/jpg;base64," + photo.base64}}/>
+            {camRollPermitted ? &lt;Button title="Save" onPress={savePhoto}/> : undefined}
+            &lt;Button title="Retake" onPress={retakePick}/>
+        &lt;/SafeAreaView>);}
+    
+    return(
+        &lt;Camera style={{flex:1}} ref ={camRef}>
+            &lt;View>
+                &lt;Button title={"Take Pic"} onPress={takePic} style={{ flex:1}}/>
+            &lt;/View>
+            &lt;StatusBar/>
+        &lt;/Camera>
+    )
+}
+
+export default CamScreen;
+
+//&lt;Button title="Share" onPress={sharePic}/></code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CamScreen">CamScreen</a></li><li><a href="global.html#retakePick">retakePick</a></li><li><a href="global.html#savePhoto">savePhoto</a></li><li><a href="global.html#sharePic">sharePic</a></li><li><a href="global.html#takePic">takePic</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Jul 21 2023 09:39:41 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
