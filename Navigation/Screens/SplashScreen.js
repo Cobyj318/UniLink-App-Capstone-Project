@@ -11,19 +11,25 @@ const Logo = require('../../assets/LaTechLogo.png');
 export default function SplashScreen({ navigation }) {
   return (
     <PaperProvider theme={theme}>
-      {/* Background Image */}
       <ImageBackground source={BGImage} resizeMode='cover' style={styles.image}>
         <View style={styles.Tint}>
           <Portal>
-            {/* LaTech Logo */}
-            <Image style={styles.logo} source={Logo} />
-            <View style={styles.TopMenu}>
+            <View style={styles.container}>
+              {/* App Logo */}
+              <View style={styles.logoContainer}>
+                <Image style={styles.logo} source={Logo} />
+              </View>
               {/* App Title */}
-              <Text style={styles.SplashscreenText}>Uni-Link</Text>
-              {/* Sign Up Button */}
-              <Button onPress={() => navigation.navigate(NewUserScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
-              {/* Existing User Button */}
-              <Button onPress={() => navigation.navigate(MainContainer)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
+              <View style={styles.titleContainer}>
+                <Text style={styles.SplashscreenText}>Uni-Link</Text>
+              </View>
+              {/* Buttons */}
+              <View style={styles.buttonContainer}>
+                {/* Sign Up Button */}
+                <Button onPress={() => navigation.navigate(NewUserScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
+                {/* Existing User Button */}
+                <Button onPress={() => navigation.navigate(MainContainer)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
+              </View>
             </View>
           </Portal>
         </View>
@@ -32,7 +38,6 @@ export default function SplashScreen({ navigation }) {
   );
 }
 
-// Custom theme for PaperProvider
 const theme = {
   ...DefaultTheme,
   roundness: 2,
@@ -44,33 +49,43 @@ const theme = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoContainer: {
+    marginBottom: 20, // Add margin between logo and title
+  },
   logo: {
     width: 200,
     height: 180,
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 200,
-    left: 90,
+    alignSelf: 'center',
   },
-  image: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  Existinguser: {
-    position: 'absolute',
-    bottom: 300,
-    width: 135,
-  },
-  Signup: {
-    position: 'absolute',
-    bottom: 350,
-    width: 135,
+  titleContainer: {
+    marginBottom: 10, // Add margin between title and buttons
   },
   SplashscreenText: {
     fontSize: 60,
     fontWeight: 'bold',
     color: 'white',
-    bottom: 100,
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    width: '100%', // Set the width of the button wrapper
+    marginTop: 10,
+  },
+  Existinguser: {
+    marginTop: 20,
+    width: '40%',
+  },
+  Signup: {
+    marginTop: 10,
+    width: '40%',
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
   },
   Tint: {
     flex: 1,
@@ -78,10 +93,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#003087',
     opacity: 0.8,
-  },
-  TopMenu: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
