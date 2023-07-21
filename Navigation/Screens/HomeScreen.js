@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { fetchData } from '../DBFunctions/FetchData';
 import onRefresh from '../DBFunctions/RefreshFunctions';
 import { RefreshControl } from 'react-native';
+
 const HomeScreen = ({ navigation }) => {
     // State to store the fetched event data
     const [users, setUsers] = useState([]);
@@ -23,6 +24,7 @@ const HomeScreen = ({ navigation }) => {
     return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh(setRefreshing, setUsers)} />}>
+        <Text style={{ fontSize:30, fontWeight:'bold'}}>Events</Text>
         <ScrollView horizontal style={styles.topScroll}>
           {/* Map through the users array to create horizontal cards */}
           {users.map((user) => (
@@ -32,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           ))}
         </ScrollView>
-
+        <Text style={{ fontSize:30, fontWeight:'bold'}}>News</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
           {/* Map through the users array to create horizontal cards */}
           {users.map((user) => (
@@ -41,8 +43,8 @@ const HomeScreen = ({ navigation }) => {
               <HomeEventCard user={user} />
             </View>
           ))}
-          
         </ScrollView>
+        <Text style={{ fontSize:30, fontWeight:'bold'}}>Clubs</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
           {/* Map through the users array to create horizontal cards */}
           {users.map((user) => (
@@ -72,6 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
+    backgroundColor: 'lightblue',
   },
   scrollView: {
     backgroundColor: 'lightblue',

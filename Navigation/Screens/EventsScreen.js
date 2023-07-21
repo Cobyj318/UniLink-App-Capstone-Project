@@ -1,5 +1,3 @@
-// EventsScreen.js
-
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl } from 'react-native';
 import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
