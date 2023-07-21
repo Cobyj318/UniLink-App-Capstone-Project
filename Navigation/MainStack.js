@@ -11,6 +11,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NewUserScreen from './Screens/NewUserScreen';
 import SplashScreen from './Screens/SplashScreen'; 
 import CamScreen from './Screens/CamScreen';
+import UploadThing from './Components/uploadThing';
 import EventsScreen from './Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MessageScreen from './Screens/MessageScreen';
@@ -24,11 +25,13 @@ const OldUser = "MainContainer";
 const NewUser = "NewUserScreen";
 const Splash = "SplashScreen";
 const Cams = "CamScreen";
+const uploading= "UploadThing"
 const homeName='Home';
 const eventsName='Events';
 const profileName='Profile';
 const messageName='Message';
 const newsName='News';
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////// Creating the Event Stack navigator for the Event tab//////////////////////
@@ -79,6 +82,7 @@ const MainStack = () => (
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: false}}/>
         <Stack.Screen name={OldUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
+        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
 );

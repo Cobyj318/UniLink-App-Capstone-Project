@@ -2,6 +2,15 @@ import * as React from 'react';
 import { StyleSheet, Text, TouchableHighlight, View}  from 'react-native'
 import PropTypes from 'prop-types'
 
+/**
+ * A custom ActionSheet component that displays a list of action items.
+ *
+ * @param {Object} props - The props passed to the component.
+ * @param {Array<Object>} props.actionItems - An array of action items to be displayed.
+ * @param {function} [props.onCancel] - The function to be called when the user cancels the ActionSheet.
+ * @param {string} [props.actionTextColor] - The color of the action items' text.
+ * @returns {JSX.Element} The JSX representation of the ActionSheet component.
+ */
 const PRIMARY_COLOR = 'rgb(0,98,255)';
 const WHITE = '#ffffff';
 const BORDER_COLOR = '#DBDBDB';

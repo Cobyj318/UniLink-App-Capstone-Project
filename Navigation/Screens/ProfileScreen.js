@@ -13,9 +13,9 @@ export default function ProfileScreen({navigation}){
     }
     return(
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            {edit ? <UploadThing isEditing={true}/> : <UploadThing isEditing={false}/>}
-            {edit ? <TextInput style={styles.editing} editable={true} placeholder={"Name"}/> : <TextInput style={styles.notEditing} editable={false} placeholder={"Name"}/>}
-            {edit ? <TextInput style={styles.editing} editable={true} placeholder={"Bio"}/> : <TextInput style={styles.notEditing} editable={false} placeholder={"Bio"}/>}
+            {edit ? <UploadThing navigation={null} isEditing={true}/> : <UploadThing navigation={null} isEditing={false}/>}
+            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Name"} value='Nothing'/> : <TextInput style={{flex:1}} editable={false} placeholder={"Name"} value='Nothing'/>}
+            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Bio"} value='Something'/> : <TextInput style={{flex:1}} editable={false} placeholder={"Bio"} value='Something'/>}
             <Text style={{flex:1}}>Friends</Text>
             {edit ? <Button style={{flex:1}} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"}/> : <Button style={{flex:1}} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"}/>}    
         </View>

@@ -6,7 +6,7 @@ import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper
 import EventCard from '../Components/EventCard';
 import { useState, useEffect } from 'react';
 import CreateEventScreen from './InnerScreenB';
-import onRefresh from '../DBFunctions/refreshFunctions';
+import onRefresh from '../DBFunctions/RefreshFunctions';
 import { fetchData } from '../DBFunctions/FetchData';
 
 export default function EventsScreen({ navigation }) {

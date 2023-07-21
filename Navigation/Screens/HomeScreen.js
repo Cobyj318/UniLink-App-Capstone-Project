@@ -3,7 +3,7 @@ import { View, ScrollView, StyleSheet, StatusBar, SafeAreaView, Text } from 'rea
 import HomeEventCard from '../Components/HomeEventCard';
 import { useState, useEffect } from 'react';
 import { fetchData } from '../DBFunctions/FetchData';
-import onRefresh from '../DBFunctions/refreshFunctions';
+import onRefresh from '../DBFunctions/RefreshFunctions';
 import { RefreshControl } from 'react-native';
 const HomeScreen = ({ navigation }) => {
     // State to store the fetched event data

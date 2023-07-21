@@ -3,13 +3,45 @@ import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar } 
 import { Camera, CameraType, } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
+import NewUserScreen from './NewUserScreen';
+
+/**
+ * @typedef {Object} PhotoObject
+ * @property {string} uri - The URI of the photo.
+ * @property {string} base64 - The base64 representation of the photo.
+ */
+
+/**
+ * @typedef {Object} CamScreenProps
+ * @property {Object} navigation - The React Navigation object for navigation purposes.
+ */
+
+/**
+ * A React component representing the camera screen.
+ *
+ * @param {CamScreenProps} props - The props passed to the component.
+ * @returns {JSX.Element} The JSX representation of the camera screen.
+ */
 
 const CamScreen = ( {navigation} ) => {
 
     let camRef = React.useRef();
+    
+    /**
+     * @type {boolean} camPermitted - checks and changes camera permissions.
+     */
     const [camPermitted, setCamPermits] = React.useState();
+    
+    /**
+     * @type {boolean} camRollPermitted - checks and changes camera roll permissions.
+     */
     const [camRollPermitted, setCamRollPermits] = React.useState();
+    
+    /**
+     * @type {PhotoObject} photo - The photo object captured by the camera.
+     */
     const [photo, setPhoto] = React.useState()
+    //const nameFrom = nameFrom.params
 
     React.useEffect(() => 
             {(async() => {
@@ -27,6 +59,13 @@ const CamScreen = ( {navigation} ) => {
         return <Text>Denied</Text>
     }
 
+    /**
+     * Takes a picture using the camera and sets the photo state.
+     *
+     * @async
+     * @function takePic
+     * @returns {Promise<void>}
+     */
     let takePic = async () => {
         let options ={
             quality: 1,
@@ -39,23 +78,48 @@ const CamScreen = ( {navigation} ) => {
     }
 
     if (photo){
+
+        /**
+         * Shares the captured photo.
+         *
+         * @function sharePic
+         * @returns {void}
+         */
         let sharePic = () => {
             shareAsync(photo.uri).then(() => {
                 setPhoto(undefined);
             })
         };
 
+        /**
+         * Saves the captured photo to the device's camera roll and navigates to the Sign Up screen.
+         *
+         * @function savePhoto
+         * @returns {void}
+         */
         let savePhoto = () => {
             MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
+                navigation.navigate(NewUserScreen);
             });
+
         };
+
+        /**
+         * Disposes of the taken photo and returns to camera screen to retake it.
+         *
+         * @function retakePick
+         * @returns {void}
+         */
+        let retakePick = () => {
+            setPhoto(undefined);
+            takePic()
+        }
         return(
         <SafeAreaView style={{ flex: 1 }}>
             <Image style={{ flex: 1 }} source={{ uri: "data:image/jpg;base64," + photo.base64}}/>
-            <Button title="Share" onPress={sharePic}/>
             {camRollPermitted ? <Button title="Save" onPress={savePhoto}/> : undefined}
-            <Button title="Discard" onPress={() => setPhoto(undefined)}/>
+            <Button title="Retake" onPress={retakePick}/>
         </SafeAreaView>);}
     
     return(
@@ -69,3 +133,5 @@ const CamScreen = ( {navigation} ) => {
 }
 
 export default CamScreen;
+
+//<Button title="Share" onPress={sharePic}/>

@@ -1,35 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, Platform, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import ActionSheet from './ActionSheet';
+import CamScreen from '../Screens/CamScreen';
 import * as ImagePicker from 'expo-image-picker';
 
-import { useActionSheet } from '@expo/react-native-action-sheet';
+/**
+ * @property {string} uri - The URI of the selected image.
 
+ * A React component representing an image uploader with options to take a photo or upload an image from the camera roll.
+ *
+ * @param {boolean} props.isEditing - Indicates whether the component is in editing mode.
+ * @returns {JSX.Element} The JSX representation of the image uploader.
+ */
 
 export default function UploadThing( {isEditing} ) {
-  const { showActionSheetWithOptions } = useActionSheet();
-  
-  const openOptions = () =>{
-    const options = ["Delete", "Save", "Cancel"];
-    const destructiveButtonIndex = 0;
-    const cancelButtonIndex = 2; 
 
-      showActionSheetWithOptions(
-        {
-          options,
-          cancelButtonIndex, //the third button will be the 'Cancel' button
-          destructiveButtonIndex, //the first button will be the 'Delete' option
-        },
-        (buttonIndex) => {
-          alert("Index pressed: " + buttonIndex);
-        }
-      );
-  }
+  /**
+   * @type {Array<Object>} actionItems - An array of action items to be displayed in the action sheet.
+   */
+  const actionItems = [
+    {
+      id: 1,
+      label: 'Take a Photo',
+      onPress: () => {}
+    },
+    {
+      id: 2,
+      label: 'Upload Image',
+      onPress: () => {addImage()}
+    }
+  ];
 
+  /**
+   * @type {boolean} actionSheet - changes the state of the action sheet.
+   */
+  const [actionSheet, setActionSheet] = useState(false);
+
+  /**
+   * Closes the action sheet.
+   *
+   * @function closeActionSheet
+   * @returns {void}
+   */
+  const closeActionSheet = () => setActionSheet(false);
+
+  /**
+   * @type {string | null} image - The URI of the selected image or null if no image is selected.
+   */
   const [image, setImage] = useState(null);
   useEffect(() => {
     checkForCameraRollPermission()
   }, []);
+  
+  /**
+   * Opens the image picker to select an image from the camera roll.
+   *
+   * @async
+   * @function addImage
+   * @returns {Promise<void>}
+   */
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -40,8 +71,16 @@ export default function UploadThing( {isEditing} ) {
     if (!_image.canceled) {
         setImage(_image.uri);
     }
+    closeActionSheet();
   };
 
+  /**
+   * Checks if camera roll permissions are granted and alerts the user if they are not.
+   *
+   * @async
+   * @function checkForCameraRollPermission
+   * @returns {Promise<void>}
+   */
   const  checkForCameraRollPermission = async()=>{
     const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -55,10 +94,14 @@ export default function UploadThing( {isEditing} ) {
               <View style={imageUploaderStyles.container}>
                   {image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                       <View style={imageUploaderStyles.uploadBtnContainer}>
-                          <TouchableOpacity onPress={() => openOptions()} style={imageUploaderStyles.uploadBtn} >
+                          <TouchableOpacity onPress={() => setActionSheet(true)} style={imageUploaderStyles.uploadBtn} >
                               <Text>{image ? 'Edit' : 'Upload'} Image</Text>
                               <AntDesign name="camera" size={20} color="black" />
                           </TouchableOpacity>
+                <Modal isVisible={actionSheet}
+                  style={{margin: 0, justifyContent: 'flex-end'}}>
+                  <ActionSheet actionItems={actionItems} onCancel={closeActionSheet}/>
+                </Modal>
                       </View>
               </View>
     );
