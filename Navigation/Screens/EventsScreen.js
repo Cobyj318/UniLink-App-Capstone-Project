@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl } from 
 import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import EventCard from '../Components/EventCard';
 import { useState, useEffect } from 'react';
-import CreateEventScreen from './InnerScreenB';
+import CreateEventScreen from './CreateEventScreen'; 
 import onRefresh from '../DBFunctions/RefreshFunctions';
 import { fetchData } from '../DBFunctions/FetchData';
 

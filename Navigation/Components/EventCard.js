@@ -83,20 +83,20 @@ const EventCard = ({ users }) => {
                 )}
               </Card.Content>
               <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-              <Card.Actions style={styles.RSVP}>
+              <Card.Actions >
                 {!editMode && (
-                  <Button style={styles.RSVP} onPress={() => alert('Thank you for RSVPING!')}>RSVP</Button>
+                  <Button  onPress={() => alert('Thank you for RSVPING!')}>RSVP</Button>
                 )}
                 {editMode ? (
                   <React.Fragment>
-                    <Button style={styles.RSVP} onPress={() => handleEditEvent(user.id)}>Save</Button>
-                    <Button style={styles.RSVP} onPress={() => setEditMode(false)}>Cancel</Button>
+                    <Button  onPress={() => handleEditEvent(user.id)}>Save</Button>
+                    <Button  onPress={() => setEditMode(false)}>Cancel</Button>
                   </React.Fragment>
                 ) : (
-                  <Button style={styles.RSVP} onPress={() => setEditMode(true)}>Edit</Button>
+                  <Button  onPress={() => setEditMode(true)}>Edit</Button>
                 )}
                 {!editMode && (
-                  <Button style={styles.RSVP} onPress={() => handleDeleteEvent(user.id)}>Delete</Button>
+                  <Button  onPress={() => handleDeleteEvent(user.id)}>Delete</Button>
                 )}
               </Card.Actions>
             </Card>
@@ -108,9 +108,6 @@ const EventCard = ({ users }) => {
 };
 
 const styles = StyleSheet.create({
-  RSVP: {
-    position: 'center',
-  },
   eventCardContainer: {
     paddingVertical: 2,
   },

@@ -18,13 +18,13 @@ import EventsScreen from './Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MessageScreen from './Screens/MessageScreen';
 import NewsScreen from './Screens/NewsScreen';
-import CreateEventScreen from './Screens/InnerScreenB';
+import CreateEventScreen from './Screens/CreateEventScreen';
 import HomeScreen from './Screens/HomeScreen';
-import ChannelScreen from './Screens/ChannelScreen';
+
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-const OldUser = "MainContainer";
+export const ExistingUser = "TabNavigator"; // Export OldUser separately
 const NewUser = "NewUserScreen";
 const Splash = "SplashScreen";
 const Cams = "CamScreen";
@@ -35,15 +35,16 @@ const profileName='Profile';
 const messageName='Message';
 const newsName='News';
 const ChanScreen = 'ChannelScreen';
-
+const EventScreen='Event Screen';
+export const CreateEventScreens='CreateEventScreen';
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////// Creating the Event Stack navigator for the Event tab//////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 const InnerStack = createStackNavigator();
 const EventStack = () => (
     <InnerStack.Navigator >
-    <InnerStack.Screen name={"InnerScreenA"} component={EventsScreen} options={{headerShown: false}} />
-    <InnerStack.Screen name={"CreateEventScreen"} component={CreateEventScreen} options={{headerShown: false}}/>
+    <InnerStack.Screen name={EventScreen} component={EventsScreen} options={{headerShown: false}} />
+    <InnerStack.Screen name={'CreateEventScreen'} component={CreateEventScreen} options={{headerShown: false}}/>
   </InnerStack.Navigator>  
 );
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -98,10 +99,9 @@ const MainStack = () => (
   <NavigationContainer>
     <Stack.Navigator>
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
-        <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: false}}/>
-        <Stack.Screen name={OldUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
-        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: false}}/>
-        <Stack.Screen name={ChanScreen} component={ChannelScreen} />
+        <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={ExistingUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
+        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
     </Stack.Navigator>
   </NavigationContainer>
 );

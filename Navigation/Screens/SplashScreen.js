@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { ImageBackground, View, Text, StyleSheet, Image } from 'react-native';
-import MainContainer from '../MainContainer';
 import NewUserScreen from './NewUserScreen';
 import { Button, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Portal } from 'react-native-paper';
+import { ExistingUser } from '../MainStack'; 
+
 
 const BGImage = require('../../assets/SplashBG.png');
 const Logo = require('../../assets/LaTechLogo.png');
@@ -28,7 +29,7 @@ export default function SplashScreen({ navigation }) {
                 {/* Sign Up Button */}
                 <Button onPress={() => navigation.navigate(NewUserScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
                 {/* Existing User Button */}
-                <Button onPress={() => navigation.navigate(MainContainer)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
+                <Button onPress={() => navigation.navigate(ExistingUser)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
               </View>
             </View>
           </Portal>
