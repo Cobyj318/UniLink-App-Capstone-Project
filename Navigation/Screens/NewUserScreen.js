@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Text, TextInput,  Button, Alert } from 'react-native';
-import MainContainer from '../MainContainer';
 /*
 import { ref, onValue } from 'firebase/database'
 import { ref, onValue, push, update, remove } from 'firebase/database';

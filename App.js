@@ -1,11 +1,11 @@
-import LogInContainer from './Navigation/LogInContainer';
-import React, {useEffect, useState} from "react";
-import MainStack from './Navigation/MainStack';
+import React from "react";
+import RegisterFrame from "./RegisterFrame";
+import MainStack from "./Navigation/MainStack";
 
-function App(){
-  return(
-        <MainStack/>
-    // <LogInContainer/>
+function App() {
+  return (
+    //<RegisterFrame/>
+    <MainStack/>
   );
 }
 

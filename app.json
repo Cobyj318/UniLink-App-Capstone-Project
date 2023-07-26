@@ -4,7 +4,7 @@
     "slug": "UniLink",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/favicon.jpg",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/LaTechLogo.png",
@@ -15,16 +15,23 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zeepotato.UniLink"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/favicon.jpg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.zeepotato.UniLink"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.jpg"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "eee88d4f-6a94-4c9e-85bd-c24910e61a76"
+      }
     }
   }
 }

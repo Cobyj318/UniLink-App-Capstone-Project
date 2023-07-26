@@ -11,7 +11,7 @@ const onRefresh = async (setRefreshing, setUsers) => {
   } finally {
     setTimeout(() => {
       setRefreshing(false);
-    }, 500);
+    }, 1000);
   }
 };
 export default onRefresh;
