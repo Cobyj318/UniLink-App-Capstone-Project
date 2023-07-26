@@ -20,6 +20,8 @@ import MessageScreen from './Screens/MessageScreen';
 import NewsScreen from './Screens/NewsScreen';
 import CreateEventScreen from './Screens/CreateEventScreen';
 import HomeScreen from './Screens/HomeScreen';
+import EventDetailsScreen from './Screens/EventDetails';
+import { View } from 'react-native';
 
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
@@ -45,6 +47,7 @@ const EventStack = () => (
     <InnerStack.Navigator >
     <InnerStack.Screen name={EventScreen} component={EventsScreen} options={{headerShown: false}} />
     <InnerStack.Screen name={'CreateEventScreen'} component={CreateEventScreen} options={{headerShown: false}}/>
+    <InnerStack.Screen name={'EventDetailsScreen'} component={EventDetailsScreen} options={{headerShown: false}}/>
   </InnerStack.Navigator>  
 );
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +79,11 @@ const TabNavigator = () => (
         } else if (route.name === profileName) {
           iconName = focused ? 'user' : 'user-o';
         }
-        return <Icon name={iconName} size={size} color={color} />; // Render the icon component
+        return (
+          <View style={{ paddingTop: 8 }}>
+            <Icon name={iconName} size={size} color={color} /> 
+          </View>
+        );
       },
     })}
   >
@@ -96,7 +103,7 @@ const TabNavigator = () => (
 ////////////////////////////////////////////////////////////////////////////////////////
 const Stack = createStackNavigator();
 const MainStack = () => (
-  <NavigationContainer>
+  <NavigationContainer independent={true}>
     <Stack.Navigator>
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>

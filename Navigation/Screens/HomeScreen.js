@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { fetchData } from '../DBFunctions/FetchData';
 import onRefresh from '../DBFunctions/RefreshFunctions';
 import { RefreshControl } from 'react-native';
+import  User from 'firebase/auth';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
 const HomeScreen = ({ navigation }) => {
     // State to store the fetched event data
@@ -20,6 +22,8 @@ const HomeScreen = ({ navigation }) => {
     };
     fetchEventData();
     }, []);
+    console.log('user',FIREBASE_AUTH.currentUser?.email);
+
 
     return (
     <SafeAreaView style={styles.container}>

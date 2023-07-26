@@ -11,7 +11,7 @@ import {
 import { StreamChat } from 'stream-chat';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import useCachedResources from '../UniLink-App-Capstone-Project copy/hooks/useCachedResources';
+import useCachedResources from '../UniLink-App-Capstone-Project/hooks/useCachedResources';
 import UserListItem from './UserListItem';
 
 const SearchBar = ({ onSearch }) => {
