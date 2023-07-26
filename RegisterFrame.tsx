@@ -20,15 +20,11 @@ function RegisterFrame() {
     });
   },[]);
 
-
-
   return (
     <NavigationContainer independent={true}>
-    	<Stack.Navigator initialRouteName="Login">
-        {user ? 
-          (<Stack.Screen name="MainStack" component={MainStack} options={{ headerShown: false }}/>):
-          (<Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>)
-        }
+    	<Stack.Navigator initialRouteName="MainStack">
+        {user ? (<Stack.Screen name="MainStack" component={MainStack} options={{ headerShown: false }}/>):(<Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>)}
+      
       </Stack.Navigator>
     </NavigationContainer>
   );

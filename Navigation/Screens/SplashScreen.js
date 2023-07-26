@@ -3,8 +3,9 @@ import { ImageBackground, View, Text, StyleSheet, Image } from 'react-native';
 import NewUserScreen from './NewUserScreen';
 import { Button, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Portal } from 'react-native-paper';
-import { ExistingUser } from '../MainStack'; 
-
+import LoginScreen from './LoginScreen';
+import { ExistingUser } from '../MainStack';
+import SignUpScreen from './SignUpScreen';
 
 const BGImage = require('../../assets/SplashBG.png');
 const Logo = require('../../assets/LaTechLogo.png');
@@ -27,9 +28,9 @@ export default function SplashScreen({ navigation }) {
               {/* Buttons */}
               <View style={styles.buttonContainer}>
                 {/* Sign Up Button */}
-                <Button onPress={() => navigation.navigate(NewUserScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
+                <Button onPress={() => navigation.navigate(SignUpScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
                 {/* Existing User Button */}
-                <Button onPress={() => navigation.navigate(ExistingUser)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
+                <Button onPress={() => navigation.navigate(LoginScreen)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
               </View>
             </View>
           </Portal>

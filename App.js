@@ -4,7 +4,6 @@ import MainStack from "./Navigation/MainStack";
 
 function App() {
   return (
-    //<RegisterFrame/>
     <MainStack/>
   );
 }
