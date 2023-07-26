@@ -8,14 +8,20 @@ export default function ProfileScreen({navigation}){
     //const submithandler = () => {  
     //}
     const [edit, isEditing] = React.useState(false);
+    const [nameEntry, nEntryEdited] = React.useState("");
+    const [bioEntry, bEntryEdited] = React.useState("");
     const editProfile = () => {
-        isEditing(!edit);
+        isEditing(!edit);  
     }
+
     return(
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
             {edit ? <UploadThing navigation={null} isEditing={true}/> : <UploadThing navigation={null} isEditing={false}/>}
-            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Name"} value='Nothing'/> : <TextInput style={{flex:1}} editable={false} placeholder={"Name"} value='Nothing'/>}
-            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Bio"} value='Something'/> : <TextInput style={{flex:1}} editable={false} placeholder={"Bio"} value='Something'/>}
+
+            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)}/> : <TextInput style={{flex:1}} editable={false}  value={nameEntry} placeholder={"Name"} />}
+
+            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)}/> : <TextInput style={{flex:1}} editable={false} placeholder={"Bio"} value={bioEntry}/>}
+
             <Text style={{flex:1}}>Friends</Text>
             {edit ? <Button style={{flex:1}} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"}/> : <Button style={{flex:1}} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"}/>}    
         </View>
