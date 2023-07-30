@@ -10,6 +10,8 @@ import {User} from "firebase/auth";
 import {onAuthStateChanged} from "firebase/auth";
 import { FIREBASE_AUTH } from "../src/firebase_init/firebase";
 import { View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////Screen Imports///////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -65,6 +67,11 @@ const EventStack = () => (
 ////////////////// Creating the bottom tab navigator ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 const Tab = createBottomTabNavigator();
+const CustomButton = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <Icon name="envelope-o" size={24} color="#3498db" />
+  </TouchableOpacity>
+);
 export const TabNavigator = () => (
     <Tab.Navigator 
     initialRouteName={homeName}
@@ -92,10 +99,17 @@ export const TabNavigator = () => (
           </View>
         );
       },
+      
     })}
   >
-    <Tab.Screen name={homeName} component={HomeScreen}/>
-    <Tab.Screen name={eventsName} component={EventStack}/>
+    <Tab.Screen name={homeName} component={HomeScreen} options={({ navigation }) => ({
+      headerRight: () => (
+        <View style={{ paddingRight: 10 }}>
+          <CustomButton onPress={() => navigation.navigate(messageName)}/>
+        </View>
+        ),
+      })}/>
+    <Tab.Screen name={eventsName} component={EventStack} />
     <Tab.Screen name={newsName} component={NewsScreen}/>
     <Tab.Screen name={messageName} component={MessageScreen}/>
     <Tab.Screen name={profileName} component={ProfileScreen}/>

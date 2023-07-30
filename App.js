@@ -1,5 +1,4 @@
 import React from "react";
-import RegisterFrame from "./RegisterFrame";
 import MainStack from "./Navigation/MainStack";
 
 function App() {
@@ -7,5 +6,4 @@ function App() {
     <MainStack/>
   );
 }
-
 export default App;

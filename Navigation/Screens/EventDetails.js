@@ -1,6 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { Button } from 'react-native-paper';
+import { CircularImage } from '../Components/CircleImage';
+import { accentColors, primaryColors } from '../Components/Colors';
+import RedLine from '../Components/RedLine';
 
 const EventDetailsScreen = () => {
   function RandomInt() {
@@ -8,6 +12,7 @@ const EventDetailsScreen = () => {
     const randomNumAsString = randomNum.toString();// Convert the random number to a string
     return randomNumAsString;
   }
+
   const route = useRoute();
   const { event } = route.params; // Access the 'event' data from route.params
   const dummyevent = {
@@ -18,14 +23,30 @@ const EventDetailsScreen = () => {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu lectus ac ligula sagittis malesuada in et sapien.',
     image: { uri: 'https://picsum.photos/'+RandomInt() },
   };
+  const screenHeight = Dimensions.get('window').height;
+  const viewHeightPercentage = 30;
+  const viewHeight = (screenHeight * viewHeightPercentage) / 100;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={dummyevent.image} style={styles.eventImage} />
+       <View style={[styles.blueHeader,{ height: viewHeight }]}>
+        <CircularImage imageUrl='https://picsum.photos/700'/>
+        <View style={styles.textContainer}>
+          <Text style={styles.blueHeadertext}  >{event.Title}</Text>
+          <Text style={styles.blueHeadertext}>{event.Date}</Text>
+          <View style={styles.sponsorContainer}>
+            <Text style={styles.sponsertext }>{event.Sponser}</Text>
+          </View>
+        </View>
+      </View>
+      <RedLine/>
       <Text style={styles.eventTitle}>{event.Title}</Text>
       <Text style={styles.eventDate}>{event.Date}</Text>
       <Text style={styles.eventLocation}>{dummyevent.location}</Text>
       <Text style={styles.eventDescription}>{dummyevent.description}</Text>
+      <View>
+      <Button>Edit</Button>
+      </View>
     </ScrollView>
   );
 };
@@ -33,9 +54,16 @@ const EventDetailsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    alignItems: 'center',
-    paddingTop: 20,
     paddingBottom: 40,
+  },
+  blueHeader:{
+    backgroundColor:primaryColors.blue,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textContainer:{
+    alignItems: 'center',
+    flex:1,
   },
   eventImage: {
     width: '100%',
@@ -62,6 +90,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 20,
   },
+  blueHeadertext:{
+    color:'#69B3E7',
+    fontSize:20,
+    flexWrap:'wrap'
+  },
+  sponsertext:{
+    color:accentColors.lightblue,
+    fontSize:20,
+    flex:1,
+    flexWrap:'wrap'
+   
+  },
+  sponsorContainer: {
+    flexDirection:'row',
+  },
+  
 });
 
 export default EventDetailsScreen;

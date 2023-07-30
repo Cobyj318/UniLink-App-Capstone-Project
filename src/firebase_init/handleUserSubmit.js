@@ -10,13 +10,13 @@ import { firestore } from "./firebase"
  * @param {string} Emaildata - The email of the user to be added.
  * @returns {void}
  */
-const HandleUserSubmit = (Userdata, Passdata, Emaildata) => {
+const HandleUserSubmit = (FirsNamedata, LastNamedata, Majordata,IdData) => {
     const ref = collection(firestore, "User_data") // Firebase creates this automatically
- 
     let data = {
-        Username: Userdata,
-        Password: Passdata,
-        Email: Emaildata
+        FirstName: FirsNamedata,
+        LastName: LastNamedata,
+        Major: Majordata,
+        Id:IdData,
     }
     
     try {
