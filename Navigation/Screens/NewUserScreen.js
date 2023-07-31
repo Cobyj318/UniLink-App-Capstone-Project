@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput,  Button, Alert } from 'react-native';
+import { View, Text, TextInput,  Button, Alert, StyleSheet,KeyboardAvoidingView } from 'react-native';
 /*
 import { ref, onValue } from 'firebase/database'
 import { ref, onValue, push, update, remove } from 'firebase/database';
@@ -10,6 +10,8 @@ import { ref, uploadBytes } from "firebase/storage"
 import HandleUserSubmit from '../../src/firebase_init/handleUserSubmit'
 import UploadThing from '../Components/uploadThing';
 import CamScreen from './CamScreen';
+import { ExistingUser } from "../MainStack";
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
 /**
  * A React component representing the screen for creating a new user.
@@ -60,19 +62,50 @@ const NewUserScreen = ( {navigation} ) => {
         if (Username === "" || Password === "" || Email === ""){
             Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK',},]);
         } else{
-            HandleUserSubmit(Username, Password, Email);
-            uploadBytes(storageRef, file).then((snapshot) => {console.log(Uploaded)})
+            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid);
         }
     }
 
+    const SubmitButton=(Username, Password, Email)=>{
+        submitHandler(Username, Password, Email);
+        navigation.navigate(ExistingUser);
+    }
+
     return(
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            <UploadThing isEditing={true}/>
-            <TextInput onChangeText={((val) => setUser(val))} placeholder="Username"/>
-            <TextInput onChangeText={((val) => setPass(val))} placeholder="Password"/>
-            <TextInput onChangeText={((val) => setEmail(val))} placeholder="Email"/>
-            <Button title="Submit" onPress ={() => submitHandler(User, Pass, Email)}/>
+            <UploadThing isEditing={true} navigation={navigation} />
+            <Button title="Take a photo" onPress={() => navigation.navigate(CamScreen, {from:"NewUser"})}/>
+            <TextInput onChangeText={((val) => setUser(val))} placeholder="First Name"/>
+            <TextInput onChangeText={((val) => setPass(val))} placeholder="Last Name"/>
+            <TextInput onChangeText={((val) => setEmail(val))} placeholder="Major"/>
+            <Button title="Submit" onPress ={() => SubmitButton(User, Pass, Email)}/>
         </View>
+        </KeyboardAvoidingView>
     );
 };
 export default NewUserScreen;
+
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    innerContainer: {
+      padding: 20,
+      width: '80%',
+      backgroundColor: '#f0f0f0',
+    },
+    label: {
+      fontSize: 18,
+      marginBottom: 10,
+    },
+    input: {
+      height: 40,
+      borderWidth: 1,
+      padding: 10,
+    },
+  });
+  

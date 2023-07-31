@@ -22,11 +22,20 @@ export default function CreateEventScreen({ navigation, route }) {
 
   const onDateChange = (date) => {
       setSelectedStartDate(date);
-      setDate(date ? date.toString() : '');
+      const datestring=(date ? date.toString() : '');
+      const index = datestring.indexOf('2023')+4;
+      setDate(datestring.substring(0,index));
   };
- 
+  const isFormValid = () => {
+    return title.trim() !== "" && desc.trim() !== "" && sponser.trim() !== "" && date.trim() !== "";
+  };
   // Function to handle event creation
   const handleEnter = () => {
+    if (!isFormValid()) {
+      // Alert the user to fill out all fields
+      alert("Please fill out all fields before entering the event.");
+      return;
+    }
     const createdBy = FIREBASE_AUTH.currentUser?.uid;
     console.log(createdBy);
     HandleUserEvents(title, desc, sponser, date,createdBy); 

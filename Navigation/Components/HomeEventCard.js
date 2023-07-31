@@ -17,10 +17,10 @@ const LeftContent = props => <Avatar.Icon {...props} icon="newspaper" />
 const NewsCard = ({ user }) => (
   <PaperProvider theme={theme}>
     <Card>
-      <Card.Title title={user.Title} subtitle={user.Description} left={LeftContent} />
+      <Card.Title title={user.Sponser} subtitle={user.Date} left={LeftContent} />
       <Card.Content>
         <Text variant="titleLarge">{user.Title}</Text>
-        <Text variant="bodyMedium">{user.Description}</Text>
+        <Text variant="bodyMedium">{user.Description.slice(0,70)+"..."}</Text>
       </Card.Content>
       <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
       <Card.Actions>

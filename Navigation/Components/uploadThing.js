@@ -5,8 +5,8 @@ import Modal from 'react-native-modal';
 import ActionSheet from './ActionSheet';
 import CamScreen from '../Screens/CamScreen';
 import * as ImagePicker from 'expo-image-picker';
-import { Cams } from '../MainStack'
-
+import { useNavigation } from '@react-navigation/native';
+import { Cams } from '../MainStack';
 /**
  * @property {string} uri - The URI of the selected image.
 
@@ -16,8 +16,10 @@ import { Cams } from '../MainStack'
  * @returns {JSX.Element} The JSX representation of the image uploader.
  */
 
-export default function UploadThing( {navigation, isEditing} ) {
+export default function UploadThing( {isEditing,navigation} ) {
 
+  const handlePress = () => { navigation.navigate(Cams);
+                              closeActionSheet();};
   /**
    * @type {Array<Object>} actionItems - An array of action items to be displayed in the action sheet.
    */
@@ -25,7 +27,7 @@ export default function UploadThing( {navigation, isEditing} ) {
     {
       id: 1,
       label: 'Take a Photo',
-      onPress: () => { navigation.navigate(CamScreen) }
+      onPress: () => handlePress(),
     },
     {
       id: 2,

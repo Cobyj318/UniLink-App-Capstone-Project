@@ -5,29 +5,14 @@ import { TextInput } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { ExistingUser } from "../MainStack";
+import NewUserScreen from "./NewUserScreen";
 
-const LoginScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
-  const signIn= async ()=>{
-    setLoading(true);
-    try
-    {
-        const response=await signInWithEmailAndPassword(auth, email,password);
-        //console.log(response);
-        navigation.navigate(ExistingUser);
-    }
-    catch (error: any){
-        console.log(error);
-        alert('Sign In failed'+ error.message);
-    }
-    finally {
-        setLoading(false);
-    }
-}
   const signUp =async()=>{
     setLoading(true);
     try
@@ -35,6 +20,7 @@ const LoginScreen = ({ navigation }) => {
         const response=await createUserWithEmailAndPassword(auth,email,password);
         console.log(response);
         alert('Thank you for registering!')
+        navigation.navigate(NewUserScreen);
     }
     catch (error:any){
         console.log(error);
@@ -52,8 +38,7 @@ const LoginScreen = ({ navigation }) => {
       <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
     {loading ? <ActivityIndicator size={"large"} color="0000ff"/>:
     <>
-    <Button title="Login" onPress={()=> signIn()}/>
-    {/* <Button title="Create Account" onPress={()=> signUp()}/> */}
+    <Button title="Create Account" onPress={()=> signUp()}/>
     </>
     }
     </KeyboardAvoidingView>
@@ -77,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignUpScreen;

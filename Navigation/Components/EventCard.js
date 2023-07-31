@@ -57,7 +57,7 @@ const EventCard = ({ users }) => {
                 (
                   <React.Fragment>
                     <Text variant="titleLarge">{event.Title}</Text>
-                    <Text variant="bodyMedium">{event.Description}</Text>
+                    <Text variant="bodyMedium">{event.Description.slice(0,100)+"..."}</Text>
                   </React.Fragment>
                 )}
               </Card.Content>

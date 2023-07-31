@@ -1,11 +1,16 @@
 //////////////////////////////////////////////////////////////////////////////////////
-//////////////////This page is for Debugging purposes/////////////////////////////////
+//////////////////This page is The inital container purposes/////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {User} from "firebase/auth";
+import {onAuthStateChanged} from "firebase/auth";
+import { FIREBASE_AUTH } from "../src/firebase_init/firebase";
+import { View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////Screen Imports///////////////////////////////////////////
@@ -21,7 +26,8 @@ import NewsScreen from './Screens/NewsScreen';
 import CreateEventScreen from './Screens/CreateEventScreen';
 import HomeScreen from './Screens/HomeScreen';
 import EventDetailsScreen from './Screens/EventDetails';
-import { View } from 'react-native';
+import LoginScreen from './Screens/LoginScreen';
+import SignUpScreen from './Screens/SignUpScreen';
 
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
@@ -30,7 +36,6 @@ export const ExistingUser = "TabNavigator"; // Export OldUser separately
 const NewUser = "NewUserScreen";
 const Splash = "SplashScreen";
 export const Cams = "CamScreen";
-const CamNav = "CameraNav";
 const uploading= "UploadThing"
 const homeName='Home';
 const eventsName='Events';
@@ -40,6 +45,9 @@ const newsName='News';
 const ChanScreen = 'ChannelScreen';
 const EventScreen='Event Screen';
 export const CreateEventScreens='CreateEventScreen';
+export const Login='LoginScreen';
+const SignUp ='SignUpScreen';
+
 ////////////////////////////////////////////////////////////////////////////////////////
 ///////////// Creating the Event Stack navigator for the Event tab//////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +67,12 @@ const EventStack = () => (
 ////////////////// Creating the bottom tab navigator ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 const Tab = createBottomTabNavigator();
-const TabNavigator = () => (
+const CustomButton = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <Icon name="envelope-o" size={24} color="#3498db" />
+  </TouchableOpacity>
+);
+export const TabNavigator = () => (
     <Tab.Navigator 
     initialRouteName={homeName}
     screenOptions={({route})=>({
@@ -86,10 +99,17 @@ const TabNavigator = () => (
           </View>
         );
       },
+      
     })}
   >
-    <Tab.Screen name={homeName} component={HomeScreen}/>
-    <Tab.Screen name={eventsName} component={EventStack}/>
+    <Tab.Screen name={homeName} component={HomeScreen} options={({ navigation }) => ({
+      headerRight: () => (
+        <View style={{ paddingRight: 10 }}>
+          <CustomButton onPress={() => navigation.navigate(messageName)}/>
+        </View>
+        ),
+      })}/>
+    <Tab.Screen name={eventsName} component={EventStack} />
     <Tab.Screen name={newsName} component={NewsScreen}/>
     <Tab.Screen name={messageName} component={MessageScreen}/>
     <Tab.Screen name={profileName} component={ProfileScreen}/>
@@ -103,16 +123,32 @@ const TabNavigator = () => (
 /////////////////// Creating the Main stack navigator //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 const Stack = createStackNavigator();
-const MainStack = () => (
-  <NavigationContainer independent={true}>
-    <Stack.Navigator>
-        <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
+
+  
+function MainStack(){
+  const [user,setuser] = useState<User|null>(null);
+  useEffect(()=>{
+    onAuthStateChanged(FIREBASE_AUTH,(user)=>{
+      console.log('user',user?.email);
+      setuser(user);
+    });
+  },[]);
+
+  return(
+  <NavigationContainer >
+    <Stack.Navigator initialRouteName={Splash}> 
+        <Stack.Screen name={ExistingUser} component={TabNavigator} options={{ headerShown: false,  gestureEnabled: false}}/>
+        <Stack.Screen name={Login} component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={ExistingUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
-        <Stack.Screen name={CamNav} component={CameraNav}/>
+        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
+        <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
+
     </Stack.Navigator>
   </NavigationContainer>
-);
+  )
+};
+
 export default MainStack;
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
