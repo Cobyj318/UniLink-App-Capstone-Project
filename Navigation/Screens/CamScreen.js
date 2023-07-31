@@ -100,7 +100,7 @@ const CamScreen = ( {navigation} ) => {
         let savePhoto = () => {
             MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
-                navigation.navigate(NewUserScreen);
+                //navigation.navigate(NewUserScreen);
             });
 
         };

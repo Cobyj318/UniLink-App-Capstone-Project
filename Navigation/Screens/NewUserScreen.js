@@ -68,7 +68,6 @@ const NewUserScreen = ( {navigation} ) => {
     return(
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
             <UploadThing isEditing={true}/>
-            <Button title="Take a photo" onPress={() => navigation.navigate(CamScreen, {from:"NewUser"})}/>
             <TextInput onChangeText={((val) => setUser(val))} placeholder="Username"/>
             <TextInput onChangeText={((val) => setPass(val))} placeholder="Password"/>
             <TextInput onChangeText={((val) => setEmail(val))} placeholder="Email"/>

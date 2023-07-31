@@ -29,7 +29,8 @@ import { View } from 'react-native';
 export const ExistingUser = "TabNavigator"; // Export OldUser separately
 const NewUser = "NewUserScreen";
 const Splash = "SplashScreen";
-const Cams = "CamScreen";
+export const Cams = "CamScreen";
+const CamNav = "CameraNav";
 const uploading= "UploadThing"
 const homeName='Home';
 const eventsName='Events';
@@ -108,11 +109,27 @@ const MainStack = () => (
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
         <Stack.Screen name={ExistingUser} component={TabNavigator} options={{headerShown: false, gestureEnabled: false}}/>
-        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={CamNav} component={CameraNav}/>
     </Stack.Navigator>
   </NavigationContainer>
 );
 export default MainStack;
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////// Camera Stack Navigation ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+const CamStack = createStackNavigator();
+export const CameraNav = () => (
+  <NavigationContainer independent={true}>
+    <CamStack.Navigator>
+      <CamStack.Screen name={uploading} component={UploadThing}/>
+      <CamStack.Screen name={Cams} component={CamScreen}/>
+    </CamStack.Navigator>
+  </NavigationContainer>
+);
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
