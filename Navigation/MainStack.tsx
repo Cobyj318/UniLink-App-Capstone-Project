@@ -35,7 +35,7 @@ import SignUpScreen from './Screens/SignUpScreen';
 export const ExistingUser = "TabNavigator"; // Export OldUser separately
 const NewUser = "NewUserScreen";
 const Splash = "SplashScreen";
-const Cams = "CamScreen";
+export const Cams = "CamScreen";
 const uploading= "UploadThing"
 const homeName='Home';
 const eventsName='Events';

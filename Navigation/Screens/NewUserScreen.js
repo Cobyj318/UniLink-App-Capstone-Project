@@ -74,7 +74,7 @@ const NewUserScreen = ( {navigation} ) => {
     return(
         <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            <UploadThing isEditing={true}/>
+            <UploadThing isEditing={true} navigation={navigation} />
             <Button title="Take a photo" onPress={() => navigation.navigate(CamScreen, {from:"NewUser"})}/>
             <TextInput onChangeText={((val) => setUser(val))} placeholder="First Name"/>
             <TextInput onChangeText={((val) => setPass(val))} placeholder="Last Name"/>
