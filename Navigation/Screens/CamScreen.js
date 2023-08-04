@@ -23,7 +23,7 @@ import NewUserScreen from './NewUserScreen';
  * @returns {JSX.Element} The JSX representation of the camera screen.
  */
 
-const CamScreen = ( {navigation} ) => {
+const CamScreen = ( {navigation, pageFrom} ) => {
 
     let camRef = React.useRef();
     
@@ -98,10 +98,11 @@ const CamScreen = ( {navigation} ) => {
          * @returns {void}
          */
         let savePhoto = () => {
-            MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+            /*MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
                 //navigation.navigate(NewUserScreen);
-            });
+            });*/
+            
 
         };
 
@@ -123,11 +124,10 @@ const CamScreen = ( {navigation} ) => {
         </SafeAreaView>);}
     
     return(
-        <Camera style={{flex:1}} ref ={camRef}>
-            <View>
-                <Button title={"Take Pic"} onPress={takePic} style={{ flex:1}}/>
+        <Camera style={{flex:1,}} ref ={camRef}>
+            <View style={{ flex:1, justifyContent:"flex-end",}}>
+                <Button title={"Take Pic"} onPress={takePic}/>
             </View>
-            <StatusBar/>
         </Camera>
     )
 }
