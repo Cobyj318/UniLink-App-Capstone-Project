@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
 import { Camera, CameraType, } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
 import NewUserScreen from './NewUserScreen';
+import UploadThing from '../Components/uploadThing';
 
 /**
  * @typedef {Object} PhotoObject
@@ -102,7 +103,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
                 setPhoto(undefined);
                 //navigation.navigate(NewUserScreen);
             });*/
-            
+            navigation.goBack();
 
         };
 
@@ -126,7 +127,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
     return(
         <Camera style={{flex:1,}} ref ={camRef}>
             <View style={{ flex:1, justifyContent:"flex-end",}}>
-                <Button title={"Take Pic"} onPress={takePic}/>
+                <Button style={styles.takePhotoBtn} title={"Take Pic"} onPress={takePic}/>
             </View>
         </Camera>
     )
@@ -134,4 +135,9 @@ const CamScreen = ( {navigation, pageFrom} ) => {
 
 export default CamScreen;
 
-//<Button title="Share" onPress={sharePic}/>
+const styles = StyleSheet.create({
+    takePhotoBtn: {
+        backgroundColor: "#ffffff",
+        color: "#000000"
+    },
+})
