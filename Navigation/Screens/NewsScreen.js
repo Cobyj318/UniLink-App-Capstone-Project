@@ -1,24 +1,25 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, StatusBar,KeyboardAvoidingView } from 'react-native';
 import NewsCard from '../Components/NewsCard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
 import NewsCardV2 from '../Components/NewsCardV2';
+import CommentSection from '../Components/CommentSection';
 
 // Screen for displaying the detailed news content
-function NewsDetailsScreen({ navigation }) {
-  // Replace this with your detailed news content
+function NewsDetailsScreen() {
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView>
       <ScrollView style={styles.scrollView}>
-        <NewsCard />
+        <NewsCard/>
+        <CommentSection/>
       </ScrollView>
-    </SafeAreaView>
+      </KeyboardAvoidingView>
+
   );
 };
 
-// Screen for displaying the news related to Latech
 function LatechNewsScreen() {
   return (
     <SafeAreaView style={styles.container}>
@@ -37,7 +38,6 @@ function LatechNewsScreen() {
 // Screen for displaying the sports news
 function SportsNewsScreen() {
   return (
-    <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <NewsCardV2 />
         <NewsCardV2 />
@@ -46,12 +46,10 @@ function SportsNewsScreen() {
         <NewsCardV2 />
         <NewsCardV2 />
       </ScrollView>
-    </SafeAreaView>
   );
 }
 
 const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator(); // Create a new stack navigator
 const LatechStack = createStackNavigator(); // Create a new stack navigator for LatechNewsScreen
 
 // Stack navigator for LatechNewsScreen
@@ -83,11 +81,10 @@ export default function NewsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
+    justifyContent: 'center',
   },
   scrollView: {
     backgroundColor: 'white',
-    marginHorizontal: 20,
   },
   text: {
     fontSize: 42,
