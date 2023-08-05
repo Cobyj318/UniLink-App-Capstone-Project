@@ -73,6 +73,11 @@ const EventStack = () => (
 const Tab = createBottomTabNavigator();
 const CustomButton = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
+    <Icon name="th-list" size={24} color="#3498db" />
+  </TouchableOpacity>
+);
+const MessagesButton = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress}>
     <Icon name="envelope-o" size={24} color="#3498db" />
   </TouchableOpacity>
 );
@@ -108,8 +113,13 @@ export const TabNavigator = () => (
   >
     <Tab.Screen name={homeName} component={HomeScreen} options={({ navigation }) => ({
       headerRight: () => (
-        <View style={{ paddingRight: 10 }}>
-          <CustomButton onPress={() => navigation.navigate(messageName)}/>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  paddingRight: 15 }}>
+          <View style={{paddingRight:20}}>
+          <CustomButton onPress={() => navigation.navigate(Notifications)}/>
+          </View>
+          <View>
+          <MessagesButton onPress={() => navigation.navigate(messageName)}/>
+          </View>
         </View>
         ),
       })}/>
@@ -148,6 +158,8 @@ function MainStack(){
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
         <Stack.Screen name={messageName} component={MessageScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
+
         
 
     </Stack.Navigator>
