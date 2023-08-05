@@ -20,7 +20,6 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
  * @returns {JSX.Element} The JSX representation of the new user screen.
  */
 
-
 const NewUserScreen = ( {navigation} ) => {
     /*User Info Inits*/
 
@@ -63,22 +62,20 @@ const NewUserScreen = ( {navigation} ) => {
             Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK',},]);
         } else{
             HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid);
+            navigation.navigate(ExistingUser);
         }
-    }
-
-    const SubmitButton=(Username, Password, Email)=>{
-        submitHandler(Username, Password, Email);
-        navigation.navigate(ExistingUser);
     }
 
     return(
         <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
+        <View style={styles.container}>
+          <View style={styles.UploadContainer}>
             <UploadThing isEditing={true} navigation={navigation} />
-            <TextInput onChangeText={((val) => setUser(val))} placeholder="First Name"/>
-            <TextInput onChangeText={((val) => setPass(val))} placeholder="Last Name"/>
-            <TextInput onChangeText={((val) => setEmail(val))} placeholder="Major"/>
-            <Button title="Submit" onPress ={() => SubmitButton(User, Pass, Email)}/>
+          </View>
+            <TextInput style={styles.input} onChangeText={((val) => setUser(val))} placeholder="First Name"/>
+            <TextInput style={styles.input} onChangeText={((val) => setPass(val))} placeholder="Last Name"/>
+            <TextInput style={styles.input} onChangeText={((val) => setEmail(val))} placeholder="Major"/>
+            <Button title="Submit" onPress ={() => submitHandler(User, Pass, Email)}/>
         </View>
         </KeyboardAvoidingView>
     );
@@ -87,24 +84,28 @@ export default NewUserScreen;
 
 
 const styles = StyleSheet.create({
-    container: {
+    
+  container: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
     },
-    innerContainer: {
-      padding: 20,
-      width: '80%',
-      backgroundColor: '#f0f0f0',
+    UploadContainer: {
+      alignItems:'center'
     },
+   
     label: {
       fontSize: 18,
       marginBottom: 10,
     },
+    
     input: {
-      height: 40,
+      width:'100%',
+      marginVertical: 4,
+      height: 50,
       borderWidth: 1,
+      borderRadius: 4,
       padding: 10,
+      backgroundColor: "#fff",
     },
   });
   

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, StyleSheet,ScrollView } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
 import CalendarPicker from 'react-native-calendar-picker';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import * as ImagePicker from 'expo-image-picker';
+import { CircularImage } from '../Components/CircleImage';
+import { getStorage, ref, uploadBytes,getDownloadURL } from "firebase/storage";
 
 
 export default function CreateEventScreen({ navigation, route }) {
@@ -15,8 +18,10 @@ export default function CreateEventScreen({ navigation, route }) {
   const [sponser, setSponser] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
-  
+  const storage = getStorage();
+  const [uploading, setUploading] = useState(false);
  
 
 
@@ -37,18 +42,46 @@ export default function CreateEventScreen({ navigation, route }) {
       return;
     }
     const createdBy = FIREBASE_AUTH.currentUser?.uid;
-    console.log(createdBy);
     HandleUserEvents(title, desc, sponser, date,createdBy); 
     setTitle("");
     setDesc("");
     setSponser("");
     setDate("");
-    navigation.goBack();
-    if (onRefresh) {
-      onRefresh();
-    }
+    
   };
+ 
+const handlePicture = async () => {
+  let _image = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  if (!_image.cancelled) {
+    setUploading(true); // Set uploading state to true
+    setSelectedImage(_image.uri);
+    const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
+    const response = await fetch(_image.uri);
+    const blob = await response.blob();
+
+    try {
+      const snapshot = await uploadBytes(storageRef, blob);
+      // The image is successfully uploaded, now get the download URL
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      console.log('Download URL:', downloadURL);
+      // You can save the downloadURL to your Firestore database if needed
+      setUploading(false); // Set uploading state to false after successful upload
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setUploading(false); // Set uploading state to false if there's an error
+    }
+  }
+};
   
+  useEffect(() => {
+    console.log("CreateEventScreen rerendered");
+  });
   return (
     <ScrollView style={styles.scrollView}>
     <View>
@@ -61,8 +94,10 @@ export default function CreateEventScreen({ navigation, route }) {
       <CalendarPicker onDateChange={onDateChange} selectedDayColor="#69B3E7" todayBackgroundColor="#FFFFFF" allowRangeSelection={false}/>
       <View style={styles.textStyle}>
         <Text style={styles.textStyle}> Selected Start Date :</Text>
-        <Text style={styles.textStyle}> {selectedStartDate ? selectedStartDate.toString() : ''} </Text>
-      </View>
+        <CircularImage imageUrl={selectedImage}/>
+      </View >
+      <View style={styles.buttonView}>
+        <Button onPress={handlePicture}>Picture</Button>
       <Button onPress={handleEnter}>Enter</Button>    
       <Button onPress={() => {                      
         navigation.goBack();                          
@@ -73,6 +108,7 @@ export default function CreateEventScreen({ navigation, route }) {
       }}>
         Dismiss
       </Button>
+      </View>
     </View>
     </ScrollView>
   );
@@ -94,5 +130,10 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: 'white',
     marginHorizontal: 10,
+  },
+  buttonView:{
+    padding:8,
+    paddingHorizontal:8,
+    justifyContent:'space-between',
   },
 });
