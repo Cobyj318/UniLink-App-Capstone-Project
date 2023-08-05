@@ -73,6 +73,7 @@ export default function UploadThing( {isEditing,navigation} ) {
       });
     if (!_image.canceled) {
         setImage(_image.uri);
+
     }
     closeActionSheet();
   };
