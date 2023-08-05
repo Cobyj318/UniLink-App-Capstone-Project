@@ -22,6 +22,7 @@ import UploadThing from './Components/uploadThing';
 import EventsScreen from './Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MessageScreen from './Screens/MessageScreen';
+import NetworkScreen from './Screens/NetworkScreen'; 
 import NewsScreen from './Screens/NewsScreen';
 import CreateEventScreen from './Screens/CreateEventScreen';
 import HomeScreen from './Screens/HomeScreen';
@@ -43,8 +44,10 @@ const eventsName='Events';
 const profileName='Profile';
 const messageName='Message';
 const newsName='News';
+const networkName='Network';
 const ChanScreen = 'ChannelScreen';
 const EventScreen='Event Screen';
+const networkScreen='Network Screen';
 export const CreateEventScreens='CreateEventScreen';
 export const Login='LoginScreen';
 const SignUp ='SignUpScreen';
@@ -79,7 +82,7 @@ export const TabNavigator = () => (
     screenOptions={({route})=>({
       tabBarActiveTintColor: '#3498db',
       tabBarInactiveTintColor: 'grey',
-      tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
+      tabBarLabelStyle: { paddingBottom: 3, fontSize: 10 },
       tabBarStyle: [{ display: 'flex' }, null],
       tabBarIcon: ({ focused, color, size }) => { // Add tabBarIcon for each screen
         let iconName;
@@ -89,8 +92,8 @@ export const TabNavigator = () => (
           iconName = focused ? 'calendar' : 'calendar-o';
         } else if (route.name === newsName) {
           iconName = focused ? 'newspaper-o' : 'newspaper-o';
-        } else if (route.name === messageName) {
-          iconName = focused ? 'envelope' : 'envelope-o';
+        } else if (route.name === networkName) {
+          iconName = focused ? 'user-plus' : 'user-plus';
         } else if (route.name === profileName) {
           iconName = focused ? 'user' : 'user-o';
         }
@@ -112,7 +115,7 @@ export const TabNavigator = () => (
       })}/>
     <Tab.Screen name={eventsName} component={EventStack} />
     <Tab.Screen name={newsName} component={NewsScreen}/>
-    <Tab.Screen name={messageName} component={MessageScreen}/>
+    <Tab.Screen name={networkName} component={NetworkScreen}/>
     <Tab.Screen name={profileName} component={ProfileScreen}/>
     </Tab.Navigator>
 );
@@ -144,6 +147,8 @@ function MainStack(){
         <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
+        <Stack.Screen name={messageName} component={MessageScreen} options={{headerShown: true}}/>
+        
 
     </Stack.Navigator>
   </NavigationContainer>
