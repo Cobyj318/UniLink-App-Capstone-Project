@@ -7,6 +7,7 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import RedLine from '../Components/RedLine';
 import { neutralColors, primaryColors } from '../Components/Colors';
 import { fetchUserData } from '../Components/UserData';
+import { CircularImage } from '../Components/CircleImage';
 
 const HomeScreen = ({ navigation }) => {
   const [users, setUsers] = useState([]);
@@ -32,7 +33,8 @@ const HomeScreen = ({ navigation }) => {
     const screenHeight = Dimensions.get('window').height;
     const viewHeightPercentage = 15;
     const viewHeight = (screenHeight * viewHeightPercentage) / 100;
-
+    const userImage=userDetails ? userDetails.Profile_Image : '';
+    console.log('user image is ', userImage);
     return (
       <View style={styles.container}>
         {isLoading ? ( // Check if data is loading and show the ActivityIndicator
@@ -44,6 +46,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={[styles.header, { height: viewHeight }]}>
             <Text style={styles.headerText}>Welcome Back, {userEmail}</Text>
         </View>
+        <CircularImage imageUrl={userImage}/>
         <RedLine />
         <Text style={styles.titlesTextfirst}>Events</Text>
         <ScrollView horizontal style={styles.topScroll}>

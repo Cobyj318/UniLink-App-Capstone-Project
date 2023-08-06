@@ -1,17 +1,14 @@
 import * as React from 'react';
+import { useState,useEffect } from 'react';
 import { View, Text, TextInput,  Button, Alert, StyleSheet,KeyboardAvoidingView } from 'react-native';
-/*
-import { ref, onValue } from 'firebase/database'
-import { ref, onValue, push, update, remove } from 'firebase/database';
-import { addDoc, collection } from "@firebase/firestore"
-*/
+
 import { storage, db } from "../../src/firebase_init/firebase"
-import { ref, uploadBytes } from "firebase/storage"
 import HandleUserSubmit from '../../src/firebase_init/handleUserSubmit'
 import UploadThing from '../Components/uploadThing';
 import CamScreen from './CamScreen';
 import { ExistingUser } from "../MainStack";
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { getStorage, ref, uploadBytes,getDownloadURL } from "firebase/storage";
 
 /**
  * A React component representing the screen for creating a new user.
@@ -22,6 +19,8 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
 const NewUserScreen = ( {navigation} ) => {
     /*User Info Inits*/
+  const [Image_, setImage_] = useState("");
+  const [uploading, setUploading] = useState(false);
 
     /**
      * @type {string} User - The username entered by the user.
@@ -57,20 +56,38 @@ const NewUserScreen = ( {navigation} ) => {
      * @param {string} Email - The email entered by the user.
      * @returns {void}
      */
-    const submitHandler = (Username, Password, Email) => {
+    const submitHandler = async (Username, Password, Email) => {
         if (Username === "" || Password === "" || Email === ""){
             Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK',},]);
         } else{
-            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid);
+          const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
+          const response = await fetch(Image_);
+          const blob = await response.blob();
+      
+          try {
+            const snapshot = await uploadBytes(storageRef, blob);
+            // The image is successfully uploaded, now get the download URL
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            console.log('Download URL:', downloadURL);
+            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid,downloadURL);
             navigation.navigate(ExistingUser);
+
+            setUploading(false); // Set uploading state to false after successful upload
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            setUploading(false); // Set uploading state to false if there's an error
+          }
+          
         }
     }
-
+    useEffect(() => {
+      console.log(Image_);
+    });
     return(
         <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.container}>
           <View style={styles.UploadContainer}>
-            <UploadThing isEditing={true} navigation={navigation} />
+            <UploadThing isEditing={true} navigation={navigation} setImage_={setImage_}/>
           </View>
             <TextInput style={styles.input} onChangeText={((val) => setUser(val))} placeholder="First Name"/>
             <TextInput style={styles.input} onChangeText={((val) => setPass(val))} placeholder="Last Name"/>

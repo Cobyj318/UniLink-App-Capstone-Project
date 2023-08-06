@@ -78,7 +78,7 @@ const CustomButton = ({ onPress }) => (
 );
 const MessagesButton = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
-    <Icon name="envelope-o" size={24} color="#3498db" />
+    <Icon name="comment-o" size={24} color="#3498db" />
   </TouchableOpacity>
 );
 export const TabNavigator = () => (

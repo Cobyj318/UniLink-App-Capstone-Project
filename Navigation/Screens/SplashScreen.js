@@ -31,7 +31,7 @@ export default function SplashScreen({ navigation }) {
               {/* Buttons */}
               <View style={styles.buttonContainer}>
                 {/* Sign Up Button */}
-                <Button onPress={() => navigation.navigate(NewUserScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
+                <Button onPress={() => navigation.navigate(SignUpScreen)} mode="contained" style={styles.Signup} buttonColor={'#cb333b'}>Sign Up</Button>
                 {/* Existing User Button */}
                 <Button onPress={() => navigation.navigate(LoginScreen)} mode="contained" style={styles.Existinguser} buttonColor={'#cb333b'}>Existing User</Button>
               </View>

@@ -18,6 +18,8 @@ export default function CreateEventScreen({ navigation, route }) {
   const [sponser, setSponser] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
+  const [Image_link, setImage_link] = useState("");
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const storage = getStorage();
@@ -31,22 +33,45 @@ export default function CreateEventScreen({ navigation, route }) {
       const index = datestring.indexOf('2023')+4;
       setDate(datestring.substring(0,index));
   };
-  const isFormValid = () => {
+  const isFormValid =  () => {
     return title.trim() !== "" && desc.trim() !== "" && sponser.trim() !== "" && date.trim() !== "";
   };
   // Function to handle event creation
-  const handleEnter = () => {
+  const handleEnter = async() => {
     if (!isFormValid()) {
       // Alert the user to fill out all fields
       alert("Please fill out all fields before entering the event.");
       return;
     }
-    const createdBy = FIREBASE_AUTH.currentUser?.uid;
-    HandleUserEvents(title, desc, sponser, date,createdBy); 
-    setTitle("");
-    setDesc("");
-    setSponser("");
-    setDate("");
+    const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
+    const response = await fetch(selectedImage);
+    const blob = await response.blob();
+
+    try {
+      const snapshot = await uploadBytes(storageRef, blob);
+      // The image is successfully uploaded, now get the download URL
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      setImage_link(downloadURL);
+      console.log('Download URL:', downloadURL);
+      // You can save the downloadURL to your Firestore database if needed
+      const createdBy = FIREBASE_AUTH.currentUser?.uid;
+      HandleUserEvents(title, desc, sponser, date,createdBy,downloadURL); 
+      setTitle("");
+      setDesc("");
+      setSponser("");
+      setDate("");
+      navigation.goBack();
+      if (onRefresh) {
+      onRefresh();
+      }
+      setUploading(false); // Set uploading state to false after successful upload
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setUploading(false); // Set uploading state to false if there's an error
+    }
+    console.log('After Loop');
+
+    
     
   };
  
@@ -61,21 +86,6 @@ const handlePicture = async () => {
   if (!_image.cancelled) {
     setUploading(true); // Set uploading state to true
     setSelectedImage(_image.uri);
-    const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
-    const response = await fetch(_image.uri);
-    const blob = await response.blob();
-
-    try {
-      const snapshot = await uploadBytes(storageRef, blob);
-      // The image is successfully uploaded, now get the download URL
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      console.log('Download URL:', downloadURL);
-      // You can save the downloadURL to your Firestore database if needed
-      setUploading(false); // Set uploading state to false after successful upload
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      setUploading(false); // Set uploading state to false if there's an error
-    }
   }
 };
   
