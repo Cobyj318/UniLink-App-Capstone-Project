@@ -1,17 +1,14 @@
 import * as React from 'react';
+import { useState,useEffect } from 'react';
 import { View, Text, TextInput,  Button, Alert, StyleSheet,KeyboardAvoidingView } from 'react-native';
-/*
-import { ref, onValue } from 'firebase/database'
-import { ref, onValue, push, update, remove } from 'firebase/database';
-import { addDoc, collection } from "@firebase/firestore"
-*/
+
 import { storage, db } from "../../src/firebase_init/firebase"
-import { ref, uploadBytes } from "firebase/storage"
 import HandleUserSubmit from '../../src/firebase_init/handleUserSubmit'
 import UploadThing from '../Components/uploadThing';
 import CamScreen from './CamScreen';
 import { ExistingUser } from "../MainStack";
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { getStorage, ref, uploadBytes,getDownloadURL } from "firebase/storage";
 
 /**
  * A React component representing the screen for creating a new user.
@@ -20,9 +17,10 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
  * @returns {JSX.Element} The JSX representation of the new user screen.
  */
 
-
 const NewUserScreen = ( {navigation} ) => {
     /*User Info Inits*/
+  const [Image_, setImage_] = useState("");
+  const [uploading, setUploading] = useState(false);
 
     /**
      * @type {string} User - The username entered by the user.
@@ -58,27 +56,43 @@ const NewUserScreen = ( {navigation} ) => {
      * @param {string} Email - The email entered by the user.
      * @returns {void}
      */
-    const submitHandler = (Username, Password, Email) => {
+    const submitHandler = async (Username, Password, Email) => {
         if (Username === "" || Password === "" || Email === ""){
             Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK',},]);
         } else{
-            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid);
+          const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
+          const response = await fetch(Image_);
+          const blob = await response.blob();
+      
+          try {
+            const snapshot = await uploadBytes(storageRef, blob);
+            // The image is successfully uploaded, now get the download URL
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            console.log('Download URL:', downloadURL);
+            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid,downloadURL);
+            navigation.navigate(ExistingUser);
+
+            setUploading(false); // Set uploading state to false after successful upload
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            setUploading(false); // Set uploading state to false if there's an error
+          }
+          
         }
     }
-
-    const SubmitButton=(Username, Password, Email)=>{
-        submitHandler(Username, Password, Email);
-        navigation.navigate(ExistingUser);
-    }
-
+    useEffect(() => {
+      console.log(Image_);
+    });
     return(
         <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            <UploadThing isEditing={true} navigation={navigation} />
-            <TextInput onChangeText={((val) => setUser(val))} placeholder="First Name"/>
-            <TextInput onChangeText={((val) => setPass(val))} placeholder="Last Name"/>
-            <TextInput onChangeText={((val) => setEmail(val))} placeholder="Major"/>
-            <Button title="Submit" onPress ={() => SubmitButton(User, Pass, Email)}/>
+        <View style={styles.container}>
+          <View style={styles.UploadContainer}>
+            <UploadThing isEditing={true} navigation={navigation} setImage_={setImage_}/>
+          </View>
+            <TextInput style={styles.input} onChangeText={((val) => setUser(val))} placeholder="First Name"/>
+            <TextInput style={styles.input} onChangeText={((val) => setPass(val))} placeholder="Last Name"/>
+            <TextInput style={styles.input} onChangeText={((val) => setEmail(val))} placeholder="Major"/>
+            <Button title="Submit" onPress ={() => submitHandler(User, Pass, Email)}/>
         </View>
         </KeyboardAvoidingView>
     );
@@ -87,24 +101,28 @@ export default NewUserScreen;
 
 
 const styles = StyleSheet.create({
-    container: {
+    
+  container: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
     },
-    innerContainer: {
-      padding: 20,
-      width: '80%',
-      backgroundColor: '#f0f0f0',
+    UploadContainer: {
+      alignItems:'center'
     },
+   
     label: {
       fontSize: 18,
       marginBottom: 10,
     },
+    
     input: {
-      height: 40,
+      width:'100%',
+      marginVertical: 4,
+      height: 50,
       borderWidth: 1,
+      borderRadius: 4,
       padding: 10,
+      backgroundColor: "#fff",
     },
   });
   

@@ -43,7 +43,7 @@ const EventDetailsScreen = () => {
       <Text style={styles.eventTitle}>{event.Title}</Text>
       <Text style={styles.eventDate}>{event.Date}</Text>
       <Text style={styles.eventLocation}>{dummyevent.location}</Text>
-      <Text style={styles.eventDescription}>{dummyevent.description}</Text>
+      <Text style={styles.eventDescription}>{event.Description}</Text>
       <View>
       <Button>Edit</Button>
       </View>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   eventDescription: {
     fontSize: 18,
     marginTop: 20,
-    textAlign: 'center',
+    textAlign: 'left',
     paddingHorizontal: 20,
   },
   blueHeadertext:{

@@ -1,7 +1,7 @@
 import { addDoc, collection,serverTimestamp } from "@firebase/firestore"
 import { firestore } from "./firebase"
 
-const HandleUserEvents = (Titledata, Descdata,Sponserdata,Datedata,CreatedbyData) => {
+const HandleUserEvents = (Titledata, Descdata,Sponserdata,Datedata,CreatedbyData,ImageLinkData) => {
     const ref = collection(firestore, "Event_data") 
     console.log(CreatedbyData);
     let data = {
@@ -11,6 +11,7 @@ const HandleUserEvents = (Titledata, Descdata,Sponserdata,Datedata,CreatedbyData
         Date:Datedata,
         Creator:CreatedbyData,
         createdAt: serverTimestamp(),
+        Image_Link:ImageLinkData
     }  
     try {
         addDoc(ref, data)   

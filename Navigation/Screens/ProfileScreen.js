@@ -18,11 +18,13 @@ export default function ProfileScreen({navigation}){
         isEditing(!edit);  
     }
 
+
      return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       {edit ? <UploadThing navigation={null} isEditing={true} /> : <UploadThing navigation={null} isEditing={false} />}
 
       {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} value={nameEntry} placeholder={"Name"} />}
+
 
       {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} placeholder={"Bio"} value={bioEntry} />}
 
