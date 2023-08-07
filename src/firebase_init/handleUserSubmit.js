@@ -17,6 +17,11 @@ const HandleUserSubmit = (FirsNamedata, LastNamedata, Majordata,IdData) => {
         LastName: LastNamedata,
         Major: Majordata,
         Id:IdData,
+        Connections: [],
+        Skills: [],
+        Projects: [], 
+        Experience: ""
+
     }
     
     try {
