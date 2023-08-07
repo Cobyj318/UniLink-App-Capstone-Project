@@ -19,7 +19,7 @@ const theme = {
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="human-greeting" />;
 
-const NewsCardV2 = ({user, onConnect}) => {
+const ConnectCard = ({user, onConnect}) => {
 
   
   const [isExpanded, setIsExpanded] = useState(false);
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewsCardV2;
+export default ConnectCard;
