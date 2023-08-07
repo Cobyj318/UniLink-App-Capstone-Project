@@ -18,7 +18,7 @@ import { Cams } from '../MainStack';
  * @returns {JSX.Element} The JSX representation of the image uploader.
  */
 
-export default function UploadThing( {isEditing,navigation} ) {
+export default function UploadThing( {isEditing,navigation,setImage_} ) {
 
   const handlePress = () => { navigation.navigate(Cams);
                               closeActionSheet();};
@@ -79,6 +79,7 @@ export default function UploadThing( {isEditing,navigation} ) {
       });
     if (!_image.canceled) {
         setImage(_image.uri);
+        setImage_(_image.uri);
 
     }
     closeActionSheet();
