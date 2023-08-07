@@ -5,6 +5,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
 import NewUserScreen from './NewUserScreen';
 import UploadThing from '../Components/uploadThing';
+import {primaryColors, neutralColors} from "../Components/Colors"
 
 /**
  * @typedef {Object} PhotoObject
@@ -127,7 +128,11 @@ const CamScreen = ( {navigation, pageFrom} ) => {
     return(
         <Camera style={{flex:1,}} ref ={camRef}>
             <View style={{ flex:1, justifyContent:"flex-end",}}>
-                <Button style={styles.takePhotoBtn} title={"Take Pic"} onPress={takePic}/>
+                <View style={styles.photoBtnContainer}>
+                    <TouchableOpacity style={styles.takePhotoBtn} onPress={takePic}>
+                        <Text> </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </Camera>
     )
@@ -135,9 +140,23 @@ const CamScreen = ( {navigation, pageFrom} ) => {
 
 export default CamScreen;
 
+
+
 const styles = StyleSheet.create({
     takePhotoBtn: {
-        backgroundColor: "#ffffff",
-        color: "#000000"
+        backgroundColor: primaryColors.red,
+        borderRadius: 45,
+        borderWidth:15,
+        borderColor:neutralColors.darkblue,
+        width:80,
+        height:80,
+        alignSelf:"center",
+        marginBottom:15,
+        marginTop:15,
+        
     },
+    photoBtnContainer:{
+        backgroundColor:'rgba(0, 0, 0, 0.8)',
+        backfaceVisibility: 'hidden',
+    }
 })

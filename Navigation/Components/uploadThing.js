@@ -7,6 +7,8 @@ import CamScreen from '../Screens/CamScreen';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { Cams } from '../MainStack';
+
+
 /**
  * @property {string} uri - The URI of the selected image.
 
@@ -56,6 +58,10 @@ export default function UploadThing( {isEditing,navigation} ) {
   useEffect(() => {
     checkForCameraRollPermission()
   }, []);
+
+  const editFromCamera = (newPhoto) => {
+    setImage(newPhoto);
+  }
   
   /**
    * Opens the image picker to select an image from the camera roll.
@@ -118,6 +124,7 @@ export default function UploadThing( {isEditing,navigation} ) {
     );
   };
 }
+
 const imageUploaderStyles=StyleSheet.create({
     container:{
         elevation:2,
