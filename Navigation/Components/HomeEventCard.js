@@ -22,7 +22,7 @@ const NewsCard = ({ user }) => (
         <Text variant="titleLarge">{user.Title}</Text>
         <Text variant="bodyMedium">{user.Description.slice(0,70)+"..."}</Text>
       </Card.Content>
-      <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+      <Card.Cover source={{ uri: user.Image_Link}} />
       <Card.Actions>
         <Button>Cancel</Button>
         <Button>Ok</Button>

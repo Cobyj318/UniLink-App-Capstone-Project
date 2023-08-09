@@ -55,7 +55,7 @@ export default function CreateEventScreen({ navigation, route }) {
       console.log('Download URL:', downloadURL);
       // You can save the downloadURL to your Firestore database if needed
       const createdBy = FIREBASE_AUTH.currentUser?.uid;
-      HandleUserEvents(title, desc, sponser, date,createdBy,downloadURL); 
+      HandleUserEvents(title, desc, sponser, date,location,createdBy,downloadURL); 
       setTitle("");
       setDesc("");
       setSponser("");

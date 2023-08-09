@@ -1,9 +1,15 @@
 import * as React from 'react' ;
+import { useState, useEffect } from 'react';
 import { View, Text, Image, Button, TextInput, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler'; // Import TouchableOpacity for custom button styling
 import handleUserSubmit from '../../src/firebase_init/handleUserSubmit';
 import UploadThing from '../Components/uploadThing'
-
-
+import PortfolioScreen from './PortfolioScreen';
+import { fetchData } from '../DBFunctions/FetchData';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { fetchUserData } from '../Components/UserData';
+import { CircularImage } from '../Components/CircleImage';
+  
 export default function ProfileScreen({navigation}){
     //const submithandler = () => {  
     //}
@@ -13,21 +19,49 @@ export default function ProfileScreen({navigation}){
     const editProfile = () => {
         isEditing(!edit);  
     }
+    const [users, setUsers] = useState([]);
+    const [refreshing, setRefreshing] = React.useState(false);
+    const [userDetails, setUserDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
 
-    return(
-        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-            {edit ? <UploadThing navigation={navigation} isEditing={true}/> : <UploadThing navigation={navigation} isEditing={false}/>}
+    useEffect(() => {
+        const fetchDataAndUserData = async () => {
+        setIsLoading(true); // Set loading state to true when fetching data
+        const usersData = await fetchData();
+        setUsers(usersData);
+        const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+        setUserDetails(userData[0]);
+        setIsLoading(false); // Set loading state to false when data fetching is complete
+        };
+        fetchDataAndUserData();  
+        },[]);
 
-            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)}/> : <TextInput style={{flex:1}} editable={false}  value={nameEntry} placeholder={"Name"} />}
+  
+    const userImage=userDetails ? userDetails.Profile_Image : '';
+    console.log('user image is ', userImage);
+    
 
-            {edit ? <TextInput style={{flex:1}} editable={true} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)}/> : <TextInput style={{flex:1}} editable={false} placeholder={"Bio"} value={bioEntry}/>}
+     return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {edit ? <UploadThing navigation={null} isEditing={true} /> : <View style={{paddingTop:'10%'}}><CircularImage imageUrl={userImage}/></View>}
 
-            <Text style={{flex:1}}>Friends</Text>
-            {edit ? <Button style={{flex:1}} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"}/> : <Button style={{flex:1}} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"}/>}    
-        </View>
-    );
-        
+      {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} value={nameEntry} placeholder={"Name"} />}
+
+
+      {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} placeholder={"Bio"} value={bioEntry} />}
+
+      <Text style={{ flex: 1 }}>Friends</Text>
+
+      {/* Add the Portfolio button */}
+      <TouchableOpacity onPress={() => navigation.navigate('PortfolioScreen')}>
+        <Text style={{ color: '#3498db', marginVertical: 10 }}>Portfolio</Text>
+      </TouchableOpacity>
+
+      {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
+    </View>
+  );
 }
+
 
 const styles = StyleSheet.create({
     notEditing:{

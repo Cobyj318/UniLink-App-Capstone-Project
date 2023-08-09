@@ -30,6 +30,7 @@ import EventDetailsScreen from './Screens/EventDetails';
 import LoginScreen from './Screens/LoginScreen';
 import SignUpScreen from './Screens/SignUpScreen';
 import NotifScreen from './Screens/NotifScreen';
+import PortfolioScreen from './Screens/PortfolioScreen';
 
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
@@ -48,6 +49,7 @@ const networkName='Network';
 const ChanScreen = 'ChannelScreen';
 const EventScreen='Event Screen';
 const networkScreen='Network Screen';
+const portfolioName = 'PortfolioScreen';
 export const CreateEventScreens='CreateEventScreen';
 export const Login='LoginScreen';
 const SignUp ='SignUpScreen';
@@ -158,9 +160,8 @@ function MainStack(){
         <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
         <Stack.Screen name={messageName} component={MessageScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={portfolioName} component={PortfolioScreen} options={{headerShown: true}}/>
         <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
-
-        
 
     </Stack.Navigator>
   </NavigationContainer>
