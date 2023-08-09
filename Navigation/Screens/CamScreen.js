@@ -6,6 +6,9 @@ import { shareAsync } from 'expo-sharing';
 import NewUserScreen from './NewUserScreen';
 import UploadThing from '../Components/uploadThing';
 import {primaryColors, neutralColors} from "../Components/Colors"
+import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
+import { storage } from "../../src/firebase_init/firebase";
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
 /**
  * @typedef {Object} PhotoObject
@@ -99,13 +102,27 @@ const CamScreen = ( {navigation, pageFrom} ) => {
          * @function savePhoto
          * @returns {void}
          */
-        let savePhoto = () => {
+        let savePhoto = async () => {
             /*MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
-                //navigation.navigate(NewUserScreen);
             });*/
-            navigation.goBack();
+            const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
+            //if (){}
+                const response = await fetch(photo);
+                const blob = await response.blob();
+            
+                try {
+                const snapshot = await uploadBytes(storageRef, blob);
+                // The image is successfully uploaded, now get the download URL
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                console.log('Download URL:', downloadURL);
 
+                setUploading(false); // Set uploading state to false after successful upload
+                } catch (error) {
+                console.error("Error uploading image:", error);
+                setUploading(false); // Set uploading state to false if there's an error
+                }
+                navigation.goBack();
         };
 
         /**

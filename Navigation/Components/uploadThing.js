@@ -7,6 +7,10 @@ import CamScreen from '../Screens/CamScreen';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { Cams } from '../MainStack';
+import { updateDoc, deleteDoc, doc, collection, query, where } from 'firebase/firestore';
+import { firestore, storage } from '../../src/firebase_init/firebase';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase'; 
+import { fetchUserPfp } from './RetreiveUserPfp';
 
 
 /**
@@ -18,10 +22,20 @@ import { Cams } from '../MainStack';
  * @returns {JSX.Element} The JSX representation of the image uploader.
  */
 
-export default function UploadThing( {isEditing,navigation,setImage_} ) {
-
+export default function UploadThing( {isEditing,navigation} ) {
+  
+  const userId = FIREBASE_AUTH.currentUser?.uid;
+  
+  /*if (){
+    fetchUserPfp(userId);
+  }*/
+  const routes = navigation.getState()?.routes;
+  const prevRoute = routes[routes.length - 1];
+  console.log(prevRoute);
   const handlePress = () => { navigation.navigate(Cams);
-                              closeActionSheet();};
+                              closeActionSheet();
+                            
+                            };
   /**
    * @type {Array<Object>} actionItems - An array of action items to be displayed in the action sheet.
    */
@@ -58,10 +72,7 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
   useEffect(() => {
     checkForCameraRollPermission()
   }, []);
-
-  const editFromCamera = (newPhoto) => {
-    setImage(newPhoto);
-  }
+  if (Profile_Image) {setImage(Profile_Image)};
   
   /**
    * Opens the image picker to select an image from the camera roll.
@@ -78,12 +89,38 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
         quality: 1,
       });
     if (!_image.canceled) {
-        setImage(_image.uri);
-        setImage_(_image.uri);
-
+      updatePFP(_image.uri);
+      setImage(_image.uri);
     }
     closeActionSheet();
   };
+
+  const updatePFP = async (_image) =>{
+    const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
+    const response = await fetch(_image);
+    const blob = await response.blob();
+
+    try {
+    const snapshot = await uploadBytes(storageRef, blob);
+    // The image is successfully uploaded, now get the download URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    console.log('Download URL:', downloadURL);
+
+    setUploading(false); // Set uploading state to false after successful upload
+    } catch (error) {
+    console.error("Error uploading image:", error);
+    setUploading(false); // Set uploading state to false if there's an error
+    }
+
+    try{
+      const pfpRef = doc(firestore, 'User_data', userId); 
+      await updateDoc(pfpRef, {                             
+        Profile_Image: downloadURL
+      });
+    } catch (error) {console.log(error)};
+  };
+
+
 
   /**
    * Checks if camera roll permissions are granted and alerts the user if they are not.
