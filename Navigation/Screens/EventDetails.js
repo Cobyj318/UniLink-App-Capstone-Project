@@ -1,53 +1,107 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import React,{useState} from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions,TextInput,KeyboardAvoidingView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
 import { CircularImage } from '../Components/CircleImage';
 import { accentColors, primaryColors } from '../Components/Colors';
 import RedLine from '../Components/RedLine';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
 const EventDetailsScreen = () => {
-  function RandomInt() {
-    const randomNum = Math.floor(Math.random() * (701 - 500) + 500); // Generate a random number between 0 and 700
-    const randomNumAsString = randomNum.toString();// Convert the random number to a string
-    return randomNumAsString;
-  }
-
   const route = useRoute();
-  const { event } = route.params; // Access the 'event' data from route.params
-  const dummyevent = {
-    title: 'Sample Event',
-    date: 'August 30, 2023',
-    location: 'Sample Venue, City',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu lectus ac ligula sagittis malesuada in et sapien.',
-    image: { uri: 'https://picsum.photos/'+RandomInt() },
-  };
+  const { event } = route.params;
+
+  const [editMode, setEditMode] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(event.Title);
+  const [editedDate, setEditedDate] = useState(event.Date);
+  const [editedLocation, setEditedLocation] = useState(event.Location);
+  const [editedDescription, setEditedDescription] = useState(event.Description);
+
   const screenHeight = Dimensions.get('window').height;
   const viewHeightPercentage = 30;
   const viewHeight = (screenHeight * viewHeightPercentage) / 100;
 
+  const User_ID = FIREBASE_AUTH.currentUser?.uid;
+
+  const handleEditButton = () => {
+    if (event.Creator === User_ID) {
+      setEditMode(true);
+    }
+  };
+  const handleSaveEvent = async (eventId) => {
+    try {
+      const eventRef = doc(firestore, 'Event_data', eventId); // Construct the reference to the event document in "Event_data" collection
+      await updateDoc(eventRef, {                             // Update the document in Firebase with the edited data
+        Title: editedTitle,
+        Description: editedDescription,
+      });
+      setEditMode(false);                                     // Exit edit mode
+      alert('Event edited successfully.');
+    } catch (error) {console.error('Error editing event:', error);}};
+
+  const handleSaveButton = () => {
+    // Implement the logic to update the event data in your Firebase or state management here
+    setEditMode(false);
+    // Display a success message or navigate back to the previous screen
+  };
+
   return (
+    <KeyboardAvoidingView style={{flex:1,}} behavior="padding" enabled>
     <ScrollView contentContainerStyle={styles.container}>
-       <View style={[styles.blueHeader,{ height: viewHeight }]}>
-        <CircularImage imageUrl='https://picsum.photos/700'/>
+      <View style={[styles.blueHeader, { height: viewHeight }]}>
+        <CircularImage imageUrl={event.Image_Link} />
         <View style={styles.textContainer}>
-          <Text style={styles.blueHeadertext}  >{event.Title}</Text>
+          <Text style={styles.blueHeadertext}>{event.Title}</Text>
           <Text style={styles.blueHeadertext}>{event.Date}</Text>
           <View style={styles.sponsorContainer}>
-            <Text style={styles.sponsertext }>{event.Sponser}</Text>
+            <Text style={styles.sponsertext}>{event.Sponser}</Text>
           </View>
         </View>
       </View>
-      <RedLine/>
-      <Text style={styles.eventTitle}>{event.Title}</Text>
-      <Text style={styles.eventDate}>{event.Date}</Text>
-      <Text style={styles.eventLocation}>{dummyevent.location}</Text>
-      <Text style={styles.eventDescription}>{event.Description}</Text>
-      <View>
-      <Button>Edit</Button>
-      </View>
+      <RedLine />
+      {editMode ? (
+        <React.Fragment>
+          <TextInput
+            label="Title"
+            value={editedTitle}
+            onChangeText={setEditedTitle}
+            style={styles.input}
+          />
+          <TextInput
+            label="Date"
+            value={editedDate}
+            onChangeText={setEditedDate}
+            style={styles.input}
+          />
+          <TextInput
+            label="Location"
+            value={editedLocation}
+            onChangeText={setEditedLocation}
+            style={styles.input}
+          />
+          <TextInput
+            label="Description"
+            value={editedDescription}
+            onChangeText={setEditedDescription}
+            style={styles.input_multiline} // Use your custom multiline input style
+            multiline // Set multiline to true
+            numberOfLines={20} // You can adjust this value as needed
+          />
+          <Button onPress={handleSaveButton}>Save</Button>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <Text style={styles.eventTitle}>{event.Title}</Text>
+          <Text style={styles.eventDate}>{event.Date}</Text>
+          <Text style={styles.eventLocation}>{event.Location}</Text>
+          <Text style={styles.eventDescription}>{event.Description}</Text>
+          {event.Creator === User_ID && (
+            <Button onPress={handleEditButton}>Edit</Button>
+          )}
+        </React.Fragment>
+      )}
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -104,6 +158,24 @@ const styles = StyleSheet.create({
   },
   sponsorContainer: {
     flexDirection:'row',
+    paddingLeft:50,
+  },
+  input: {
+    marginVertical: 4,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 10,
+    backgroundColor: "#fff",
+  },
+  input_multiline: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 10,
+    backgroundColor: "#fff",
+    height: 200, // Adjust the height to your desired value
+    textAlignVertical: 'top', // Align the text at the top of the input
   },
   
 });

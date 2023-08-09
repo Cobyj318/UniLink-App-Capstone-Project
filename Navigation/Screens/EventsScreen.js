@@ -29,8 +29,8 @@ export default function EventsScreen({ navigation }) {
   useEffect(() => {
     const fetchEventData = async () => {
       try {
-        const usersData = await fetchData();
-        setUsers(usersData);
+        const eventData = await fetchData();
+        setUsers(eventData);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

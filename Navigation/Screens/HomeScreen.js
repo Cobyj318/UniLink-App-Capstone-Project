@@ -35,6 +35,7 @@ const HomeScreen = ({ navigation }) => {
     const viewHeight = (screenHeight * viewHeightPercentage) / 100;
     const userImage=userDetails ? userDetails.Profile_Image : '';
     console.log('user image is ', userImage);
+    
     return (
       <View style={styles.container}>
         {isLoading ? ( // Check if data is loading and show the ActivityIndicator
@@ -46,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={[styles.header, { height: viewHeight }]}>
             <Text style={styles.headerText}>Welcome Back, {userEmail}</Text>
         </View>
-        <CircularImage imageUrl={userImage}/>
+        {/* <CircularImage imageUrl={userImage}/> */}
         <RedLine />
         <Text style={styles.titlesTextfirst}>Events</Text>
         <ScrollView horizontal style={styles.topScroll}>

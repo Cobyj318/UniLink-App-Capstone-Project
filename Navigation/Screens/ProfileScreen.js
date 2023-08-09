@@ -1,12 +1,14 @@
 import * as React from 'react' ;
+import { useState, useEffect } from 'react';
 import { View, Text, Image, Button, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler'; // Import TouchableOpacity for custom button styling
 import handleUserSubmit from '../../src/firebase_init/handleUserSubmit';
 import UploadThing from '../Components/uploadThing'
 import PortfolioScreen from './PortfolioScreen';
-
-
-
+import { fetchData } from '../DBFunctions/FetchData';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { fetchUserData } from '../Components/UserData';
+import { CircularImage } from '../Components/CircleImage';
   
 export default function ProfileScreen({navigation}){
     //const submithandler = () => {  
@@ -17,11 +19,31 @@ export default function ProfileScreen({navigation}){
     const editProfile = () => {
         isEditing(!edit);  
     }
+    const [users, setUsers] = useState([]);
+    const [refreshing, setRefreshing] = React.useState(false);
+    const [userDetails, setUserDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
 
+    useEffect(() => {
+        const fetchDataAndUserData = async () => {
+        setIsLoading(true); // Set loading state to true when fetching data
+        const usersData = await fetchData();
+        setUsers(usersData);
+        const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+        setUserDetails(userData[0]);
+        setIsLoading(false); // Set loading state to false when data fetching is complete
+        };
+        fetchDataAndUserData();  
+        },[]);
+
+  
+    const userImage=userDetails ? userDetails.Profile_Image : '';
+    console.log('user image is ', userImage);
+    
 
      return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {edit ? <UploadThing navigation={null} isEditing={true} /> : <UploadThing navigation={null} isEditing={false} />}
+      {edit ? <UploadThing navigation={null} isEditing={true} /> : <View style={{paddingTop:'10%'}}><CircularImage imageUrl={userImage}/></View>}
 
       {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} value={nameEntry} placeholder={"Name"} />}
 

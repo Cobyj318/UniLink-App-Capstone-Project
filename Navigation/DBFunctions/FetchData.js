@@ -8,13 +8,16 @@ export const fetchData = async () => {
     const querySnapshot = await getDocs(eventsQuery);
     const usersData = [];
     querySnapshot.forEach((doc) => {
-      const { Title, Description, Sponser, Date } = doc.data();
+      const { Title, Description, Sponser, Date,Location,Creator,Image_Link } = doc.data();
       usersData.push({
         id: doc.id,
         Title,
         Description,
         Sponser,
         Date,
+        Image_Link,
+        Location,
+        Creator,
       });
     });
     return usersData;
