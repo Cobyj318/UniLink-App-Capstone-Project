@@ -1,15 +1,15 @@
 import React,{ useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, StatusBar, SafeAreaView, Text, Dimensions, ActivityIndicator,RefreshControl  } from 'react-native';
+import { View, ScrollView, StyleSheet, StatusBar, Text, Dimensions, ActivityIndicator,RefreshControl  } from 'react-native';
 import HomeEventCard from '../Components/HomeEventCard';
-import { fetchData } from '../DBFunctions/FetchData';
-import onRefresh from '../DBFunctions/RefreshFunctions';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import RedLine from '../Components/RedLine';
+import onRefresh from '../DBFunctions/RefreshFunctions';
+import { fetchData } from '../DBFunctions/FetchData';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { neutralColors, primaryColors } from '../Components/Colors';
-import { fetchUserData } from '../Components/UserData';
-import { CircularImage } from '../Components/CircleImage';
+import { fetchUserData} from '../Components/UserData';
+import { fetchtagData } from '../DBFunctions/FetchData';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [userDetails, setUserDetails] = useState(null);
@@ -65,7 +65,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           ))}
         </ScrollView>
-        <Text style={styles.titlesText}>Clubs</Text>
+        <Text style={styles.titlesText}>Projects</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
           {users.map((user) => (
             <View style={styles.card} key={user.id}>
@@ -81,12 +81,12 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   topScroll: {
-    maxHeight: 400,
+    maxHeight: 460,
     marginTop: 10,
     flexDirection: 'row',
   },
   bottomScroll: {
-    maxHeight: 400,
+    maxHeight: 460,
     marginBottom: 10,
     flexDirection: 'row',
   },
