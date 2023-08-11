@@ -20,6 +20,7 @@ const HandleUserSubmit = (FirsNamedata, LastNamedata, Majordata,IdData,AvatarDat
         Connections: [],
         Skills: [],
         Projects: [], 
+        Interests: [],
         Experience: "",
 
 

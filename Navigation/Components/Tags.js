@@ -1,39 +1,62 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const Tags = ({ tags, onTagAdd, color }) => {
-  const [customTag, setCustomTag] = useState('');
+const Tags = ({ tags, color, openDropdown, onDeleteTag, style }) => {
+  const [selectedTag, setSelectedTag] = useState(null);
 
-  const addTag = (tag) => {
-    if (tag.trim() !== '') {
-      onTagAdd(tag);
-      setCustomTag('');
-    }
+  const openDeleteModal = (tag) => {
+    setSelectedTag(tag);
+  };
+
+  const closeDeleteModal = () => {
+    setSelectedTag(null);
   };
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={[styles.tagsContainer, style]}>
       {tags.map((tag, index) => (
-        <View key={index} style={[styles.container, { backgroundColor: color }]}>
-          <Text style={styles.tagText}>{tag}</Text>
-        </View>
+        <TouchableOpacity
+          key={index}
+          style={[styles.tag, styles.pill, { borderColor: color }]}
+          onLongPress={() => onDeleteTag(tag)} // Trigger the onDeleteTag function
+        >
+          <Text style={{ color: 'white' }}>{tag}</Text>
+        </TouchableOpacity>
       ))}
-      <TouchableOpacity onPress={() => addTag(customTag)}>
-        <View style={[styles.container, styles.addTagContainer]}>
-          <Text style={[styles.tagText, styles.addTagText]}>+</Text>
-        </View>
+      <TouchableOpacity style={[styles.addTag, styles.pill, { borderColor: color }]} onPress={openDropdown}>
+        <Ionicons name="add" size={16} color={'white'} />
       </TouchableOpacity>
-      <TextInput
-        style={styles.input}
-        placeholder="Add custom tag"
-        value={customTag}
-        onChangeText={setCustomTag}
-      />
+
+      {/* Delete Confirmation Modal */}
+      <Modal visible={selectedTag !== null} transparent={true} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.deleteModal}>
+            <Text style={styles.deleteMessage}>Delete tag "{selectedTag}"?</Text>
+            <View style={styles.deleteButtonsContainer}>
+              <TouchableOpacity onPress={() => deleteTag(selectedTag)}>
+                <Text style={styles.deleteButton}>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={closeDeleteModal}>
+                <Text style={styles.cancelButton}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
+// ... (styles and other parts of the component remain unchanged)
+
 const styles = StyleSheet.create({
+  tagsContainer: {
+    flexDirection: 'row', // Ensure tags are in a row
+    flexWrap: 'wrap', // Allow tags to wrap to the next row
+    alignItems: 'center', // Center align tags vertically
+    paddingHorizontal: 5, // Adjust horizontal padding for consistent spacing
+  },
   container: {
     borderRadius: 20,
     paddingHorizontal: 12,
@@ -52,14 +75,12 @@ const styles = StyleSheet.create({
   addTagText: {
     fontSize: 24,
   },
-  input: {
-    flex: 1,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginVertical: 4,
-    marginRight: 8,
-    backgroundColor: 'white',
+  pill: {
+    borderRadius: 20, // Adjust the radius to create a pill shape
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    margin: 5,
+    backgroundColor: '#3498db',
   },
 });
 

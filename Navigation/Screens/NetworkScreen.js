@@ -12,7 +12,7 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
 export const fetchData = async () => {
   try {
-    const eventsRef = collection(firestore, 'test_data');
+    const eventsRef = collection(firestore, 'User_data');
     const querySnapshot = await getDocs(eventsRef);
     const usersData = [];
     querySnapshot.forEach((doc) => {
@@ -94,6 +94,7 @@ function ConnectionsScreen({ navigation }) {
       const documentRef = doc(firestore,'User_data', userDetails.id);
       try {
         await updateDoc(documentRef, userDetails);
+        console.log(userDetails.id);
         console.log('Document updated successfully');
       } catch (error) {
         console.error('Error updating document:', error);
@@ -129,8 +130,6 @@ function MutualsScreen() {
     setUsersData(usersData);
     const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
     setUserDetails(userData[0]);
-    console.log("usersData=",usersData);
-    console.log("userData=",userData[0]);
     setLoading(false); // Set loading state to false when data fetching is complete
   };
 
@@ -153,6 +152,7 @@ function MutualsScreen() {
       const documentRef = doc(firestore,'User_data', userDetails.id);
       try {
         await updateDoc(documentRef, userDetails);
+        
         console.log('Document updated successfully');
       } catch (error) {
         console.error('Error updating document:', error);
