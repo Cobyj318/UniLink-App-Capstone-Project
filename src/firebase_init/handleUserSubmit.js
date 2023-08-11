@@ -1,4 +1,4 @@
-import { addDoc, collection } from "@firebase/firestore"
+import { addDoc, collection, updateDoc } from "@firebase/firestore"
 import { firestore } from "./firebase"
  
 /**
@@ -21,8 +21,6 @@ const HandleUserSubmit = (FirsNamedata, LastNamedata, Majordata,IdData,AvatarDat
         Skills: [],
         Projects: [], 
         Experience: "",
-
-
         Profile_Image:AvatarData,
 
     }

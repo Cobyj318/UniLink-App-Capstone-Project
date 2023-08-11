@@ -10,8 +10,8 @@ import { Cams } from '../MainStack';
 import { updateDoc, deleteDoc, doc, collection, query, where } from 'firebase/firestore';
 import { firestore, storage } from '../../src/firebase_init/firebase';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase'; 
-import { fetchUserPfp } from './RetreiveUserPfp';
-
+import { fetchUserData } from './UserData';
+import { fetchData } from '../DBFunctions/FetchData';
 
 /**
  * @property {string} uri - The URI of the selected image.
@@ -22,7 +22,7 @@ import { fetchUserPfp } from './RetreiveUserPfp';
  * @returns {JSX.Element} The JSX representation of the image uploader.
  */
 
-export default function UploadThing( {isEditing,navigation} ) {
+export default function UploadThing( {isEditing,navigation,setImage_} ) {
   
   const userId = FIREBASE_AUTH.currentUser?.uid;
   
@@ -30,12 +30,29 @@ export default function UploadThing( {isEditing,navigation} ) {
     fetchUserPfp(userId);
   }*/
   const routes = navigation.getState()?.routes;
-  const prevRoute = routes[routes.length - 1];
-  console.log(prevRoute);
-  const handlePress = () => { navigation.navigate(Cams);
-                              closeActionSheet();
-                            
-                            };
+  const currPage = routes[routes.length - 1];
+  console.log(currPage)
+
+  const handlePress = () => { navigation.navigate(Cams); closeActionSheet();};
+
+  const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
+  const [userDetails, setUserDetails] = useState(null);
+  
+  //if (currPage === "Profile"){
+    useEffect(() => {
+      const fetchDataAndUserData = async () => {
+      setIsLoading(true); // Set loading state to true when fetching data
+      const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+      console.log(userData[0]);
+      setImage(userData[0].Profile_Image);
+      setIsLoading(false); // Set loading state to false when data fetching is complete
+      };
+      fetchDataAndUserData();  
+    },[]);
+  //}
+
+
+
   /**
    * @type {Array<Object>} actionItems - An array of action items to be displayed in the action sheet.
    */
@@ -71,9 +88,12 @@ export default function UploadThing( {isEditing,navigation} ) {
   const [image, setImage] = useState(null);
   useEffect(() => {
     checkForCameraRollPermission()
+    if (currPage.name === "Profile"){
+
+      //setImage(userDetails.Profile_Image);
+      //console.log(userDetails.Profile_Image);
+    };
   }, []);
-  if (Profile_Image) {setImage(Profile_Image)};
-  
   /**
    * Opens the image picker to select an image from the camera roll.
    *
@@ -84,21 +104,26 @@ export default function UploadThing( {isEditing,navigation} ) {
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
+        //allowsEditing: true,
         aspect: [4,3],
         quality: 1,
       });
     if (!_image.canceled) {
-      updatePFP(_image.uri);
+      if (currPage.name === "Profile"){
+        updatePFP(_image);
+      }
       setImage(_image.uri);
+      setImage_(_image.uri);
+
     }
     closeActionSheet();
   };
 
   const updatePFP = async (_image) =>{
-    const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
+    const storageRef = ref(storage, `images/${userId}/${Date.now()}.jpg`);
     const response = await fetch(_image);
     const blob = await response.blob();
+    console.log("here")
 
     try {
     const snapshot = await uploadBytes(storageRef, blob);
@@ -112,12 +137,14 @@ export default function UploadThing( {isEditing,navigation} ) {
     setUploading(false); // Set uploading state to false if there's an error
     }
 
-    try{
-      const pfpRef = doc(firestore, 'User_data', userId); 
-      await updateDoc(pfpRef, {                             
-        Profile_Image: downloadURL
-      });
-    } catch (error) {console.log(error)};
+    if (currPage === "ProfileScreen"){
+      try{
+        const pfpRef = doc(firestore, 'User_data', userId); 
+        await updateDoc(pfpRef, {                             
+          Profile_Image: downloadURL
+        });
+      } catch (error) {console.log(error)};
+    }
   };
 
 

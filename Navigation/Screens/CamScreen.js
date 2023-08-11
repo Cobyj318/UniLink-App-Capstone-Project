@@ -9,6 +9,7 @@ import {primaryColors, neutralColors} from "../Components/Colors"
 import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
 import { storage } from "../../src/firebase_init/firebase";
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { fetchUserData } from '../Components/UserData';
 
 /**
  * @typedef {Object} PhotoObject
@@ -31,6 +32,24 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 const CamScreen = ( {navigation, pageFrom} ) => {
 
     let camRef = React.useRef();
+    const routes = navigation.getState()?.routes;
+    const prevPage = routes[routes.length - 2];
+    console.log(prevPage.name);
+
+    const [userDetails, setUserDetails] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(true); // State to track if data is being fetched
+    React.useEffect(() => {
+        const fetchDataAndUserData = async () => {
+            const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+            console.log(userData);
+            setUserDetails(userData[0]);
+            setIsLoading(false); // Set loading state to false when data fetching is complete
+        };
+        fetchDataAndUserData();  
+        },[]);
+
+    
+
     
     /**
      * @type {boolean} camPermitted - checks and changes camera permissions.
@@ -106,6 +125,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
             /*MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
             });*/
+            setPhoto(userDetails.Profile_Image);
             const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
             //if (){}
                 const response = await fetch(photo);
