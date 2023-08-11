@@ -16,6 +16,7 @@ export default function ProfileScreen({navigation}){
     const [edit, isEditing] = React.useState(false);
     const [nameEntry, nEntryEdited] = React.useState("");
     const [bioEntry, bEntryEdited] = React.useState("");
+    const [Image_, setImage_] = useState("")
     const editProfile = () => {
         isEditing(!edit);  
     }
@@ -37,13 +38,17 @@ export default function ProfileScreen({navigation}){
         },[]);
 
   
-    const userImage=userDetails ? userDetails.Profile_Image : '';
-    console.log('user image is ', userImage);
+    const userImage = userDetails ? userDetails.Profile_Image : '';
+    useEffect(() => {
+        setImage_(userImage)
+    },[])
     
+    //console.log('user image is ', userImage);
+    //<View style={{paddingTop:'10%'}}><CircularImage imageUrl={userImage}/></View>
 
      return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {edit ? <UploadThing navigation={null} isEditing={true} /> : <View style={{paddingTop:'10%'}}><CircularImage imageUrl={userImage}/></View>}
+      {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
 
       {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} value={nameEntry} placeholder={"Name"} />}
 

@@ -5,6 +5,11 @@ import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
 import NewUserScreen from './NewUserScreen';
 import UploadThing from '../Components/uploadThing';
+import {primaryColors, neutralColors} from "../Components/Colors"
+import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
+import { storage } from "../../src/firebase_init/firebase";
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { fetchUserData } from '../Components/UserData';
 
 /**
  * @typedef {Object} PhotoObject
@@ -27,6 +32,24 @@ import UploadThing from '../Components/uploadThing';
 const CamScreen = ( {navigation, pageFrom} ) => {
 
     let camRef = React.useRef();
+    const routes = navigation.getState()?.routes;
+    const prevPage = routes[routes.length - 2];
+    console.log(prevPage.name);
+
+    const [userDetails, setUserDetails] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(true); // State to track if data is being fetched
+    React.useEffect(() => {
+        const fetchDataAndUserData = async () => {
+            const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+            console.log(userData);
+            setUserDetails(userData[0]);
+            setIsLoading(false); // Set loading state to false when data fetching is complete
+        };
+        fetchDataAndUserData();  
+        },[]);
+
+    
+
     
     /**
      * @type {boolean} camPermitted - checks and changes camera permissions.
@@ -98,13 +121,28 @@ const CamScreen = ( {navigation, pageFrom} ) => {
          * @function savePhoto
          * @returns {void}
          */
-        let savePhoto = () => {
+        let savePhoto = async () => {
             /*MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
-                //navigation.navigate(NewUserScreen);
             });*/
-            navigation.goBack();
+            /*setPhoto(userDetails.Profile_Image);
+            const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
+            //if (){}
+                const response = await fetch(photo);
+                const blob = await response.blob();
+            
+                try {
+                const snapshot = await uploadBytes(storageRef, blob);
+                // The image is successfully uploaded, now get the download URL
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                console.log('Download URL:', downloadURL);
 
+                setUploading(false); // Set uploading state to false after successful upload
+                } catch (error) {
+                console.error("Error uploading image:", error);
+                setUploading(false); // Set uploading state to false if there's an error
+                }*/
+                navigation.goBack();
         };
 
         /**
@@ -127,7 +165,11 @@ const CamScreen = ( {navigation, pageFrom} ) => {
     return(
         <Camera style={{flex:1,}} ref ={camRef}>
             <View style={{ flex:1, justifyContent:"flex-end",}}>
-                <Button style={styles.takePhotoBtn} title={"Take Pic"} onPress={takePic}/>
+                <View style={styles.photoBtnContainer}>
+                    <TouchableOpacity style={styles.takePhotoBtn} onPress={takePic}>
+                        <Text> </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </Camera>
     )
@@ -135,9 +177,23 @@ const CamScreen = ( {navigation, pageFrom} ) => {
 
 export default CamScreen;
 
+
+
 const styles = StyleSheet.create({
     takePhotoBtn: {
-        backgroundColor: "#ffffff",
-        color: "#000000"
+        backgroundColor: primaryColors.red,
+        borderRadius: 45,
+        borderWidth:15,
+        borderColor:neutralColors.darkblue,
+        width:80,
+        height:80,
+        alignSelf:"center",
+        marginBottom:15,
+        marginTop:15,
+        
     },
+    photoBtnContainer:{
+        backgroundColor:'rgba(0, 0, 0, 0.8)',
+        backfaceVisibility: 'hidden',
+    }
 })
