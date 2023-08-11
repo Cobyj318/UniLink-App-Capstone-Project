@@ -125,7 +125,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
             /*MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
             });*/
-            setPhoto(userDetails.Profile_Image);
+            /*setPhoto(userDetails.Profile_Image);
             const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
             //if (){}
                 const response = await fetch(photo);
@@ -141,7 +141,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
                 } catch (error) {
                 console.error("Error uploading image:", error);
                 setUploading(false); // Set uploading state to false if there's an error
-                }
+                }*/
                 navigation.goBack();
         };
 
