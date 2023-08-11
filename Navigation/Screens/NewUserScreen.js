@@ -60,24 +60,26 @@ const NewUserScreen = ( {navigation} ) => {
         if (Username === "" || Password === "" || Email === ""){
             Alert.alert("Missing Entries", "You have empty entries", [{text: 'OK',},]);
         } else{
+          
+          console.log(UploadThing.image)
           const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
           const response = await fetch(Image_);
           const blob = await response.blob();
-      
           try {
             const snapshot = await uploadBytes(storageRef, blob);
             // The image is successfully uploaded, now get the download URL
             const downloadURL = await getDownloadURL(snapshot.ref);
             console.log('Download URL:', downloadURL);
-            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid,downloadURL);
-            navigation.navigate(ExistingUser);
 
             setUploading(false); // Set uploading state to false after successful upload
+            HandleUserSubmit(Username, Password, Email,FIREBASE_AUTH.currentUser?.uid, downloadURL);
           } catch (error) {
             console.error("Error uploading image:", error);
             setUploading(false); // Set uploading state to false if there's an error
           }
           
+          navigation.navigate(ExistingUser);
+                    
         }
     }
     useEffect(() => {
