@@ -100,7 +100,10 @@ function ConnectionsScreen({ navigation }) {
       }
     } catch (error) {
       console.error('Error disconnecting user', error);
-    }};
+    }
+    onRefresh();
+
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -144,6 +147,7 @@ function MutualsScreen() {
   };
 
   const handleConnect = async (selectedUser, selectedUserID) => {
+    if (!userDetails.Connections.includes(selectedUserID)) {
     try {
       userDetails.Connections= [...userDetails?.Connections,selectedUserID];
       const documentRef = doc(firestore,'User_data', userDetails.id);
@@ -156,7 +160,8 @@ function MutualsScreen() {
     } catch (error) {
       console.error('Error connecting user', error);
     }
-  };
+    onRefresh();
+  }};
 
   useEffect(() => {
     fetchDataAndUserData();  

@@ -8,13 +8,44 @@ import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { neutralColors, primaryColors } from '../Components/Colors';
 import { fetchUserData} from '../Components/UserData';
 import { fetchtagData } from '../DBFunctions/FetchData';
+import { firestore } from '../../src/firebase_init/firebase';
+import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
+import HomeNewsCard from "../Components/HomeNewsCard"
+
+const fetchNewsData = async () => {
+  try {
+    const eventsRef = collection(firestore, 'News_data');
+    const querySnapshot = await getDocs(eventsRef);
+    const newsData = [];
+    querySnapshot.forEach((doc) => {
+      const { Body, Title,From} = doc.data();
+      newsData.push({
+        id: doc.id,
+        Title,
+        From,
+        Body,
+      });
+    });
+    return newsData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+};
 
 const HomeScreen = () => {
   const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
+  const [news, setNews] = useState([]);
 
+  const fetchNewsDatafordisplay = async () => {
+    setIsLoading(true); // Set loading state to true when fetching data
+    const newsData = await fetchNewsData();
+    setNews(newsData);
+    setIsLoading(false); // Set loading state to false when data fetching is complete
+  };
   useEffect(() => {
     const fetchDataAndUserData = async () => {
       setIsLoading(true); // Set loading state to true when fetching data
@@ -25,6 +56,7 @@ const HomeScreen = () => {
       setIsLoading(false); // Set loading state to false when data fetching is complete
     };
     fetchDataAndUserData();  
+    fetchNewsDatafordisplay();
     },[]);
 
   
@@ -59,9 +91,9 @@ const HomeScreen = () => {
         </ScrollView>
         <Text style={styles.titlesText}>News</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
-          {users.map((user) => (
+          {news.map((user) => (
             <View style={styles.card} key={user.id}>
-              <HomeEventCard user={user} />
+              <HomeNewsCard news={user}/>
             </View>
           ))}
         </ScrollView>

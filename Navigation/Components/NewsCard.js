@@ -15,21 +15,21 @@ const theme = {
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="newspaper" />;
 
-const NewsCard = () => {
+const NewsCard = ({news}) => {
   const navigation = useNavigation(); // Initialize useNavigation hook
-
   const handleOkButtonPress = () => {
     // Navigate to 'NewsDetails' screen when 'Ok' button is pressed
-    navigation.navigate('NewsDetailsScreen');
+    console.log(news);
+    navigation.navigate('NewsDetailsScreen',{news});
   };
 
   return (
     <PaperProvider theme={theme}>
       <Card>
-        <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent} />
+        <Card.Title title={news?.Title} subtitle={news?.From} left={LeftContent} />
         <Card.Content>
-          <Text variant="titleLarge">Card title</Text>
-          <Text variant="bodyMedium">Card content</Text>
+          <Text variant="titleLarge">{news?.Title}</Text>
+          <Text variant="bodyMedium">{news?.Body.slice(0, 100) + '...'}</Text>
         </Card.Content>
         <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
         <Card.Actions>
