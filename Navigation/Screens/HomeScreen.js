@@ -1,20 +1,51 @@
 import React,{ useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, StatusBar, SafeAreaView, Text, Dimensions, ActivityIndicator,RefreshControl  } from 'react-native';
+import { View, ScrollView, StyleSheet, StatusBar, Text, Dimensions, ActivityIndicator,RefreshControl  } from 'react-native';
 import HomeEventCard from '../Components/HomeEventCard';
-import { fetchData } from '../DBFunctions/FetchData';
-import onRefresh from '../DBFunctions/RefreshFunctions';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import RedLine from '../Components/RedLine';
+import onRefresh from '../DBFunctions/RefreshFunctions';
+import { fetchData } from '../DBFunctions/FetchData';
+import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { neutralColors, primaryColors } from '../Components/Colors';
-import { fetchUserData } from '../Components/UserData';
-import { CircularImage } from '../Components/CircleImage';
+import { fetchUserData} from '../Components/UserData';
+import { fetchtagData } from '../DBFunctions/FetchData';
+import { firestore } from '../../src/firebase_init/firebase';
+import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
+import HomeNewsCard from "../Components/HomeNewsCard"
 
-const HomeScreen = ({ navigation }) => {
+const fetchNewsData = async () => {
+  try {
+    const eventsRef = collection(firestore, 'News_data');
+    const querySnapshot = await getDocs(eventsRef);
+    const newsData = [];
+    querySnapshot.forEach((doc) => {
+      const { Body, Title,From} = doc.data();
+      newsData.push({
+        id: doc.id,
+        Title,
+        From,
+        Body,
+      });
+    });
+    return newsData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+};
+
+const HomeScreen = () => {
   const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
+  const [news, setNews] = useState([]);
 
+  const fetchNewsDatafordisplay = async () => {
+    setIsLoading(true); // Set loading state to true when fetching data
+    const newsData = await fetchNewsData();
+    setNews(newsData);
+    setIsLoading(false); // Set loading state to false when data fetching is complete
+  };
   useEffect(() => {
     const fetchDataAndUserData = async () => {
       setIsLoading(true); // Set loading state to true when fetching data
@@ -25,6 +56,7 @@ const HomeScreen = ({ navigation }) => {
       setIsLoading(false); // Set loading state to false when data fetching is complete
     };
     fetchDataAndUserData();  
+    fetchNewsDatafordisplay();
     },[]);
 
   
@@ -59,13 +91,13 @@ const HomeScreen = ({ navigation }) => {
         </ScrollView>
         <Text style={styles.titlesText}>News</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
-          {users.map((user) => (
+          {news.map((user) => (
             <View style={styles.card} key={user.id}>
-              <HomeEventCard user={user} />
+              <HomeNewsCard news={user}/>
             </View>
           ))}
         </ScrollView>
-        <Text style={styles.titlesText}>Clubs</Text>
+        <Text style={styles.titlesText}>Projects</Text>
         <ScrollView horizontal style={styles.bottomScroll}>
           {users.map((user) => (
             <View style={styles.card} key={user.id}>
@@ -81,12 +113,12 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   topScroll: {
-    maxHeight: 400,
+    maxHeight: 460,
     marginTop: 10,
     flexDirection: 'row',
   },
   bottomScroll: {
-    maxHeight: 400,
+    maxHeight: 460,
     marginBottom: 10,
     flexDirection: 'row',
   },

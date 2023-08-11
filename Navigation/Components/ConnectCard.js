@@ -17,11 +17,17 @@ const theme = {
 };
 
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="human-greeting" />;
 
 const ConnectCard = ({user, onConnect}) => {
-
-  
+  const LeftContent = ({ style }) => (
+    <View>
+    {user.Profile_Image ? (
+    <Avatar.Image source={{ uri: user.Profile_Image}} size={40} style={style} />
+    ) : (
+      <Avatar.Icon size={40} icon="account" />
+    )}
+    </View>
+  );
   const [isExpanded, setIsExpanded] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -78,14 +84,14 @@ const ConnectCard = ({user, onConnect}) => {
       <TouchableOpacity onPress={handleExpand}>
         <PaperProvider theme={theme}>
           <Card style={styles.card}>
-            <Card.Title title={user.Username} subtitle={user.Major} left={LeftContent} />
+            <Card.Title title={user.FirstName} subtitle={user.Major} left={LeftContent} />
 
             {isExpanded && (
               <Card.Content>
                 <Text variant="bodyLarge">{user.About_me}</Text>
               </Card.Content>
             )}
-            {isExpanded && <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />}
+            {isExpanded && <Card.Cover source={{ uri: user.Profile_Image }} />}
             {isExpanded && (
               <Card.Actions>
                 <Button buttonColor='#CB333B' textColor='white'>Cancel</Button>

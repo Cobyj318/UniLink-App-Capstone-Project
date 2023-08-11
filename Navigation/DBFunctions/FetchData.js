@@ -51,3 +51,23 @@ export const fetchNewsData = async () => {
     return [];
   }
 };
+
+export const fetchtagData = async () => {
+  try {
+    const eventsRef = collection(firestore, 'Portfolio_tags');
+    const querySnapshot = await getDocs(eventsRef);
+    const tagData = [];
+    querySnapshot.forEach((doc) => {
+      const { Interests, Skills} = doc.data();
+      tagData.push({
+        id: doc.id,
+        Interests,
+        Skills
+      });
+    });
+    return tagData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+};

@@ -7,13 +7,13 @@ import { firestore } from '../../src/firebase_init/firebase';
 import { useNavigation } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
-const LeftContent = ({ style }) => (
-  <Avatar.Image source={{ uri: 'https://picsum.photos/'}} size={40} style={style} />
-);
 
 const EventCard = ({ users }) => {
   const navigation = useNavigation();
   const currentUserUID=FIREBASE_AUTH.currentUser?.uid;
+  const LeftContent = ({ style,image }) => (
+    <Avatar.Image source={{ uri: image?.Image_Link}} size={40} style={style} />
+  );
   
   const handlePress = (event) => {
     navigation.navigate('EventDetailsScreen', { event });
@@ -30,7 +30,7 @@ const EventCard = ({ users }) => {
       {users.map((event, index) => (
         <View style={styles.eventCardContainer} key={index}>
           <Card>
-            <Card.Title title={event.Sponser} subtitle={event.Date} left={LeftContent} />
+            <Card.Title title={event.Sponser} subtitle={event.Date} left={(props) => <LeftContent {...props} image={event} />} />
             <Card.Content>
               <Text variant="titleLarge">{event.Title}</Text>
               <Text variant="bodyMedium">{event.Description.slice(0, 100) + '...'}</Text>

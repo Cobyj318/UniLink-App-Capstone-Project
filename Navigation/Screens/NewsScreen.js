@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState,useEffect } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, StatusBar,KeyboardAvoidingView } from 'react-native';
 import NewsCard from '../Components/NewsCard';
 import { NavigationContainer } from '@react-navigation/native';
@@ -6,45 +7,75 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createStackNavigator } from '@react-navigation/stack'; 
 import NewsCardV2 from '../Components/NewsCardV2';
 import CommentSection from '../Components/CommentSection';
+import { firestore } from '../../src/firebase_init/firebase';
+import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
+import NewsDetailsScreen from './NewsDetails';
 
-// Screen for displaying the detailed news content
-function NewsDetailsScreen() {
-  return (
-    <KeyboardAvoidingView>
-      <ScrollView style={styles.scrollView}>
-        <NewsCard/>
-        <CommentSection/>
-      </ScrollView>
-      </KeyboardAvoidingView>
-
-  );
+const fetchNewsData = async () => {
+  try {
+    const eventsRef = collection(firestore, 'News_data');
+    const querySnapshot = await getDocs(eventsRef);
+    const newsData = [];
+    querySnapshot.forEach((doc) => {
+      const { Body, Title,From} = doc.data();
+      newsData.push({
+        id: doc.id,
+        Title,
+        From,
+        Body,
+      });
+    });
+    return newsData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
 };
 
+
 function LatechNewsScreen() {
+  const [loading, setLoading] = useState(false);
+  const [news, setNews] = useState([]);
+
+  const fetchNewsDatafordisplay = async () => {
+    setLoading(true); // Set loading state to true when fetching data
+    const newsData = await fetchNewsData();
+    setNews(newsData);
+    setLoading(false); // Set loading state to false when data fetching is complete
+  };
+  useEffect(() => {
+    fetchNewsDatafordisplay();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <NewsCard />
-        <NewsCard />
-        <NewsCard />
-        <NewsCard />
-        <NewsCard />
-        <NewsCard />
+      {news?.map((id) => (
+          <NewsCard key={id.id} news={id}/>
+        ))}
       </ScrollView>
-    </SafeAreaView>
   );
 }
 
 // Screen for displaying the sports news
 function SportsNewsScreen() {
+  const [loading, setLoading] = useState(false);
+  const [news, setNews] = useState([]);
+
+  const fetchNewsDatafordisplay = async () => {
+    setLoading(true); // Set loading state to true when fetching data
+    const newsData = await fetchNewsData();
+    setNews(newsData);
+    setLoading(false); // Set loading state to false when data fetching is complete
+  };
+  useEffect(() => {
+    fetchNewsDatafordisplay();
+  }, []);
+
   return (
       <ScrollView style={styles.scrollView}>
-        <NewsCardV2 />
-        <NewsCardV2 />
-        <NewsCardV2 />
-        <NewsCardV2 />
-        <NewsCardV2 />
-        <NewsCardV2 />
+      {news?.map((id) => (
+          <NewsCard key={id.id} news={id}/>
+        ))}
       </ScrollView>
   );
 }
@@ -54,11 +85,10 @@ const LatechStack = createStackNavigator(); // Create a new stack navigator for 
 
 // Stack navigator for LatechNewsScreen
 function LatechStackScreen() {
+  
   return (
-    <LatechStack.Navigator
-      screenOptions={{headerShown: false, }}// Hide the header for all screens in this stack
-    >
-      <LatechStack.Screen name="LatechNews" component={LatechNewsScreen} />
+    <LatechStack.Navigator screenOptions={{headerShown: false, }}>
+      <LatechStack.Screen name="LatechNews" component={LatechNewsScreen}/>
       <LatechStack.Screen name="NewsDetailsScreen" component={NewsDetailsScreen} />
       {/* You can add more screens specific to LatechNewsScreen here */}
     </LatechStack.Navigator>
