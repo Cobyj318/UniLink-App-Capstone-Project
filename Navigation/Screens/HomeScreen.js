@@ -66,7 +66,6 @@ const HomeScreen = () => {
     const viewHeightPercentage = 15;
     const viewHeight = (screenHeight * viewHeightPercentage) / 100;
     const userImage=userDetails ? userDetails.Profile_Image : '';
-    console.log('user image is ', userImage);
     
     return (
       <View style={styles.container}>

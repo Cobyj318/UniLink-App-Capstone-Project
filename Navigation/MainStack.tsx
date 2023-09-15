@@ -11,6 +11,9 @@ import {onAuthStateChanged} from "firebase/auth";
 import { FIREBASE_AUTH } from "../src/firebase_init/firebase";
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { enc, AES } from 'react-native-crypto-js';
+import { signInWithEmailAndPassword} from "firebase/auth";
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////Screen Imports///////////////////////////////////////////
@@ -166,9 +169,47 @@ function MainStack(){
     });
   },[]);
 
+  const auth = FIREBASE_AUTH;
+const [loading, setLoading] = useState(false);
+const signIn= async (email,password)=>{
+  setLoading(true);
+  try
+  {
+      const response=await signInWithEmailAndPassword(auth, email,password);
+  }
+  catch (error){
+      console.log(error);
+  }
+  finally {
+      setLoading(false);
+  }
+}
+useEffect(()=>{ 
+const loadLoginInfo = async () => {
+  try {
+    const encryptedEmail = await AsyncStorage.getItem('userEmail');
+    const encryptedPassword = await AsyncStorage.getItem('userPassword');
+    if (encryptedEmail && encryptedPassword) {
+      const decryptedEmail = AES.decrypt(encryptedEmail, 'your-secret-key').toString(enc.Utf8);
+      const decryptedPassword = AES.decrypt(encryptedPassword, 'your-secret-key').toString(enc.Utf8);
+      await signIn(decryptedEmail,decryptedPassword);
+      return { email: decryptedEmail, password: decryptedPassword };
+    } else {
+      return null; // No credentials found
+    }
+  } catch (error) {
+    console.error('Error loading login info:', error);
+    return null; // Handle error
+  }
+};
+loadLoginInfo();
+}, []);
+
+
   return(
   <NavigationContainer >
-    <Stack.Navigator initialRouteName={Splash}> 
+    {auth.currentUser?.uid ? (
+        <Stack.Navigator initialRouteName={Splash}>
         <Stack.Screen name={ExistingUser} component={TabNavigator} options={{ headerShown: false,  gestureEnabled: false}}/>
         <Stack.Screen name={Login} component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
@@ -179,11 +220,25 @@ function MainStack(){
         <Stack.Screen name={portfolioName} component={PortfolioScreen} options={{headerShown: true}}/>
         <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
         <Stack.Screen name={collaborationName} component={CollaborationScreen} options={{headerShown: true}}/>
-
-    </Stack.Navigator>
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator initialRouteName={ExistingUser}>
+        <Stack.Screen name={ExistingUser} component={TabNavigator} options={{ headerShown: false,  gestureEnabled: false}}/>
+        <Stack.Screen name={Login} component={LoginScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
+        <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
+        <Stack.Screen name={messageName} component={MessageScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={portfolioName} component={PortfolioScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={collaborationName} component={CollaborationScreen} options={{headerShown: true}}/>
+        </Stack.Navigator>
+  )}
   </NavigationContainer>
-  )
-};
+  );
+}
+
 
 export default MainStack;
 ////////////////////////////////////////////////////////////////////////////////////////
