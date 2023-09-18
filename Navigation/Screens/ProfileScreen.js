@@ -47,14 +47,13 @@ export default function ProfileScreen({navigation}){
     //<View style={{paddingTop:'10%'}}><CircularImage imageUrl={userImage}/></View>
 
      return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
       {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
 
       {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} value={nameEntry} placeholder={"Name"} />}
 
 
       {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} placeholder={"Bio"} value={bioEntry} />}
-
       <Text style={{ flex: 1 }}>Friends</Text>
 
       {/* Add the Portfolio button */}
