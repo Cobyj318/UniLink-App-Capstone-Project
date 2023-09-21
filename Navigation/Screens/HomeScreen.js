@@ -10,7 +10,8 @@ import { fetchUserData} from '../Components/UserData';
 import { fetchtagData } from '../DBFunctions/FetchData';
 import { firestore } from '../../src/firebase_init/firebase';
 import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
-import HomeNewsCard from "../Components/HomeNewsCard"
+// import HomeNewsCard from "../Components/HomeNewsCard"
+import NewsCardV2 from '../Components/HomeNewsCard';
 
 const fetchNewsData = async () => {
   try {
@@ -39,7 +40,12 @@ const HomeScreen = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
   const [news, setNews] = useState([]);
-
+  const userEmail = userDetails ? userDetails.FirstName : '';
+  const screenHeight = Dimensions.get('window').height;
+  const viewHeightPercentage = 15;
+  const viewHeight = (screenHeight * viewHeightPercentage) / 100;
+  // const userImage=userDetails ? userDetails.Profile_Image : '';
+  
   const fetchNewsDatafordisplay = async () => {
     setIsLoading(true); // Set loading state to true when fetching data
     const newsData = await fetchNewsData();
@@ -59,14 +65,6 @@ const HomeScreen = () => {
     fetchNewsDatafordisplay();
     },[]);
 
-  
-
-    const userEmail = userDetails ? userDetails.FirstName : '';
-    const screenHeight = Dimensions.get('window').height;
-    const viewHeightPercentage = 15;
-    const viewHeight = (screenHeight * viewHeightPercentage) / 100;
-    const userImage=userDetails ? userDetails.Profile_Image : '';
-    
     return (
       <View style={styles.container}>
         {isLoading ? ( // Check if data is loading and show the ActivityIndicator
@@ -78,7 +76,6 @@ const HomeScreen = () => {
         <View style={[styles.header, { height: viewHeight }]}>
             <Text style={styles.headerText}>Welcome Back, {userEmail}</Text>
         </View>
-        {/* <CircularImage imageUrl={userImage}/> */}
         <RedLine />
         <Text style={styles.titlesTextfirst}>Events</Text>
         <ScrollView horizontal style={styles.topScroll}>
@@ -92,7 +89,7 @@ const HomeScreen = () => {
         <ScrollView horizontal style={styles.bottomScroll}>
           {news.map((user) => (
             <View style={styles.card} key={user.id}>
-              <HomeNewsCard news={user}/>
+              <NewsCardV2 news={user}/>
             </View>
           ))}
         </ScrollView>

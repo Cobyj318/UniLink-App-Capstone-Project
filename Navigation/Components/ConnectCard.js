@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Card, Text } from 'react-native-paper';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Avatar, Button, Text } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { updateDoc, deleteDoc, doc, getDoc, collection, query, where, getDocs} from '@firebase/firestore';
+import {
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from '@firebase/firestore';
 import { firestore } from '../../src/firebase_init/firebase';
-
+import { Image } from 'expo-image';
+import { primaryColors,accentColors } from './Colors';
 
 const theme = {
-  ...DefaultTheme,
   roundness: 4,
   colors: {
-    ...DefaultTheme.colors,
     primary: '#3498db',
     accent: '#f1c40f',
   },
 };
 
-
-
-const ConnectCard = ({user, onConnect}) => {
+const ConnectCard = ({ user, onConnect }) => {
   const LeftContent = ({ style }) => (
     <View>
-    {user.Profile_Image ? (
-    <Avatar.Image source={{ uri: user.Profile_Image}} size={40} style={style} />
-    ) : (
-      <Avatar.Icon size={40} icon="account" />
-    )}
+      {user.Profile_Image ? (
+        <Image source={{ uri: user.Profile_Image }} style={[styles.avatar, style]} />
+      ) : (
+        <Avatar.Icon size={40} icon="account" style={style} />
+      )}
     </View>
   );
   const [isExpanded, setIsExpanded] = useState(false);
@@ -33,19 +38,12 @@ const ConnectCard = ({user, onConnect}) => {
 
   const fetchConnectionsByEmail = async (email) => {
     try {
-      // Create a query to find the user document with the provided email
       const q = query(collection(firestore, 'test_data'), where('Email', '==', email));
-  
-      // Execute the query and get the matching user documents
       const querySnapshot = await getDocs(q);
-  
-      // Check if any user documents were found
+
       if (!querySnapshot.empty) {
-        // Since the email should be unique, there should be only one matching user document
         const userDoc = querySnapshot.docs[0];
         const userData = userDoc.data();
-  
-        // Extract the connections array from the user's document
         const connections = userData.Connections || [];
         return connections;
       } else {
@@ -64,13 +62,13 @@ const ConnectCard = ({user, onConnect}) => {
 
   const handleConnectPress = () => {
     if (!isConnected) {
-      onConnect(user); // Call the onConnect callback with the user's data
+      onConnect(user);
     }
   };
 
   useEffect(() => {
     const currentUserEmail = 'Ava'; // Replace with the current user's email
-    fetchConnectionsByEmail(currentUserEmail) // Use await to get the connections
+    fetchConnectionsByEmail(currentUserEmail)
       .then((currentUserConnections) => {
         setIsConnected(currentUserConnections.includes(user.id));
       })
@@ -82,26 +80,41 @@ const ConnectCard = ({user, onConnect}) => {
   return (
     !isConnected && (
       <TouchableOpacity onPress={handleExpand}>
-        <PaperProvider theme={theme}>
-          <Card style={styles.card}>
-            <Card.Title title={user.FirstName} subtitle={user.Major} left={LeftContent} />
+        <View style={[styles.card, isExpanded && styles.expandedCard]}>
+          <View style={styles.cardHeader}>
+            <LeftContent style={styles.avatar} />
+            <View style={styles.headerText}>
+              <Text style={styles.title}>{user.FirstName}</Text>
+              <Text style={styles.subtitle}>{user.Major}</Text>
+            </View>
+          </View>
 
-            {isExpanded && (
-              <Card.Content>
-                <Text variant="bodyLarge">{user.About_me}</Text>
-              </Card.Content>
-            )}
-            {isExpanded && <Card.Cover source={{ uri: user.Profile_Image }} />}
-            {isExpanded && (
-              <Card.Actions>
-                <Button buttonColor='#CB333B' textColor='white'>Cancel</Button>
-                <Button buttonColor='#003087' onPress={handleConnectPress}>
-                  {isConnected ? 'Connected' : 'Connect'}
-                </Button>
-              </Card.Actions>
-            )}
-          </Card>
-        </PaperProvider>
+          {isExpanded && (
+            <View style={styles.cardContent}>
+              <Text style={styles.bodyLarge}>{user.About_me}</Text>
+              <Image source={{ uri: user.Profile_Image }} style={styles.cardImage} />
+            </View>
+          )}
+
+          {isExpanded && (
+            <View style={styles.cardActions}>
+              <Button
+                style={styles.cancelButton}
+                color='#CB333B'
+                onPress={handleExpand}
+              >
+                Cancel
+              </Button>
+              <Button
+                style={styles.connectButton}
+                color='#003087'
+                onPress={handleConnectPress}
+              >
+                {isConnected ? 'Connected' : 'Connect'}
+              </Button>
+            </View>
+          )}
+        </View>
       </TouchableOpacity>
     )
   );
@@ -109,8 +122,58 @@ const ConnectCard = ({user, onConnect}) => {
 
 const styles = StyleSheet.create({
   card: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
     margin: 10,
-  }
+  },
+  expandedCard: {
+    borderColor: accentColors.lightblue, // Change the border color when expanded (for demonstration)
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+  },
+  headerText: {
+    flex: 1,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  subtitle: {
+    color: '#666',
+  },
+  cardContent: {
+    marginTop: 10,
+  },
+  bodyLarge: {
+    fontSize: 16,
+  },
+  cardImage: {
+    width: '100%',
+    height: 200,
+    marginTop: 10,
+  },
+  cardActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  cancelButton: {
+    flex: 1,
+    marginRight: 5,
+  },
+  connectButton: {
+    flex: 1,
+    marginLeft: 5,
+  },
 });
 
 export default ConnectCard;
