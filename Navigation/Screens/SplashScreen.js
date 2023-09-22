@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { ImageBackground, View, Text, StyleSheet, Image } from 'react-native';
-import NewUserScreen from './NewUserScreen';
 import { Button, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Portal } from 'react-native-paper';
 import LoginScreen from './LoginScreen';
-import { ExistingUser } from '../MainStack';
 import SignUpScreen from './SignUpScreen';
-
-import { Notifications } from '../MainStack';
-import NotifScreen from './NotifScreen';
 
 const BGImage = require('../../assets/SplashBG.png');
 const Logo = require('../../assets/LaTechLogo.png');

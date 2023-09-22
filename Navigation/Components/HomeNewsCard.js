@@ -21,7 +21,6 @@ const NewsCard = ({ news }) => {
   const handlePress = () => {
     navigation.navigate('NewsDetailsScreen', { news});
   };
-  console.log(news?.From);
   return (
     <PaperProvider theme={theme}>
       <Card>

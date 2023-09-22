@@ -1,23 +1,37 @@
-import { View, Text, StyleSheet,Button, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet,Button, KeyboardAvoidingView } from "react-native";
 import React, { useState,useEffect } from "react";
 import { FIREBASE_AUTH } from "../../src/firebase_init/firebase";
 import { TextInput } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword} from "firebase/auth";
 import { ExistingUser } from "../MainStack";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { enc, AES } from 'react-native-crypto-js';
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
+
+  const saveLoginInfo = async (email, password) => {
+    try {
+      const encryptedEmail = AES.encrypt(email, 'your-secret-key').toString();
+      const encryptedPassword = AES.encrypt(password, 'your-secret-key').toString();
+  
+      await AsyncStorage.setItem('userEmail', encryptedEmail);
+      await AsyncStorage.setItem('userPassword', encryptedPassword);
+    } catch (error) {
+      console.error('Error saving login info:', error);
+    }
+  };
   const signIn= async ()=>{
     setLoading(true);
     try
     {
         const response=await signInWithEmailAndPassword(auth, email,password);
-        //console.log(response);
+        saveLoginInfo(email,password);
         navigation.navigate(ExistingUser);
     }
     catch (error: any){
@@ -28,23 +42,7 @@ const LoginScreen = ({ navigation }) => {
         setLoading(false);
     }
 }
-  const signUp =async()=>{
-    setLoading(true);
-    try
-    {
-        const response=await createUserWithEmailAndPassword(auth,email,password);
-        console.log(response);
-        alert('Thank you for registering!')
-    }
-    catch (error:any){
-        console.log(error);
-        alert('Sign up failed'+ error.message);
-    }
-    finally {
-        setLoading(false);
-    }
-   
-  }
+  
   return (
     <View style={styles.container}>
     <KeyboardAvoidingView behavior="padding">
@@ -53,7 +51,6 @@ const LoginScreen = ({ navigation }) => {
     {loading ? <ActivityIndicator size={"large"} color="0000ff"/>:
     <>
     <Button title="Login" onPress={()=> signIn()}/>
-    {/* <Button title="Create Account" onPress={()=> signUp()}/> */}
     </>
     }
     </KeyboardAvoidingView>

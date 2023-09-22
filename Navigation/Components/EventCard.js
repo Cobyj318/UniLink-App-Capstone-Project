@@ -36,7 +36,7 @@ const EventCard = ({ users }) => {
               <Text variant="bodyMedium">{event.Description.slice(0, 100) + '...'}</Text>
             </Card.Content>
             <Pressable onPress={() => handlePress(event)} style={styles.pressable}>
-              <Card.Cover source={{ uri: event.Image_Link }} />
+              <Card.Cover source={{ uri: event.Image_Link }} /> 
             </Pressable>
             <Card.Actions>
               <Button onPress={() => alert('Thank you for RSVPING!')}>RSVP</Button>
@@ -63,6 +63,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden', // This is important to prevent overflow of the border radius
   },
+  
 });
 
 export default EventCard;
+
+

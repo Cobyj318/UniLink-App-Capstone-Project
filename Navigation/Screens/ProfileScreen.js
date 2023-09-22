@@ -60,6 +60,9 @@ export default function ProfileScreen({navigation}){
       <TouchableOpacity onPress={() => navigation.navigate('PortfolioScreen')}>
         <Text style={{ color: '#3498db', marginVertical: 10 }}>Portfolio</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>
+        <Text style={{ color: '#3498db', marginVertical: 10 }}>Create and join other people's Projects</Text>
+      </TouchableOpacity>
 
       {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
     </View>
