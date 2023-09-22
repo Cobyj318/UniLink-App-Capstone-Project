@@ -1,11 +1,9 @@
 import React from 'react';
-import { Avatar, Button, Card, Text } from 'react-native-paper';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'; // Import useNavigation from react-native-paper
-import { useNavigation } from '@react-navigation/native'; // Also import useNavigation from react-navigation/native
+import { Avatar,Text } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider, Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import {View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
-import { View, StyleSheet } from 'react-native';
-
-
 const theme = {
   ...DefaultTheme,
   roundness: 4,
@@ -16,10 +14,10 @@ const theme = {
   },
 };
 
-const LeftContent = props => <Avatar.Icon {...props} icon="newspaper" />
+const LeftContent = () => <Avatar.Icon icon="newspaper" />;
 
 const EventCard = ({ user }) => {
-  const navigation = useNavigation(); // Move useNavigation inside the NewsCard component
+  const navigation = useNavigation();
 
   const handlePress = () => {
     navigation.navigate('EventDetailsScreen', { event: user });
@@ -27,31 +25,50 @@ const EventCard = ({ user }) => {
 
   return (
     <PaperProvider theme={theme}>
-      <Card>
-        <Card.Title title={user.Sponser} subtitle={user.Date} left={LeftContent} />
-        <Card.Content>
-          <Text variant="titleLarge">{user.Title}</Text>
-          <Text variant="bodyMedium">{user.Description.slice(0, 70) + "..."}</Text>
-        </Card.Content>
-        <Card.Actions>
-          <Button onPress={handlePress}>open</Button>
-        </Card.Actions>
-        
-      </Card>
-      <Image source={{ uri: user.Image_Link }} style={styles.image} />
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <View style={styles.cardHeader}>
+            <LeftContent />
+            <Text style={styles.cardHeaderText}>{user?.Sponser}</Text>
+          </View>
+          <Text variant="titleLarge">{user?.Title}</Text>
+          <Text variant="bodyMedium">
+            {user.Description.slice(0, 70) + '...'}
+          </Text>
+        <Image source={{ uri: user.Image_Link }} style={styles.image} />
 
+          <Button onPress={handlePress}>open</Button>
+        </View>
+      </View>
     </PaperProvider>
   );
 };
 
-export default EventCard;
-
-
 const styles = StyleSheet.create({
-  
-  image: {
-    flex: 1,
+  card: {
     width: '100%',
-    height: '100%',
+    margin: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+    borderColor: '#ccc',
+    borderWidth: 1,
+  },
+  cardContent: {
+    padding: 10,
+    backgroundColor: 'white',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardHeaderText: {
+    marginLeft: 10,
+    fontSize: 16,
+  },
+  image: {
+    width: '100%',
+    height: 200,
   },
 });
+
+export default EventCard;
