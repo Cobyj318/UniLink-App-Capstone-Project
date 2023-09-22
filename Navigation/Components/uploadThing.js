@@ -167,11 +167,11 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
   if(isEditing === true){
     return (
               <View style={imageUploaderStyles.container}>
-                  {image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                  {image  && <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />}
                       <View style={imageUploaderStyles.uploadBtnContainer}>
                           <TouchableOpacity onPress={() => setActionSheet(true)} style={imageUploaderStyles.uploadBtn} >
                               <Text>{image ? 'Edit' : 'Upload'} Image</Text>
-                              <AntDesign name="camera" size={20} color="black" />
+                              <AntDesign name="camera" size={15} color="black" />
                           </TouchableOpacity>
                 <Modal isVisible={actionSheet}
                   style={{margin: 0, justifyContent: 'flex-end'}}>
@@ -184,7 +184,7 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
   else if(isEditing === false){
     return (
       <View style={imageUploaderStyles.container}>
-          {image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+          {image  && <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />}
       </View>
     );
   };
@@ -192,11 +192,13 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
 
 const imageUploaderStyles=StyleSheet.create({
     container:{
-        elevation:2,
-        height:200,
-        width:200,
+        //elevation:1,
+        marginTop:7,
+        marginLeft:10,
+        height:150,
+        width:150,
         backgroundColor:'#c1c9d6',
-        position:'relative',
+        //position:'relative',
         borderRadius:999,
         overflow:'hidden',
     },

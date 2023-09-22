@@ -42,18 +42,21 @@ export default function ProfileScreen({navigation}){
     useEffect(() => {
         setImage_(userImage)
     },[])
-    
-    //console.log('user image is ', userImage);
-    //<View style={{paddingTop:'10%'}}><CircularImage imageUrl={userImage}/></View>
 
      return (
-    <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-      {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
+    <View style={{ flex: 1, alignSelf: 'center'}}>
+      <View style={Pfstyles.container}>
+        {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
 
-      {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} value={nameEntry} placeholder={"Name"} />}
+        <View style={Pfstyles.textContainer}>
+            {edit ? <TextInput style={Pfstyles.containerItems} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput editable={false} value={nameEntry} style={Pfstyles.containerItems} placeholder={"Name"} />}
 
-
-      {edit ? <TextInput style={{ flex: 1 }} editable={true} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)} /> : <TextInput style={{ flex: 1 }} editable={false} placeholder={"Bio"} value={bioEntry} />}
+            <Text style={Pfstyles.containerItems}>Tags Here</Text>
+        </View>
+      </View>
+        
+      {edit ? <TextInput editable={true} style={styles.Bio} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)} /> : <TextInput editable={false} style={styles.Bio} placeholder={"Bio"} value={bioEntry} />}
+      
       <Text style={{ flex: 1 }}>Friends</Text>
 
       {/* Add the Portfolio button */}
@@ -84,5 +87,43 @@ const styles = StyleSheet.create({
     },
     saveEditsBtn:{
         flex:1
+    },
+    Bio:{
+        marginTop:10,
+        backgroundColor:"#ffffff",
+        borderRadius:40,
+        minHeight:50,
+        width:325,
+        fontSize:20,
+        paddingLeft:10,
+    }
+});
+
+const Pfstyles = StyleSheet.create({
+    container:{
+        display:"flex",
+        //position:"relative",
+        alignItems:"flex-start",
+        backgroundColor:"#ffffff",
+        height:165,
+        width:325,
+        borderRadius:70,
+        flexDirection:"row",
+        marginTop:10,
+        justifyContent:"space-between"
+    },
+    textContainer:{
+        flex:1, 
+        justifyContent:"space-evenly", 
+        height:165
+        
+    },
+    containerItems:{
+        alignSelf:'center',
+        paddingLeft:50,
+        position:"relative",
+        alignSelf:"center",
+        right:35,
+        fontSize:20,
     }
 });
