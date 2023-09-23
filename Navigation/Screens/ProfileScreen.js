@@ -9,7 +9,8 @@ import { fetchData } from '../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 import { CircularImage } from '../Components/CircleImage';
-  
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function ProfileScreen({navigation}){
     //const submithandler = () => {  
     //}
@@ -24,7 +25,17 @@ export default function ProfileScreen({navigation}){
     const [refreshing, setRefreshing] = React.useState(false);
     const [userDetails, setUserDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
-
+    const signOut = async () => {
+        try {
+            await AsyncStorage.clear();
+            await FIREBASE_AUTH.signOut();
+            // Redirect to the login screen or any other screen after signing out.
+            navigation.navigate('LoginScreen');
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+      };
+    
     useEffect(() => {
         const fetchDataAndUserData = async () => {
         setIsLoading(true); // Set loading state to true when fetching data
@@ -65,6 +76,9 @@ export default function ProfileScreen({navigation}){
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>
         <Text style={{ color: '#3498db', marginVertical: 10 }}>Create and join other people's Projects</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={signOut}>
+        <Text style={{ color: '#ff0000', marginVertical: 10 }}>Sign Out</Text>
       </TouchableOpacity>
 
       {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
