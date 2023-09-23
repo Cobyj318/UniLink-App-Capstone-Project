@@ -11,10 +11,6 @@ const EventCard = ({ users }) => {
   const navigation = useNavigation();
   const currentUserUID = FIREBASE_AUTH.currentUser?.uid;
 
-  const LeftContent = ({ style, image }) => (
-    <Avatar.Image source={{ uri: image?.Image_Link }} size={40} style={style} />
-  );
-
   const handlePress = (event) => {
     navigation.navigate('EventDetailsScreen', { event });
   };
@@ -35,7 +31,10 @@ const EventCard = ({ users }) => {
         <View style={styles.eventCardContainer} key={index}>
           <View style={styles.eventCard}>
             <View style={styles.cardHeader}>
-              <LeftContent style={styles.avatar} image={event} />
+            <Image
+                source={{ uri: event.Image_Link }}
+                style={styles.avatar}
+              />
               <View style={styles.headerText}>
                 <Text style={styles.title}>{event.Sponser}</Text>
                 <Text style={styles.subtitle}>{event.Date}</Text>
@@ -117,6 +116,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
   },
 });
 

@@ -24,12 +24,12 @@ const theme = {
 };
 
 const ConnectCard = ({ user, onConnect }) => {
-  const LeftContent = ({ style }) => (
+  const LeftContent = () => (
     <View>
       {user.Profile_Image ? (
-        <Image source={{ uri: user.Profile_Image }} style={[styles.avatar, style]} />
+        <Image source={{ uri: user.Profile_Image }} style={[styles.avatar]} />
       ) : (
-        <Avatar.Icon size={40} icon="account" style={style} />
+        <Avatar.Icon size={40} icon="account" />
       )}
     </View>
   );
@@ -82,7 +82,7 @@ const ConnectCard = ({ user, onConnect }) => {
       <TouchableOpacity onPress={handleExpand}>
         <View style={[styles.card, isExpanded && styles.expandedCard]}>
           <View style={styles.cardHeader}>
-            <LeftContent style={styles.avatar} />
+            <LeftContent />
             <View style={styles.headerText}>
               <Text style={styles.title}>{user.FirstName}</Text>
               <Text style={styles.subtitle}>{user.Major}</Text>
@@ -100,14 +100,12 @@ const ConnectCard = ({ user, onConnect }) => {
             <View style={styles.cardActions}>
               <Button
                 style={styles.cancelButton}
-                color='#CB333B'
                 onPress={handleExpand}
               >
                 Cancel
               </Button>
               <Button
                 style={styles.connectButton}
-                color='#003087'
                 onPress={handleConnectPress}
               >
                 {isConnected ? 'Connected' : 'Connect'}
