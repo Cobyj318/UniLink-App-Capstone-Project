@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     {
         const response=await signInWithEmailAndPassword(auth, email,password);
         saveLoginInfo(email,password);
-        navigation.navigate(ExistingUser);
+        navigation.replace(ExistingUser);
     }
     catch (error: any){
         console.log(error);

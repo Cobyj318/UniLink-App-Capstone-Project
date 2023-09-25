@@ -1,5 +1,5 @@
 import React, { useEffect, View, useState} from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, StatusBar, Button, RefreshControl } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, StatusBar, Button, RefreshControl,TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
@@ -94,7 +94,6 @@ function ConnectionsScreen({ navigation }) {
       const documentRef = doc(firestore,'User_data', userDetails.id);
       try {
         await updateDoc(documentRef, userDetails);
-        console.log(userDetails.id);
         console.log('Document updated successfully');
       } catch (error) {
         console.error('Error updating document:', error);
@@ -111,6 +110,10 @@ function ConnectionsScreen({ navigation }) {
       <ScrollView
         style={styles.scrollView}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />} >
+          <TextInput
+        style={styles.searchInput}
+        placeholder="Search..."
+      />
         {userDetails?.Connections?.map((id) => (
           <MutualCard user={id} userID={id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} />
         ))}
@@ -124,6 +127,9 @@ function MutualsScreen() {
   const [loading, setLoading] = useState(false);
   const [usersData, setUsersData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
+  const [searchText, setSearchText] = useState('');
+
+
   const fetchDataAndUserData = async () => {
     setLoading(true); // Set loading state to true when fetching data
     const usersData = await fetchAllUsers();
@@ -167,15 +173,27 @@ function MutualsScreen() {
     fetchDataAndUserData();  
     fetchData();
   }, []);
-  
-  let filteredArray = usersData?.filter(item => !userDetails?.Connections.includes(item.id));
-  filteredArray=filteredArray?.filter(item=>item.Id!==FIREBASE_AUTH?.currentUser.uid);
 
+  let filteredArray = usersData?.filter(item => !userDetails?.Connections.includes(item.id));
+
+  if(searchText==''){
+    filteredArray=filteredArray?.filter(item=>item.Id!==FIREBASE_AUTH?.currentUser.uid);
+  }
+  else{
+    filteredArray=filteredArray?.filter(item=>item.FirstName==searchText);
+    
+  }
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}> 
       <ScrollView
       style={styles.scrollView}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />}>
+        <TextInput
+        style={styles.searchInput}
+        placeholder="Search..."
+        onChangeText={(text) => setSearchText(text)}
+        value={searchText}
+      />
         {filteredArray?.map((user) => (
           <ConnectCard user = {user} onConnect={() => handleConnect(user, user.id)}/>   
         ))}
@@ -219,5 +237,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 42,
+  },
+  searchInput: {
+    fontSize: 18, // Slightly larger font size
+    paddingVertical: 14, // Increased vertical padding
+    paddingLeft: 20, // Left padding for text
+    color: '#333', // Text color
   },
 });

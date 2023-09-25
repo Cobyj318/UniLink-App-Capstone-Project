@@ -44,7 +44,6 @@ const HomeScreen = () => {
   const screenHeight = Dimensions.get('window').height;
   const viewHeightPercentage = 15;
   const viewHeight = (screenHeight * viewHeightPercentage) / 100;
-  // const userImage=userDetails ? userDetails.Profile_Image : '';
   
   const fetchNewsDatafordisplay = async () => {
     setIsLoading(true); // Set loading state to true when fetching data
@@ -60,7 +59,9 @@ const HomeScreen = () => {
       const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
       setUserDetails(userData[0]);
       setIsLoading(false); // Set loading state to false when data fetching is complete
+      console.log(userData[0]);
     };
+   
     fetchDataAndUserData();  
     fetchNewsDatafordisplay();
     },[]);

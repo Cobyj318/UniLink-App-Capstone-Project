@@ -30,7 +30,6 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
   };
 
   useEffect(() => {
-    console.log("User:", user, "  AllUser:", AllUsers);
     const foundUser = AllUsers.find(use => use.id === user);
     if (foundUser) {
       console.log("User found:", foundUser);
