@@ -4,7 +4,7 @@ import { Camera, CameraType, } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
 import {primaryColors, neutralColors} from "../Components/Colors"
-import { updateDoc, doc, collection, getDocs, query, where } from 'firebase/firestore';
+import { updateDoc, doc, collection, getDocs, query, where, documentId } from 'firebase/firestore';
 import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
 import { storage,firestore } from "../../src/firebase_init/firebase";
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
@@ -148,11 +148,12 @@ const CamScreen = ( {navigation, pageFrom} ) => {
                 const userRef = collection(firestore, 'User_data');
 
                 let firestoreQuery = query(userRef, where('Id', '==',  FIREBASE_AUTH.currentUser?.uid));
-                
+
                 const querySnapshot = await getDocs(firestoreQuery);
-                const docref = doc(firestore, 'User_data', querySnapshot
-                );
-                console.log(FIREBASE_AUTH.currentUser?.uid);
+                const docos = querySnapshot.docs[0];
+                console.log(docos.id);
+
+                const docref = doc(firestore, 'User_data', docos.id);
                 updateDoc(docref, {Profile_Image: imageLink})
                 navigation.goBack();
             }
