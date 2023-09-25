@@ -3,11 +3,10 @@ import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar, S
 import { Camera, CameraType, } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
-import NewUserScreen from './NewUserScreen';
-import UploadThing from '../Components/uploadThing';
 import {primaryColors, neutralColors} from "../Components/Colors"
+import { updateDoc, doc, collection, getDocs, query, where } from 'firebase/firestore';
 import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
-import { storage } from "../../src/firebase_init/firebase";
+import { storage,firestore } from "../../src/firebase_init/firebase";
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 
@@ -36,6 +35,8 @@ const CamScreen = ( {navigation, pageFrom} ) => {
     const prevPage = routes[routes.length - 2];
     console.log(prevPage.name);
 
+    const [imageLink, setImageLink] = React.useState("");
+    const [uploading, setUploading] = React.useState(false);
     const [userDetails, setUserDetails] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true); // State to track if data is being fetched
     React.useEffect(() => {
@@ -47,8 +48,9 @@ const CamScreen = ( {navigation, pageFrom} ) => {
         };
         fetchDataAndUserData();  
         },[]);
+    //setImageLink(userDetails.Profile_Image);
 
-    
+
 
     
     /**
@@ -92,14 +94,14 @@ const CamScreen = ( {navigation, pageFrom} ) => {
      */
     let takePic = async () => {
         let options ={
-            quality: 1,
+            quality: 0,
             base64: true,
-            exif: false
+            exif: false,
         };
         
         let newPhoto = await camRef.current.takePictureAsync(options);
         setPhoto(newPhoto);
-    }
+        }
 
     if (photo){
 
@@ -125,24 +127,38 @@ const CamScreen = ( {navigation, pageFrom} ) => {
             /*MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
                 setPhoto(undefined);
             });*/
-            /*setPhoto(userDetails.Profile_Image);
-            const storageRef = ref(storage, `images/pfps/${Date.now()}.jpg`);
-            //if (){}
-                const response = await fetch(photo);
-                const blob = await response.blob();
-            
-                try {
-                const snapshot = await uploadBytes(storageRef, blob);
-                // The image is successfully uploaded, now get the download URL
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                console.log('Download URL:', downloadURL);
+            const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
+            const response = await fetch(photo.uri);
+            const blob = await response.blob();
+        
+            try {
+            const snapshot = await uploadBytes(storageRef, blob);
 
-                setUploading(false); // Set uploading state to false after successful upload
-                } catch (error) {
-                console.error("Error uploading image:", error);
-                setUploading(false); // Set uploading state to false if there's an error
-                }*/
+            // The image is successfully uploaded, now get the download URL
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            //console.log('Download URL:', downloadURL);
+            setImageLink(downloadURL);
+
+            setUploading(false); // Set uploading state to false after successful upload
+            } catch (error) {
+            console.error("Error uploading image:", error);
+            setUploading(false); // Set uploading state to false if there's an error
+            }
+            if (imageLink != null) {
+                const userRef = collection(firestore, 'User_data');
+
+                let firestoreQuery = query(userRef, where('Id', '==',  FIREBASE_AUTH.currentUser?.uid));
+                
+                const querySnapshot = await getDocs(firestoreQuery);
+                const docref = doc(firestore, 'User_data', querySnapshot
+                );
+                console.log(FIREBASE_AUTH.currentUser?.uid);
+                updateDoc(docref, {Profile_Image: imageLink})
                 navigation.goBack();
+            }
+            else{
+                navigation.goBack();
+            }
         };
 
         /**

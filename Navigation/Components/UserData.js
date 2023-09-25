@@ -10,6 +10,7 @@ export async function fetchUserData(searchID) {
     if (searchID) {firestoreQuery = query(userRef, where('Id', '==', searchID));}
     
     const querySnapshot = await getDocs(firestoreQuery);
+    console.log(querySnapshot.data());
 
     if (querySnapshot.empty) {return [];}
     // Access the first document directly (assuming there's only one matching document)

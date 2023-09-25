@@ -12,6 +12,7 @@ import { firestore, storage } from '../../src/firebase_init/firebase';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase'; 
 import { fetchUserData } from './UserData';
 import { fetchData } from '../DBFunctions/FetchData';
+import ProfileScreen from '../Screens/ProfileScreen';
 
 /**
  * @property {string} uri - The URI of the selected image.
@@ -44,6 +45,7 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
       setIsLoading(true); // Set loading state to true when fetching data
       const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
       console.log(userData[0]);
+      console.log(userData[0].Profile_Image);
       setImage(userData[0].Profile_Image);
       setIsLoading(false); // Set loading state to false when data fetching is complete
       };

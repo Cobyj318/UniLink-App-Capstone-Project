@@ -1,6 +1,6 @@
 import * as React from 'react' ;
 import { useState, useEffect } from 'react';
-import { View, Text, Image, Button, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Image, Button, TextInput, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler'; // Import TouchableOpacity for custom button styling
 import handleUserSubmit from '../../src/firebase_init/handleUserSubmit';
 import UploadThing from '../Components/uploadThing'
@@ -34,7 +34,12 @@ export default function ProfileScreen({navigation}){
         } catch (error) {
             console.error('Error signing out:', error);
         }
-      };
+    };
+
+    const DATA =[{
+        id: 'Test Connection',
+        title:"First Friends"
+    }]
     
     useEffect(() => {
         const fetchDataAndUserData = async () => {
@@ -47,7 +52,6 @@ export default function ProfileScreen({navigation}){
         };
         fetchDataAndUserData();  
         },[]);
-
   
     const userImage = userDetails ? userDetails.Profile_Image : '';
     useEffect(() => {
@@ -55,7 +59,7 @@ export default function ProfileScreen({navigation}){
     },[])
 
      return (
-    <View style={{ flex: 1, alignSelf: 'center'}}>
+    <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}>
       <View style={Pfstyles.container}>
         {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
 
@@ -65,15 +69,16 @@ export default function ProfileScreen({navigation}){
             <Text style={Pfstyles.containerItems}>Tags Here</Text>
         </View>
       </View>
-        
-      {edit ? <TextInput editable={true} style={styles.Bio} placeholder={"Bio"} value={bioEntry} onChangeText={value => bEntryEdited(value)} /> : <TextInput editable={false} style={styles.Bio} placeholder={"Bio"} value={bioEntry} />}
-      
-      <Text style={{ flex: 1 }}>Friends</Text>
+              
+      <View style={styles.Bio}>
+        <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Portfolio</Text>
+        <PortfolioScreen/>
+      </View>
+      <View style={styles.Bio}>
+        <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
+        <FlatList/>
+      </View>
 
-      {/* Add the Portfolio button */}
-      <TouchableOpacity onPress={() => navigation.navigate('PortfolioScreen')}>
-        <Text style={{ color: '#3498db', marginVertical: 10 }}>Portfolio</Text>
-      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>
         <Text style={{ color: '#3498db', marginVertical: 10 }}>Create and join other people's Projects</Text>
       </TouchableOpacity>
@@ -82,7 +87,7 @@ export default function ProfileScreen({navigation}){
       </TouchableOpacity>
 
       {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -103,14 +108,17 @@ const styles = StyleSheet.create({
         flex:1
     },
     Bio:{
+        paddingTop:10,
+        flex:1,
         marginTop:10,
         backgroundColor:"#ffffff",
         borderRadius:40,
-        minHeight:50,
+        minHeight:150,
         width:325,
         fontSize:20,
-        paddingLeft:10,
-    }
+        //paddingLeft:10,
+        overflow:'hidden',
+    },
 });
 
 const Pfstyles = StyleSheet.create({
