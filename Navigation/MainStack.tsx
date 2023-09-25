@@ -1,19 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////This page is The inital container purposes/////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {User} from "firebase/auth";
-import {onAuthStateChanged} from "firebase/auth";
-import { FIREBASE_AUTH } from "../src/firebase_init/firebase";
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { enc, AES } from 'react-native-crypto-js';
-import { signInWithEmailAndPassword} from "firebase/auth";
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////Screen Imports///////////////////////////////////////////
@@ -159,85 +153,26 @@ export const TabNavigator = () => (
 ////////////////////////////////////////////////////////////////////////////////////////
 const Stack = createStackNavigator();
 
+function MainStack() {
   
-function MainStack(){
-  const [user,setuser] = useState<User|null>(null);
-  useEffect(()=>{
-    onAuthStateChanged(FIREBASE_AUTH,(user)=>{
-      console.log('user',user?.email);
-      setuser(user);
-    });
-  },[]);
-
-  const auth = FIREBASE_AUTH;
-const [loading, setLoading] = useState(false);
-const signIn= async (email,password)=>{
-  setLoading(true);
-  try
-  {
-      const response=await signInWithEmailAndPassword(auth, email,password);
-  }
-  catch (error){
-      console.log(error);
-  }
-  finally {
-      setLoading(false);
-  }
-}
-useEffect(()=>{ 
-const loadLoginInfo = async () => {
-  try {
-    const encryptedEmail = await AsyncStorage.getItem('userEmail');
-    const encryptedPassword = await AsyncStorage.getItem('userPassword');
-    if (encryptedEmail && encryptedPassword) {
-      const decryptedEmail = AES.decrypt(encryptedEmail, 'your-secret-key').toString(enc.Utf8);
-      const decryptedPassword = AES.decrypt(encryptedPassword, 'your-secret-key').toString(enc.Utf8);
-      await signIn(decryptedEmail,decryptedPassword);
-      return { email: decryptedEmail, password: decryptedPassword };
-    } else {
-      return null; // No credentials found
-    }
-  } catch (error) {
-    console.error('Error loading login info:', error);
-    return null; // Handle error
-  }
-};
-loadLoginInfo();
-}, []);
-
-
   return(
-  <NavigationContainer >
-    {auth.currentUser?.uid ? (
-        <Stack.Navigator initialRouteName={Splash}>
+    <NavigationContainer>
+       <Stack.Navigator initialRouteName="Splash">
+        <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={ExistingUser} component={TabNavigator} options={{ headerShown: false,  gestureEnabled: false}}/>
         <Stack.Screen name={Login} component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
         <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
         <Stack.Screen name={messageName} component={MessageScreen} options={{headerShown: true}}/>
         <Stack.Screen name={portfolioName} component={PortfolioScreen} options={{headerShown: true}}/>
         <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
         <Stack.Screen name={collaborationName} component={CollaborationScreen} options={{headerShown: true}}/>
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator initialRouteName={ExistingUser}>
-        <Stack.Screen name={ExistingUser} component={TabNavigator} options={{ headerShown: false,  gestureEnabled: false}}/>
-        <Stack.Screen name={Login} component={LoginScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name={NewUser} component={NewUserScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={Cams} component={CamScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={Splash} component={SplashScreen} options={{headerShown: false}}/>
-        <Stack.Screen name={SignUp} component={SignUpScreen} options={{headerShown: false}}/>
-        <Stack.Screen name={messageName} component={MessageScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={portfolioName} component={PortfolioScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
-        <Stack.Screen name={collaborationName} component={CollaborationScreen} options={{headerShown: true}}/>
-        </Stack.Navigator>
-  )}
-  </NavigationContainer>
+    </Stack.Navigator>
+    </NavigationContainer>
   );
 }
+
 
 
 export default MainStack;

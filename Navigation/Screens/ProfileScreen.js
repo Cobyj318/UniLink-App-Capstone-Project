@@ -27,10 +27,13 @@ export default function ProfileScreen({navigation}){
     const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
     const signOut = async () => {
         try {
+            await AsyncStorage.removeItem('userEmail');
+            await AsyncStorage.removeItem('userPassword');
+            console.log('Data deleted from AsyncStorage');      
             await AsyncStorage.clear();
             await FIREBASE_AUTH.signOut();
             // Redirect to the login screen or any other screen after signing out.
-            navigation.navigate('LoginScreen');
+            navigation.replace('SplashScreen');
         } catch (error) {
             console.error('Error signing out:', error);
         }
