@@ -7,10 +7,8 @@ import { fetchData } from '../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { neutralColors, primaryColors } from '../Components/Colors';
 import { fetchUserData} from '../Components/UserData';
-import { fetchtagData } from '../DBFunctions/FetchData';
 import { firestore } from '../../src/firebase_init/firebase';
-import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
-// import HomeNewsCard from "../Components/HomeNewsCard"
+import { collection, getDocs} from '@firebase/firestore';
 import NewsCardV2 from '../Components/HomeNewsCard';
 
 const fetchNewsData = async () => {

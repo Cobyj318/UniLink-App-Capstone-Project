@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions,TextInput,KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions,TextInput,KeyboardAvoidingView,TouchableOpacity,Linking } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
 import { CircularImage } from '../Components/CircleImage';
@@ -43,6 +43,21 @@ const EventDetailsScreen = () => {
     // Implement the logic to update the event data in your Firebase or state management here
     setEditMode(false);
     // Display a success message or navigate back to the previous screen
+  };
+
+  const openGoogleMaps = (location) => {
+    const latitude = 37.7749;
+    const longitude = -122.4194;
+    //const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    const url = `https://maps.app.goo.gl/PDGzFzzMJV7bKwdt5`;
+
+    Linking.openURL(url)
+      .then((data) => {
+        console.log('Google Maps opened:', data);
+      })
+      .catch((error) => {
+        console.error('Error opening Google Maps:', error);
+      });
   };
 
   return (
@@ -93,7 +108,9 @@ const EventDetailsScreen = () => {
         <React.Fragment>
           <Text style={styles.eventTitle}>{event.Title}</Text>
           <Text style={styles.eventDate}>{event.Date}</Text>
-          <Text style={styles.eventLocation}>{event.Location}</Text>
+          <TouchableOpacity onPress={() => openGoogleMaps(event.Location)}>
+            <Text style={styles.eventLocation}>{event.Location}</Text>
+          </TouchableOpacity>
           <Text style={styles.eventDescription}>{event.Description}</Text>
           {event.Creator === User_ID && (
             <Button onPress={handleEditButton}>Edit</Button>
