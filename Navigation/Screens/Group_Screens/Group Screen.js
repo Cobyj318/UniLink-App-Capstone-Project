@@ -24,8 +24,6 @@ export default function EventsScreen({ navigation }) {
     }
   };
 
-
-
   useEffect(() => {
     const fetchEventData = async () => {
       try {

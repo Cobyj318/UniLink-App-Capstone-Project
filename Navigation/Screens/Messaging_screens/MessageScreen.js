@@ -11,8 +11,8 @@
   import { StreamChat } from 'stream-chat';
   import React, { useEffect, useState } from 'react';
   import { SafeAreaProvider } from 'react-native-safe-area-context';
-  import useCachedResources from '../../hooks/useCachedResources';
-  import UserListItem from '../Components/UserListItem';
+  import useCachedResources from '../../../hooks/useCachedResources';
+  import UserListItem from '../../Components/UserListItem';
 
   const SearchBar = ({ onSearch }) => {
     const [searchText, setSearchText] = useState('');

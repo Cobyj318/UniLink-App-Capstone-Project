@@ -15,7 +15,7 @@ const PortfolioScreen = () => {
   const [interests, setInterests] = useState([]);
   const [projects,setProjects] = useState([]);
   const [customTag, setCustomTag] = useState('');
-  const [tagCategory, setTagCategory] = useState(null);
+  const [tagCategory, setTagCategory] = useState(null); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -133,9 +133,6 @@ const deleteTagFromFirebase = async (category, tag) => {
   }
 };
 
-
-
-
 const deleteTag = async (tagToDelete) => {
   try {
     const user = auth.currentUser;
@@ -185,17 +182,11 @@ const deleteTag = async (tagToDelete) => {
     console.error('Error deleting tag:', error);
   }
 };
-
-
-
-
-
   const toggleDropdown = (category) => {
     setIsDropdownOpen(!isDropdownOpen);
     setCustomTag('');
     setTagCategory(category);
   };
-
   const addTag = async (tag) => {
     if (tag.trim() !== '') {
       if (!skills.includes(tag) && !interests.includes(tag)) {
@@ -255,7 +246,6 @@ const deleteTag = async (tagToDelete) => {
       console.error('Error updating tag in Firebase:', error);
     }
   };
-  
 
   const closeDropdown = () => {
     console.log('Closing dropdown');
@@ -392,6 +382,8 @@ const deleteTag = async (tagToDelete) => {
     
   );
 };
+
+
 
 
 const styles = StyleSheet.create({

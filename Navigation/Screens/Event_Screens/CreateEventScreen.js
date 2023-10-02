@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import HandleUserEvents from '../../src/firebase_init/handleUserEvents';
+import HandleUserEvents from '../../../src/firebase_init/handleUserEvents';
 import CalendarPicker from 'react-native-calendar-picker';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import * as ImagePicker from 'expo-image-picker';
-import { CircularImage } from '../Components/CircleImage';
+import { CircularImage } from '../../Components/CircleImage';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Picker } from '@react-native-picker/picker';
 
@@ -124,7 +124,11 @@ export default function CreateEventScreen({ navigation, route }) {
           >
             <Picker.Item label="Barnes & Noble Bookstore" value="Barnes & Noble Bookstore" />
             <Picker.Item label="Daniel D. Reneau Biomedical  Engineering Building" value="Daniel D. Reneau Biomedical  Engineering Building" />
-            <Picker.Item label="Bogard Hall (Engineering)" value="Bogard Hall (Engineering)" />
+            <Picker.Item label=" Lambright Sports & Wellness Center" value=" Lambright Sports & Wellness Center" />
+            <Picker.Item label="Integrated Engineering and Science Building (IESB)" value="Integrated Engineering and Science Building (IESB)" />
+            <Picker.Item label="College of Business" value="College of Business" />
+            <Picker.Item label="Carson-Taylor Hall (Human Ecology & Science)" value="Carson-Taylor Hall (Human Ecology & Science)" />
+            <Picker.Item label="Tolliver Hall/Post Office" value="Tolliver Hall/Post Office" />
           </Picker>
         )}
 

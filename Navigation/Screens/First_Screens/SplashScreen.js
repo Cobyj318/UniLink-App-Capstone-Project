@@ -1,45 +1,21 @@
 import * as React from 'react';
 import { useState,useEffect } from 'react';
 import { ImageBackground, View, Text, StyleSheet, Image } from 'react-native';
-import { Button, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { Portal } from 'react-native-paper';
+import { Button,Portal, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { enc, AES } from 'react-native-crypto-js';
 import { signInWithEmailAndPassword} from "firebase/auth";
 
-const BGImage = require('../../assets/SplashBG.png');
-const Logo = require('../../assets/LaTechLogo.png');
+const BGImage = require('../../../assets/SplashBG.png');
+const Logo = require('../../../assets/LaTechLogo.png');
 const auth = FIREBASE_AUTH;
 
-console.log(auth.currentUser?.email);
 export default function SplashScreen({ navigation }) {
-  const [user, setUser] = useState(null);
+  
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Check if there is user data saved in AsyncStorage
-    const loadLoginInfo = async () => {
-      try {
-        const encryptedEmail = await AsyncStorage.getItem('userEmail');
-        const encryptedPassword = await AsyncStorage.getItem('userPassword');
-        if (encryptedEmail && encryptedPassword) {
-          const decryptedEmail = AES.decrypt(encryptedEmail, 'your-secret-key').toString(enc.Utf8);
-          const decryptedPassword = AES.decrypt(encryptedPassword, 'your-secret-key').toString(enc.Utf8);
-          
-          // Try to sign in with the saved credentials
-          await signIn(decryptedEmail, decryptedPassword);
-        }
-      } catch (error) {
-        console.error('Error loading login info:', error);
-      }
-    };
-
-    loadLoginInfo();
-  }, []);
-
   // Set up your sign-in function
   const signIn = async (email, password) => {
     setLoading(true);
@@ -48,16 +24,33 @@ export default function SplashScreen({ navigation }) {
       // If sign-in is successful, update the user state
       navigation.replace('TabNavigator');
     } catch (error) {
-      console.log(error);
+        console.log(error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
-  const auth = FIREBASE_AUTH;
+  // Check if there is user data saved in AsyncStorage
+  const loadLoginInfo = async () => {
+    try {
+      const encryptedEmail = await AsyncStorage.getItem('userEmail');
+      const encryptedPassword = await AsyncStorage.getItem('userPassword');
+      if (encryptedEmail && encryptedPassword) {
+        const decryptedEmail = AES.decrypt(encryptedEmail, 'your-secret-key').toString(enc.Utf8);
+        const decryptedPassword = AES.decrypt(encryptedPassword, 'your-secret-key').toString(enc.Utf8);
+        
+        // Try to sign in with the saved credentials
+        await signIn(decryptedEmail, decryptedPassword);
+      }
+    } catch (error) {
+      console.error('Error loading login info:', error);
+    }
+  };
   
+  useEffect(() => {
+    loadLoginInfo();
+  }, []);
 
-  
-
+ 
   return (
     <PaperProvider theme={theme}>
       <ImageBackground source={BGImage} resizeMode='cover' style={styles.image}>

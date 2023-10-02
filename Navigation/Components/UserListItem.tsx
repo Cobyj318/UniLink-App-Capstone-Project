@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { useChatContext } from "stream-chat-react-native-core";
 import AuthContext from "../Contexts/Authentication";
-import ChannelScreen from "../Screens/ChannelScreen";
+import ChannelScreen from "../Screens/Messaging_screens/ChannelScreen";
 
 const UserListItem = ({ user }) => {
   const { client } = useChatContext();

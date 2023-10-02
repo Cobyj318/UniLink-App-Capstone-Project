@@ -12,20 +12,20 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////Screen Imports///////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-import NewUserScreen from './Screens/NewUserScreen';
-import SplashScreen from './Screens/SplashScreen'; 
+import NewUserScreen from './Screens/First_Screens/NewUserScreen';
+import SplashScreen from './Screens/First_Screens/SplashScreen'; 
 import CamScreen from './Screens/CamScreen';
 import UploadThing from './Components/uploadThing';
-import EventsScreen from './Screens/EventsScreen';
+import EventsScreen from './Screens/Event_Screens/EventsScreen';
 import ProfileScreen from './Screens/ProfileScreen';
-import MessageScreen from './Screens/MessageScreen';
+import MessageScreen from './Screens/Messaging_screens/MessageScreen';
 import NetworkScreen from './Screens/NetworkScreen'; 
-import NewsScreen from './Screens/NewsScreen';
-import CreateEventScreen from './Screens/CreateEventScreen';
+import NewsScreen from './Screens/News_screens/NewsScreen';
+import CreateEventScreen from './Screens/Event_Screens/CreateEventScreen';
 import HomeScreen from './Screens/HomeScreen';
-import EventDetailsScreen from './Screens/EventDetails';
-import LoginScreen from './Screens/LoginScreen';
-import SignUpScreen from './Screens/SignUpScreen';
+import EventDetailsScreen from './Screens/Event_Screens/EventDetails';
+import LoginScreen from './Screens/First_Screens/LoginScreen';
+import SignUpScreen from './Screens/First_Screens/SignUpScreen';
 import NotifScreen from './Screens/NotifScreen';
 import PortfolioScreen from './Screens/PortfolioScreen';
 import CollaborationScreen from './Screens/CollaborationScreen';

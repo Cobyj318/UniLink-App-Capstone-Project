@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
 import {View,TextInput,Button,Alert,StyleSheet,KeyboardAvoidingView,} from 'react-native';
-import { storage } from '../../src/firebase_init/firebase';
-import HandleUserSubmit from '../../src/firebase_init/handleUserSubmit';
-import UploadThing from '../Components/uploadThing';
-import { ExistingUser } from '../MainStack';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { storage } from '../../../src/firebase_init/firebase';
+import HandleUserSubmit from '../../../src/firebase_init/handleUserSubmit';
+import UploadThing from '../../Components/uploadThing';
+import { ExistingUser } from '../../MainStack';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import {
   getStorage,
   ref,
