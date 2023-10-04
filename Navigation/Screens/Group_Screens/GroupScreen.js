@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl, View, ActivityIndicator } from 'react-native';
 import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import EventCard from '../../Components/EventCard';
+import GroupCard from '../../Components/GroupCards';
 import { useState, useEffect } from 'react';
-import CreateEventScreen from './CreateEventScreen'; 
 import { fetchData } from '../../DBFunctions/FetchData';
+import { primaryColors } from '../../Components/Colors';
 
-export default function EventsScreen({ navigation }) {
+export default function GroupsScreen({ navigation }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,8 +23,6 @@ export default function EventsScreen({ navigation }) {
     }, 500);
     }
   };
-
-
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -57,16 +55,14 @@ export default function EventsScreen({ navigation }) {
           // Show the ScrollView when data is loaded
           <ScrollView
             style={styles.scrollView}
-            // Add a RefreshControl to enable pull-to-refresh functionality
             refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />}
           >
-            {/* Render the EventCard component and pass the fetched event data as props */}
-            <EventCard users={users} />
+            
+            <GroupCard users={users} navigation={navigation}/>
           </ScrollView>
         )}
       </SafeAreaView>
-      {/* Render the custom FloatingButton */}
-      <FloatingButton />
+      {/* <FloatingButton /> */}
     </PaperProvider>
   );
 }
@@ -87,9 +83,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
+    backgroundColor:primaryColors.blue,
   },
   scrollView: {
-    backgroundColor: 'white',
     marginHorizontal: 10,
   },
   text: {

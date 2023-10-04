@@ -8,9 +8,10 @@ const RedLine = () => {
 
 const styles = StyleSheet.create({
   line: {
-    height: 5, // Set the height to adjust the line thickness
+    height: 5,
     backgroundColor: primaryColors.red,
-    width: '100%', // This will make the line run from one side to the other
+    width: '100%',
+    borderRadius: 2.5, // Adjust the borderRadius to control the roundness of the edges
   },
 });
 
