@@ -32,7 +32,7 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
   }*/
   const routes = navigation.getState()?.routes;
   const currPage = routes[routes.length - 1];
-  console.log(currPage)
+  //console.log(currPage)
 
   const handlePress = () => { navigation.navigate(Cams); closeActionSheet();};
 
@@ -44,8 +44,8 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
       const fetchDataAndUserData = async () => {
       setIsLoading(true); // Set loading state to true when fetching data
       const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
-      console.log(userData[0]);
-      console.log(userData[0].Profile_Image);
+      //console.log(userData[0]);
+      //console.log(userData[0].Profile_Image);
       setImage(userData[0].Profile_Image);
       setIsLoading(false); // Set loading state to false when data fetching is complete
       };
@@ -125,17 +125,16 @@ export default function UploadThing( {isEditing,navigation,setImage_} ) {
     const storageRef = ref(storage, `images/${userId}/${Date.now()}.jpg`);
     const response = await fetch(_image);
     const blob = await response.blob();
-    console.log("here")
 
     try {
     const snapshot = await uploadBytes(storageRef, blob);
     // The image is successfully uploaded, now get the download URL
     const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log('Download URL:', downloadURL);
+    //console.log('Download URL:', downloadURL);
 
     setUploading(false); // Set uploading state to false after successful upload
     } catch (error) {
-    console.error("Error uploading image:", error);
+    //console.error("Error uploading image:", error);
     setUploading(false); // Set uploading state to false if there's an error
     }
 

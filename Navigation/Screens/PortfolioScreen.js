@@ -121,7 +121,7 @@ const deleteTagFromFirebase = async (category, tag) => {
       const userSnapshot = await getDoc(userRef);
       if (userSnapshot.exists()) {
         const userData = userSnapshot.data();
-        console.log(userData);
+        //console.log(userData);
         const updatedArray = userData[category].filter(item => item !== tag);
         await updateDoc(userRef, {
           [category]: updatedArray,

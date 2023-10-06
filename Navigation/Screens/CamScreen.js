@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Text, Image, SafeAreaView, Button, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
+import { Avatar } from 'react-native-paper';
 import { Camera, CameraType, } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from 'expo-sharing';
@@ -42,7 +43,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
     React.useEffect(() => {
         const fetchDataAndUserData = async () => {
             const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
-            console.log(userData);
+            //console.log(userData);
             setUserDetails(userData[0]);
             setIsLoading(false); // Set loading state to false when data fetching is complete
         };
@@ -151,7 +152,7 @@ const CamScreen = ( {navigation, pageFrom} ) => {
 
                 const querySnapshot = await getDocs(firestoreQuery);
                 const docos = querySnapshot.docs[0];
-                console.log(docos.id);
+                console.log(imageLink);
 
                 const docref = doc(firestore, 'User_data', docos.id);
                 updateDoc(docref, {Profile_Image: imageLink})

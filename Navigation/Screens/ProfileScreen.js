@@ -8,23 +8,42 @@ import PortfolioScreen from './PortfolioScreen';
 import { fetchData } from '../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
+import { fetchFriendData } from '../Components/FriendData';
 import { CircularImage } from '../Components/CircleImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { editData } from '../DBFunctions/editData';
+import { Avatar } from 'react-native-paper';
 
 export default function ProfileScreen({navigation}){
     //const submithandler = () => {  
     //}
-    const [edit, isEditing] = React.useState(false);
-    const [nameEntry, nEntryEdited] = React.useState("");
-    const [bioEntry, bEntryEdited] = React.useState("");
+    const [edit, isEditing] = useState(false);
+    const [nameEntry, nEntryEdited] = useState("");
     const [Image_, setImage_] = useState("")
-    const editProfile = () => {
-        isEditing(!edit);  
-    }
-    const [users, setUsers] = useState([]);
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [userDetails, setUserDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
+    useEffect(() => {
+        const fetchDataAndUserData = async () => {
+        setIsLoading(true); // Set loading state to true when fetching data
+        const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+        setUserDetails(userData[0]);
+        setIsLoading(false); // Set loading state to false when data fetching is complete
+        };
+        fetchDataAndUserData();  
+        },[]);
+
+    const userName = `${userDetails ? userDetails.FirstName: ''} ${userDetails ? userDetails.LastName: ''}`;
+    const userImage = userDetails ? userDetails.Profile_Image : '';
+    const userConnections = userDetails ? userDetails.Connections : [];
+    
+    useEffect(() => {
+        setImage_(userImage);
+        //console.log(userDetails)
+        //console.log(userName);
+        nEntryEdited(userName);
+    },[]);
+
     const signOut = async () => {
         try {
             await AsyncStorage.removeItem('userEmail');
@@ -39,27 +58,53 @@ export default function ProfileScreen({navigation}){
         }
     };
 
-    const DATA =[{
-        id: 'Test Connection',
-        title:"First Friends"
-    }]
+    const editProfile = () => {
+        isEditing(!edit);
+        if (edit === true){
+            let newNameEntry= nameEntry.split(' ');
+            editData(newNameEntry);
+        }
+    }
+
+    const listData = () => {
+        let friends = []
+        if(userConnections != []){
+            for (let i=0; i < userConnections.length; i++){
+                const fetchDataAndFriendData = async () => {
+                    setIsLoading(true); // Set loading state to true when fetching data
+                    const userData = await fetchFriendData(userConnections[i]);
+                    setIsLoading(false); // Set loading state to false when data fetching is complete
+                    return(userData[0].FirstName, userData[0].LastName, userData[0].Profile_Image, userData[0].id)
+                    };
+                    friends[i] = fetchDataAndFriendData();
+                    shouldComponentUpdate(fetchDataAndFriendData);
+                
+            }
+        }
+        return(friends);
+    }
+    let DATA = listData();
+
+    const connectionsList = ({friend}) => {
+        if (friend != undefined){
+            const Name = friend.Firstname + " " + friend.Lastname;
+            return(
+            <View>    
+                <TouchableOpacity style={{flex:1, flexDirection: 'row', backgroundColor:'#000000'}}>
+                    <Avatar.Image size={24} source={{uri: friend.pfi}}/>
+                    <Text>${Name}</Text>
+                </TouchableOpacity>
+            </View>
+            )
+        } else{
+            return(
+                <Text>Reload</Text>
+            )
+        }
+    }  
     
-    useEffect(() => {
-        const fetchDataAndUserData = async () => {
-        setIsLoading(true); // Set loading state to true when fetching data
-        const usersData = await fetchData();
-        setUsers(usersData);
-        const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
-        setUserDetails(userData[0]);
-        setIsLoading(false); // Set loading state to false when data fetching is complete
-        };
-        fetchDataAndUserData();  
-        },[]);
+
   
-    const userImage = userDetails ? userDetails.Profile_Image : '';
-    useEffect(() => {
-        setImage_(userImage)
-    },[])
 
      return (
     <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}>
@@ -79,7 +124,11 @@ export default function ProfileScreen({navigation}){
       </View>
       <View style={styles.Bio}>
         <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
-        <FlatList/>
+        <FlatList
+            data={DATA}
+            renderItem={connectionsList}
+            keyExtractor={e=>e.id}
+     /> 
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>

@@ -57,6 +57,7 @@ const HomeScreen = () => {
       const usersData = await fetchData();
       setUsers(usersData);
       const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+      console.log(userData);
       setUserDetails(userData[0]);
       setIsLoading(false); // Set loading state to false when data fetching is complete
       console.log(userData[0]);
