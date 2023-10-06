@@ -8,7 +8,6 @@ import PortfolioScreen from './PortfolioScreen';
 import { fetchData } from '../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
-import { CircularImage } from '../Components/CircleImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen({navigation}){

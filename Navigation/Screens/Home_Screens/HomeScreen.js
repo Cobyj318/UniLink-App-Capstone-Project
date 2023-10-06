@@ -2,10 +2,9 @@ import React,{ useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, ActivityIndicator,} from 'react-native';
 import { fetchData } from '../../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
-import { neutralColors, primaryColors } from '../../Components/Colors';
+import { primaryColors } from '../../Components/Colors';
 import { fetchUserData} from '../../Components/UserData';
 import EventsScreen from './EventsScreen';
-
 
 const HomeScreen = ({navigation}) => {
   const [users, setUsers] = useState([]);
@@ -15,18 +14,17 @@ const HomeScreen = ({navigation}) => {
   
   const fetchDataAndUserData = async () => {
     setIsLoading(true); // Set loading state to true when fetching data
-    const usersData = await fetchData();
-    setUsers(usersData);
+    const eventData = await fetchData();
+    setUsers(eventData);
     const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
     setUserDetails(userData[0]);
-    console.log(userDetails);
+    console.log(FIREBASE_AUTH.currentUser?.uid);
+    console.log(userData[0]);
     setIsLoading(false); // Set loading state to false when data fetching is complete
   };
-
   useEffect(() => {
-    fetchDataAndUserData();  
-    },[]);
-
+    fetchDataAndUserData();      
+  },[]);
     return (
     <View style={styles.container}>
       {isLoading ? 

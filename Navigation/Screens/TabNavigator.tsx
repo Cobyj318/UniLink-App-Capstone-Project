@@ -1,12 +1,11 @@
-import { TouchableOpacity,View } from "react-native";
+import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GroupStack } from "./Group_Screens/groupStack";
 import NewsScreen from "./News_screens/NewsScreen";
 import NetworkScreen from "./NetworkScreen";
 import ProfileScreen from "./ProfileScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { HomeStack } from "./Home_Screens/HomeStack";
-
+import DrawerNavigation from "./Home_Screens/HomeDrawer";
 
 export const ExistingUser = "TabNavigator"; // Export OldUser separately
 export const Cams = "CamScreen";
@@ -21,16 +20,7 @@ export const Notifications = "NotifScreen";
 
 
 const Tab = createBottomTabNavigator();
-const CustomButton = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress}>
-    <Icon name="th-list" size={24} color="#3498db" />
-  </TouchableOpacity>
-);
-const MessagesButton = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress}>
-    <Icon name="comment-o" size={24} color="#3498db" />
-  </TouchableOpacity>
-);
+
 export const TabNavigator = () => (
     <Tab.Navigator 
     initialRouteName={homeName}
@@ -39,7 +29,7 @@ export const TabNavigator = () => (
       tabBarInactiveTintColor: 'grey',
       tabBarLabelStyle: { paddingBottom: 3, fontSize: 10 },
       tabBarStyle: [{ display: 'flex' }, null],
-      tabBarIcon: ({ focused, color, size }) => { // Add tabBarIcon for each screen
+      tabBarIcon: ({ focused, color, size }) => { 
         let iconName;
         if (route.name === homeName) {
           iconName = focused ? 'home' : 'home';
@@ -61,18 +51,7 @@ export const TabNavigator = () => (
       
     })}
   >
-    <Tab.Screen name={homeName} component={HomeStack} options={({ navigation }) => ({
-      headerRight: () => (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  paddingRight: 15 }}>
-          <View style={{paddingRight:20}}>
-          <CustomButton onPress={() => navigation.navigate(Notifications)}/>
-          </View>
-          <View>
-          <MessagesButton onPress={() => navigation.navigate(messageName)}/>
-          </View>
-        </View>
-        ),
-      })}/>
+    <Tab.Screen name={homeName} component={DrawerNavigation} options={{headerShown:false}}/>
     <Tab.Screen name={eventsName} component={GroupStack} />
     <Tab.Screen name={newsName} component={NewsScreen}/>
     <Tab.Screen name={networkName} component={NetworkScreen}/>

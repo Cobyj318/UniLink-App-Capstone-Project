@@ -17,6 +17,7 @@ export default function EventsScreen({ navigation,userDetails }) {
       setLoading(true); // Set loading to true while fetching data
       const usersData = await fetchData(); // Call the fetchData function
       setUsers(usersData);
+      console.log(userDetails.FirstName);
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {setTimeout(() => {
