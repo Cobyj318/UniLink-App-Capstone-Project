@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, SafeAreaView,Text, ScrollView, StatusBar, RefreshControl, View, ActivityIndicator } from 'react-native';
 import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import EventCard from '../Components/EventCard';
+import EventCard from '../../Components/EventCard';
 import { useState, useEffect } from 'react';
-import CreateEventScreen from './CreateEventScreen'; 
-import { fetchData } from '../DBFunctions/FetchData';
+import { fetchData } from '../../DBFunctions/FetchData';
+import { primaryColors } from '../../Components/Colors';
+import RedLine from '../../Components/RedLine';
 
-export default function EventsScreen({ navigation }) {
+export default function EventsScreen({ navigation,userDetails }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +17,7 @@ export default function EventsScreen({ navigation }) {
       setLoading(true); // Set loading to true while fetching data
       const usersData = await fetchData(); // Call the fetchData function
       setUsers(usersData);
+      console.log(userDetails.FirstName);
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {setTimeout(() => {
@@ -23,8 +25,6 @@ export default function EventsScreen({ navigation }) {
     }, 500);
     }
   };
-
-
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -59,7 +59,11 @@ export default function EventsScreen({ navigation }) {
             style={styles.scrollView}
             // Add a RefreshControl to enable pull-to-refresh functionality
             refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />}
-          >
+          >  
+            <View style={[styles.header]}>
+              <Text style={styles.headerText}>Welcome Back {userDetails?.FirstName}! </Text>
+            </View>
+            <RedLine/>
             {/* Render the EventCard component and pass the fetched event data as props */}
             <EventCard users={users} />
           </ScrollView>
@@ -70,7 +74,6 @@ export default function EventsScreen({ navigation }) {
     </PaperProvider>
   );
 }
-
 
 // Theme configuration for PaperProvider
 const theme = {
@@ -89,7 +92,6 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
-    backgroundColor: 'white',
     marginHorizontal: 10,
   },
   text: {
@@ -108,5 +110,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  header: {
+    backgroundColor:primaryColors.blue,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  headerText:{
+    fontSize:40, 
+    fontWeight:'bold',
+    color:'white',
+    textAlign: 'center', // Center text horizontally
+    textAlignVertical: 'center',
   },
 });

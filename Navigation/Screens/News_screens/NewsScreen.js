@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useState,useEffect } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, StatusBar,KeyboardAvoidingView } from 'react-native';
-import NewsCard from '../Components/NewsCard';
+import NewsCard from '../../Components/NewsCard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
-import NewsCardV2 from '../Components/NewsCardV2';
-import CommentSection from '../Components/CommentSection';
-import { firestore } from '../../src/firebase_init/firebase';
+import NewsCardV2 from '../../Components/NewsCardV2';
+import CommentSection from '../../Components/CommentSection';
+import { firestore } from '../../../src/firebase_init/firebase';
 import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
 import NewsDetailsScreen from './NewsDetails';
 

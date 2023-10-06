@@ -1,11 +1,21 @@
 import React,{useState} from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions,TextInput,KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions,TextInput,KeyboardAvoidingView,TouchableOpacity,Linking } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
-import { CircularImage } from '../Components/CircleImage';
-import { accentColors, primaryColors } from '../Components/Colors';
-import RedLine from '../Components/RedLine';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { CircularImage } from '../../Components/CircleImage';
+import { accentColors, primaryColors } from '../../Components/Colors';
+import RedLine from '../../Components/RedLine';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
+
+const locationUrls = {
+  "Barnes & Noble Bookstore": "https://maps.app.goo.gl/PDGzFzzMJV7bKwdt5",
+  "Bogard Hall (Engineering)": "https://maps.app.goo.gl/wLQkNYtuhjJV6muM8",
+  "Lambright Sports & Wellness Center": "https://maps.app.goo.gl/Au3HGL1Lnqt9EZVx7",
+  "Integrated Engineering and Science Building (IESB)": "https://maps.app.goo.gl/4ywvr9sKaVsTPma36",
+  "College of Business": "https://maps.app.goo.gl/X9SvkghA1AJkwfLp6",
+  "Tolliver Hall/Post Office": "https://maps.app.goo.gl/5aRS8NqXFWAMz5nW8",
+  "Carson-Taylor Hall (Human Ecology & Science)": "https://maps.app.goo.gl/Pf7vTWnyYv3XYtn96",
+};
 
 const EventDetailsScreen = () => {
   const route = useRoute();
@@ -43,6 +53,25 @@ const EventDetailsScreen = () => {
     // Implement the logic to update the event data in your Firebase or state management here
     setEditMode(false);
     // Display a success message or navigate back to the previous screen
+  };
+
+  const openGoogleMaps = (location) => {
+    const latitude = 37.7749;
+    const longitude = -122.4194;
+    
+    //const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    const url = locationUrls[location];
+    if (url) {
+      Linking.openURL(url)
+        .then((data) => {
+          console.log('Google Maps opened:', data);
+        })
+        .catch((error) => {
+          console.error('Error opening Google Maps:', error);
+        });
+    } else {
+      console.error('No URL found for the given location:', location);
+    }
   };
 
   return (
@@ -93,7 +122,9 @@ const EventDetailsScreen = () => {
         <React.Fragment>
           <Text style={styles.eventTitle}>{event.Title}</Text>
           <Text style={styles.eventDate}>{event.Date}</Text>
-          <Text style={styles.eventLocation}>{event.Location}</Text>
+          <TouchableOpacity onPress={() => openGoogleMaps(event.Location)}>
+            <Text style={styles.eventLocation}>{event.Location}</Text>
+          </TouchableOpacity>
           <Text style={styles.eventDescription}>{event.Description}</Text>
           {event.Creator === User_ID && (
             <Button onPress={handleEditButton}>Edit</Button>

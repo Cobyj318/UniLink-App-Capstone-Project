@@ -1,36 +1,28 @@
-import { addDoc, collection, updateDoc } from "@firebase/firestore"
-import { firestore } from "./firebase"
- 
-/**
- * Handles the submission of user data to the Firebase Firestore collection "User_data".
- *
- * @function HandleUserSubmit
- * @param {string} Userdata - The username of the user to be added.
- * @param {string} Passdata - The password of the user to be added.
- * @param {string} Emaildata - The email of the user to be added.
- * @returns {void}
- */
-const HandleUserSubmit = (FirsNamedata, LastNamedata, Majordata,IdData,AvatarData) => {
-    const ref = collection(firestore, "User_data") // Firebase creates this automatically
-    let data = {
-        FirstName: FirsNamedata,
-        LastName: LastNamedata,
-        Major: Majordata,
-        Id:IdData,
-        Connections: [],
-        Skills: [],
-        Projects: [], 
-        Interests: [],
-        Experience: "",
-        Profile_Image:AvatarData,
+import { setDoc, doc, collection } from "@firebase/firestore";
+import { firestore } from "./firebase";
 
-    }
-    
-    try {
-        addDoc(ref, data)
-    } catch(err) {
-        console.log(err)
-    }
-}
+const HandleUserSubmit = (FirstName, LastName, Major, IdData, AvatarData) => {
+  const userRef = doc(firestore, "User_data", IdData); // Specify the custom ID here
+  const data = {
+    FirstName,
+    LastName,
+    Major,
+    Connections: [],
+    Skills: [],
+    Projects: [],
+    Interests: [],
+    Experience: "",
+    Profile_Image: AvatarData,
+    Id:IdData,
+  };
 
-export default HandleUserSubmit
+  // Using setDoc to set data and the document ID
+  return setDoc(userRef, data)
+    .then(() => IdData) // Return the specified ID
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+      return null;
+    });
+};
+
+export default HandleUserSubmit;

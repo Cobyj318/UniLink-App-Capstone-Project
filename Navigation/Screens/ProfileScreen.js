@@ -9,7 +9,6 @@ import { fetchData } from '../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 import { fetchFriendData } from '../Components/FriendData';
-import { CircularImage } from '../Components/CircleImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { editData } from '../DBFunctions/editData';
 import { Avatar } from 'react-native-paper';
