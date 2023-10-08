@@ -1,48 +1,43 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import EventCard from './Components/EventCard';
+import { firestore } from '../../../src/firebase_init/firebase';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
+import { ScrollView } from 'react-native-gesture-handler';
+import { RefreshControl } from 'react-native';
+
+const RSVPedEvents = () => {
+  	const [rsvpedEvents, setRSVPedEvents] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const fetchRSVPedEvents = async () => {
+		try {
+			setLoading(true);	
+			const userRef = doc(firestore, 'User_data', FIREBASE_AUTH.currentUser?.uid);
+			// Fetch current user data
+			const userDoc = await getDoc(userRef);
+			const userData = userDoc.data();
+			// Check if RSVP array exists, if not, create an empty array
+			const rsvpArray = userData.RSVP || [];
+			setRSVPedEvents(rsvpArray);
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+			console.error('Error fetching RSVPed events:', error);
+		}
+	  };
+ 	 useEffect(() => {
+    	fetchRSVPedEvents();
+  	}, []);
 
 
-
-const RSVPedEvents = ({ rsvpedEvents }) => {
-    const rsvpedEventsData = [
-        { id: 1, title: 'Event 1', date: '2023-10-10' },
-        { id: 2, title: 'Event 2', date: '2023-10-15' },
-        // Add more events as needed
-      ];
-    return (
-    <View style={styles.container}>
-      <Text style={styles.title}>RSVPed Events</Text>
-      <FlatList
-        data={rsvpedEventsData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.eventContainer}>
-            <Text style={styles.eventTitle}>{item.title}</Text>
-            <Text>{item.date}</Text>
-          </View>
-        )}
-      />
-    </View>
-  );
+  return (
+  <ScrollView 
+  // Add a RefreshControl to enable pull-to-refresh functionality
+  refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchRSVPedEvents} />}
+>
+  	<EventCard users={rsvpedEvents} />
+  </ScrollView>
+  )
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  eventContainer: {
-    marginBottom: 16,
-  },
-  eventTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
 
 export default RSVPedEvents;

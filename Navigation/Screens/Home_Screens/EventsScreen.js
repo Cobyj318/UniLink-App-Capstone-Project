@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, SafeAreaView,Text, ScrollView, StatusBar, RefreshControl, View, ActivityIndicator } from 'react-native';
 import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import EventCard from '../../Components/EventCard';
+import EventCard from './Components/EventCard';
 import { useState, useEffect } from 'react';
 import { fetchData } from '../../DBFunctions/FetchData';
 import { primaryColors } from '../../Components/Colors';
-import RedLine from '../../Components/RedLine';
+import RedLine from './Components/RedLine';
 
 export default function EventsScreen({ navigation,userDetails }) {
   const [users, setUsers] = useState([]);

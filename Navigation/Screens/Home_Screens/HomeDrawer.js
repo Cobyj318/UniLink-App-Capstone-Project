@@ -46,7 +46,7 @@ return (
             headerRight: () => (
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 15 }}>
                 <View style={{ paddingRight: 20 }}>
-                  <CustomButton onPress={() =>  navigation.navigate('NotifScreen')} />
+                  <CustomButton onPress={() =>  navigation.navigate('Notifications')} />
                 </View>
                 <View>
                   <MessagesButton onPress={() => navigation.navigate('Messages')} />
@@ -55,7 +55,7 @@ return (
             ),
           })}
         />
-        <Drawer.Screen name="NotifScreen" component={NotifScreen}/>
+        <Drawer.Screen name="Notifications" component={NotifScreen}/>
         <Drawer.Screen name="Messages" component={MessageScreen}/>
         <Drawer.Screen name="RSVPed Events" component={RSVPedEvents}/>
         <Drawer.Screen name="Liked Projects" component={LikedProjectsScreen}/>

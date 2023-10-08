@@ -1,52 +1,121 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, RefreshControl, View, ActivityIndicator, FlatList,Pressable,Text } from 'react-native';
+import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { styles } from '../Group_Screens/Stylings/GroupScreenStyles';
+import { cardstyles } from '../Group_Screens/Stylings/GroupCardStyles';
 
-const likedProjectsData = [
-    { id: 1, title: 'Liked Project 1', description: 'Description for Liked Project 1' },
-    { id: 2, title: 'Liked Project 2', description: 'Description for Liked Project 2' },
-    // Add more liked projects as needed
-  ];
+import GroupsCard from '../Group_Screens/Components/GroupCards';
+import ChipTags from '../Group_Screens/Components/ChipTags';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
+import { collection, getDoc,doc } from 'firebase/firestore';
+import { firestore } from '../../../src/firebase_init/firebase';
 
-const LikedProjectsScreen = ({ likedProjects }) => {
-    const likedProjectsData = [
-        { id: 1, title: 'Liked Project 1', description: 'Description for Liked Project 1' },
-        { id: 2, title: 'Liked Project 2', description: 'Description for Liked Project 2' },
-        // Add more liked projects as needed
-      ];
-    return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Liked Projects</Text>
-      <FlatList
-        data={likedProjectsData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.projectContainer}>
-            <Text style={styles.projectTitle}>{item.title}</Text>
-            <Text>{item.description}</Text>
+// ... (other imports)
+
+export default function GroupsScreen({ navigation }) {
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTag, setSelectedTag] = React.useState('All');
+  const auth = FIREBASE_AUTH;
+  const [likedProjects, setLikedProjects] = useState([]);
+
+  // Function to handle pull-to-refresh
+  const onRefresh = async () => {
+    console.log("Refresh");
+    fetchDataFromFirebase();
+  };
+
+  useEffect(() => {
+    fetchDataFromFirebase();
+    console.log("Remount");
+  }, []);
+
+  const fetchDataFromFirebase = async () => {
+    try {
+      setLoading(true);
+      const userRef = doc(firestore, 'User_data', FIREBASE_AUTH.currentUser?.uid);
+      const userDoc = await getDoc(userRef);
+      const userData = userDoc.data();
+      const userLikedProjects = userData.liked_projects || [];
+      setGroups(userLikedProjects);
+    } catch (error) {
+      console.error('Error fetching group data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Custom FloatingButton component to navigate to CreateEventScreen
+  const FloatingButton = () => (
+    <FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => navigation.navigate('CreateEventScreen', { onRefresh: onRefresh })} />
+  );
+
+  const filterProjectsByTag = (tag) => {
+    return tag === 'All' ? groups : groups.filter(project => project.Tags.includes(tag));
+  };
+
+  const handlePress = (project) => {
+    console.log('Project pressed:', project);
+    const isMember = project.MembersID.includes(auth?.currentUser.uid);
+    if (isMember) {
+      navigation.navigate('GroupUsers', { groupDetails: project });
+    } else {
+      navigation.navigate('GroupDetailsScreen', { groupDetails: project });
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <GroupsCard
+      item={item}
+      handlePress={handlePress}
+    />
+  );
+
+  return (
+    <PaperProvider theme={theme}>
+      <SafeAreaView style={styles.container}>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#3498db" />
+          </View>
+        ) : (
+          <View style={styles.scrollView}>
+            <ChipTags selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
+            {groups.length === 0 ? (
+              <Pressable
+              onPress={fetchDataFromFirebase}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ fontSize: 24, color: 'white' }}>Refresh</Text>
+            </Pressable>
+            ) : (
+              <FlatList
+                data={filterProjectsByTag(selectedTag)}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                contentContainerStyle={cardstyles.flatListContainer}
+                refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />}
+              />
+            )}
           </View>
         )}
-      />
-    </View>
+      </SafeAreaView>
+      {/* <FloatingButton /> */}
+    </PaperProvider>
   );
+}
+
+// Theme configuration for PaperProvider
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  projectContainer: {
-    marginBottom: 16,
-  },
-  projectTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
-
-export default LikedProjectsScreen;

@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GroupStack } from "./Group_Screens/groupStack";
-import NewsScreen from "./News_screens/NewsScreen";
+import NewsScreen from "./News_screens/NewsTabs";
 import NetworkScreen from "./NetworkScreen";
 import ProfileScreen from "./ProfileScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
