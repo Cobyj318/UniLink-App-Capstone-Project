@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import { accentColors, primaryColors } from '../../Components/Colors';
-import RedLine from '../../Components/RedLine';
+import RedLine from '../Home_Screens/Components/RedLine';
 import { Image } from 'expo-image';
 import Schedule from './Components/ScheduleBlock';
 import { useNavigation } from '@react-navigation/native';

@@ -1,49 +1,43 @@
-import * as React from 'react';
-import { SafeAreaView, RefreshControl, View, ActivityIndicator, FlatList} from 'react-native';
-import { FAB, DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import { useState, useEffect } from 'react';
-import { fetchData } from '../../DBFunctions/FetchData';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, RefreshControl, View, ActivityIndicator, FlatList } from 'react-native';
+import { FAB, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { styles } from './Stylings/GroupScreenStyles';
 import { cardstyles } from './Stylings/GroupCardStyles';
-import { projects } from './Components/GroupConstansts';
 import GroupCard from './Components/GroupCards';
 import ChipTags from './Components/ChipTags';
 import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../../../src/firebase_init/firebase';
 
 export default function GroupsScreen({ navigation }) {
-  const [users, setUsers] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = React.useState('All');
-  const auth=FIREBASE_AUTH;
+  const auth = FIREBASE_AUTH;
 
   // Function to handle pull-to-refresh
   const onRefresh = async () => {
-    try {
-      setLoading(true); // Set loading to true while fetching data
-      const usersData = await fetchData(); // Call the fetchData function
-      setUsers(usersData);
-    } catch (error) {
-      console.error('Error refreshing data:', error);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    }
+    console.log("Refresh");
+    fetchDataFromFirebase();
   };
 
   useEffect(() => {
-    const fetchEventData = async () => {
-      try {
-        const eventData = await fetchData();
-        setUsers(eventData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false); // Set loading to false when the data is fetched
-      }
-    };
-    fetchEventData();
+    fetchDataFromFirebase();
   }, []);
+
+  const fetchDataFromFirebase = async () => {
+    try {
+      setLoading(true);
+      const groupCollectionRef = collection(firestore, 'Groups');
+      const groupSnapshot = await getDocs(groupCollectionRef);
+      const groupData = groupSnapshot.docs.map(doc => doc.data());
+      setGroups(groupData);
+    } catch (error) {
+      console.error('Error fetching group data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Custom FloatingButton component to navigate to CreateEventScreen
   const FloatingButton = () => (
@@ -51,12 +45,11 @@ export default function GroupsScreen({ navigation }) {
   );
 
   const filterProjectsByTag = (tag) => {
-    return tag === 'All' ? projects : projects.filter(project => project.Tags.includes(tag));
+    return tag === 'All' ? groups : groups.filter(project => project.Tags.includes(tag));
   };
-  console.log(auth.currentUser.uid);
+
   const handlePress = (project) => {
     console.log('Project pressed:', project);
-
     const isMember = project.MembersID.includes(auth?.currentUser.uid);
     if (isMember) {
       navigation.navigate('GroupUsers', { groupDetails: project });

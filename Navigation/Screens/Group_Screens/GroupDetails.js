@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpac
 import { Button } from 'react-native-paper';
 import { CircularImage } from '../../Components/CircleImage';
 import { accentColors, primaryColors } from '../../Components/Colors';
-import RedLine from '../../Components/RedLine';
+import RedLine from '../Home_Screens/Components/RedLine';
 import { Image } from 'expo-image';
 
 const GroupDetailsScreen = ({ route }) => {

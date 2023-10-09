@@ -4,7 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
 import { CircularImage } from '../../Components/CircleImage';
 import { accentColors, primaryColors } from '../../Components/Colors';
-import RedLine from '../../Components/RedLine';
+import RedLine from './Components/RedLine';
 import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 
 const locationUrls = {

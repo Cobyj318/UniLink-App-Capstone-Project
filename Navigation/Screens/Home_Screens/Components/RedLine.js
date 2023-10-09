@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { primaryColors } from './Colors';
+import { primaryColors } from '../../../Components/Colors';
 
 const RedLine = () => {
   return <View style={styles.line} />;

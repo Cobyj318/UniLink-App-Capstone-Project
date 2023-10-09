@@ -3,16 +3,6 @@ import { Avatar, Button, Card, Text } from 'react-native-paper';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 4,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
-  },
-};
-
 const LeftContent = (props) => <Avatar.Icon {...props} icon="newspaper" />;
 
 const NewsCard = ({news}) => {
@@ -31,14 +21,21 @@ const NewsCard = ({news}) => {
           <Text variant="titleLarge">{news?.Title}</Text>
           <Text variant="bodyMedium">{news?.Body.slice(0, 100) + '...'}</Text>
         </Card.Content>
-        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
         <Card.Actions>
-          <Button>Cancel</Button>
-          <Button onPress={handleOkButtonPress}>Ok</Button> 
+          <Button onPress={handleOkButtonPress}>View</Button> 
         </Card.Actions>
       </Card>
     </PaperProvider>
   );
 };
-
 export default NewsCard;
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 4,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+};
