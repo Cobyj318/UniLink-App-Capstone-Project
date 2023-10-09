@@ -65,44 +65,35 @@ export default function ProfileScreen({navigation}){
         }
     }
 
-    const listData = () => {
+    const listData = async () => {
         let friends = []
         if(userConnections != []){
-            for (let i=0; i < userConnections.length; i++){
-                const fetchDataAndFriendData = async () => {
-                    setIsLoading(true); // Set loading state to true when fetching data
-                    const userData = await fetchFriendData(userConnections[i]);
-                    setIsLoading(false); // Set loading state to false when data fetching is complete
-                    return(userData[0].FirstName, userData[0].LastName, userData[0].Profile_Image, userData[0].id)
-                    };
-                    friends[i] = fetchDataAndFriendData();
-                    shouldComponentUpdate(fetchDataAndFriendData);
-                
-            }
+                const userData = fetchFriendData(userConnections[0]);
+                console.log(userData);
+                friends[0] = {Firstname: userData.FirstName, Lastname: userData.LastName, pfi: userData.Profile_Image, Id:userData.id};      
         }
         return(friends);
     }
-    let DATA = listData();
+    //let DATA = listData();
+    const Data = []
 
-    const connectionsList = ({friend}) => {
-        if (friend != undefined){
-            const Name = friend.Firstname + " " + friend.Lastname;
-            return(
-            <View>    
-                <TouchableOpacity style={{flex:1, flexDirection: 'row', backgroundColor:'#000000'}}>
-                    <Avatar.Image size={24} source={{uri: friend.pfi}}/>
-                    <Text>${Name}</Text>
-                </TouchableOpacity>
-            </View>
-            )
-        } else{
-            return(
-                <Text>Reload</Text>
-            )
-        }
+    const getItem =(data, index) => ({
+        id: Math.random().toString(12).substring(0),
+        Firstname: "John" + index,
+        Lastname: "Smith",
+        pfi: "../../assets/adaptive-icon.png",
+    })
+
+    const connectionsList = (Name, Pfi) => {
+        <View>    
+            <TouchableOpacity style={{flex:1, flexDirection: 'row', backgroundColor:'#000000'}}>
+                <Avatar.Image size={24} source={Pfi}/>
+                <Text>${Name}</Text>
+            </TouchableOpacity>
+        </View>
     }  
     
-
+    const getItemCount = (data) => {return 50;}
   
 
      return (
@@ -124,8 +115,8 @@ export default function ProfileScreen({navigation}){
       <View style={styles.Bio}>
         <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
         <FlatList
-            data={DATA}
-            renderItem={connectionsList}
+            data={Data}
+            renderItem={({e}) => <connectionsList Name={e.Firstname} Pfi={e.pfi}/>}
             keyExtractor={e=>e.id}
      /> 
       </View>
