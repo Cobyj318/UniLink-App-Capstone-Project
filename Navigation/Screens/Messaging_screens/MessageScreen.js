@@ -121,8 +121,11 @@
               {selectedChannel ? (
                 <Channel channel={selectedChannel}>
                   <View style={styles.channelContainer}>
-                    
+                  <View style={styles.goBackButtonContainer}>
+                      <Button title="Go back" onPress={goBack} />
+                    </View>
                     <MessageList style={{ flex: 0.7 }} />
+                    
                     <MessageInput style={{ flex: 0.3 }} />
                     <View style={styles.goBackButtonContainer}>
                       <Button title="Go back" onPress={goBack} />

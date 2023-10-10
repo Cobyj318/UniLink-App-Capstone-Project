@@ -1,45 +1,63 @@
 import * as React from 'react' ;
 import { useState, useEffect } from 'react';
-import { View, Text, Image, Button, TextInput, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, ScrollView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler'; // Import TouchableOpacity for custom button styling
-import handleUserSubmit from '../../src/firebase_init/handleUserSubmit';
 import UploadThing from '../Components/uploadThing'
 import PortfolioScreen from './PortfolioScreen';
-import { fetchData } from '../DBFunctions/FetchData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
-import { fetchFriendData } from '../Components/FriendData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { editData } from '../DBFunctions/editData';
-import { Avatar } from 'react-native-paper';
+// import { Avatar } from 'react-native-paper';
+import MutualCard from '../Components/MutualCard';
+import Avatar_profiles from '../Components/Avatar_profiles';
+import { RefreshControl } from 'react-native';
+import { fetchAllUsers } from './NetworkScreen';
 
 export default function ProfileScreen({navigation}){
-    //const submithandler = () => {  
-    //}
     const [edit, isEditing] = useState(false);
     const [nameEntry, nEntryEdited] = useState("");
     const [Image_, setImage_] = useState("")
-    const [refreshing, setRefreshing] = useState(false);
     const [userDetails, setUserDetails] = useState(null);
-    const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
+    const [loading, setLoading] = useState(false);
+    const [users, setUsers] = useState([]);
+    
     useEffect(() => {
-        const fetchDataAndUserData = async () => {
-        setIsLoading(true); // Set loading state to true when fetching data
+        fetchDataAndUserData(); 
+        console.log(userDetails?.Connections); 
+        console.log(users);
+        },[]);
+
+    const fetchDataAndUserData = async () => {
+        setLoading(true); // Set loading state to true when fetching data
+        const usersData = await fetchAllUsers();
+        setUsers(usersData);
         const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
         setUserDetails(userData[0]);
-        setIsLoading(false); // Set loading state to false when data fetching is complete
-        };
-        fetchDataAndUserData();  
-        },[]);
+        setLoading(false); // Set loading state to false when data fetching is complete
+    };
+    const handleDisconnect = async (userToRemove) => {
+        try {
+          userDetails.Connections = userDetails.Connections?.filter(item => item !== userToRemove);
+          const documentRef = doc(firestore,'User_data', userDetails.id);
+          try {
+            await updateDoc(documentRef, userDetails);
+            console.log('Document updated successfully');
+          } catch (error) {
+            console.error('Error updating document:', error);
+          }
+        } catch (error) {
+          console.error('Error disconnecting user', error);
+        }
+        onRefresh();
+    
+      };
 
     const userName = `${userDetails ? userDetails.FirstName: ''} ${userDetails ? userDetails.LastName: ''}`;
     const userImage = userDetails ? userDetails.Profile_Image : '';
-    const userConnections = userDetails ? userDetails.Connections : [];
     
     useEffect(() => {
         setImage_(userImage);
-        //console.log(userDetails)
-        //console.log(userName);
         nEntryEdited(userName);
     },[]);
 
@@ -65,80 +83,60 @@ export default function ProfileScreen({navigation}){
         }
     }
 
-    const listData = async () => {
-        let friends = []
-        if(userConnections != []){
-                const userData = fetchFriendData(userConnections[0]);
-                console.log(userData);
-                friends[0] = {Firstname: userData.FirstName, Lastname: userData.LastName, pfi: userData.Profile_Image, Id:userData.id};      
+    const onRefresh = async () => {
+        try {
+          fetchDataAndUserData();  
+        } catch (error) {
+          console.error('Error refreshing data:', error);
+        } finally {
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
         }
-        return(friends);
-    }
-    //let DATA = listData();
-    const Data = []
-
-    const getItem =(data, index) => ({
-        id: Math.random().toString(12).substring(0),
-        Firstname: "John" + index,
-        Lastname: "Smith",
-        pfi: "../../assets/adaptive-icon.png",
-    })
-
-    const connectionsList = (Name, Pfi) => {
-        <View>    
-            <TouchableOpacity style={{flex:1, flexDirection: 'row', backgroundColor:'#000000'}}>
-                <Avatar.Image size={24} source={Pfi}/>
-                <Text>${Name}</Text>
-            </TouchableOpacity>
-        </View>
-    }  
-    
-    const getItemCount = (data) => {return 50;}
-  
+      };
 
      return (
-    <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}>
-      <View style={Pfstyles.container}>
-        {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
-
-        <View style={Pfstyles.textContainer}>
-            {edit ? <TextInput style={Pfstyles.containerItems} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput editable={false} value={nameEntry} style={Pfstyles.containerItems} placeholder={"Name"} />}
-
-            <Text style={Pfstyles.containerItems}>Tags Here</Text>
-        </View>
-      </View>
-              
-      <View style={styles.Bio}>
-        <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Portfolio</Text>
-        <PortfolioScreen/>
-      </View>
-      <View style={styles.Bio}>
-        <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
-        <FlatList
-            data={Data}
-            renderItem={({e}) => <connectionsList Name={e.Firstname} Pfi={e.pfi}/>}
-            keyExtractor={e=>e.id}
-     /> 
-      </View>
-
-      <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>
-        <Text style={{ color: '#3498db', marginVertical: 10 }}>Create and join other people's Projects</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={signOut}>
-        <Text style={{ color: '#ff0000', marginVertical: 10 }}>Sign Out</Text>
-      </TouchableOpacity>
-
-      {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
-    </ScrollView>
+        <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />} >
+            <View style={Pfstyles.container}>
+                {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
+                <View style={Pfstyles.textContainer}>
+                    {edit ? <TextInput style={Pfstyles.containerItems} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput editable={false} value={nameEntry} style={Pfstyles.containerItems} placeholder={"Name"} />}
+                    <Text style={Pfstyles.containerItems}>Tags Here</Text>
+                </View>
+            </View>             
+            <View style={styles.Bio}>
+                <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Portfolio</Text>
+                <PortfolioScreen/>
+            </View>
+            <View style={styles.Bio}>
+                <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
+                <View style={styles.avatarContainer}>
+                    {userDetails?.Connections?.map((id) => (
+                    <Avatar_profiles user={id} userID={id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} />
+                    ))}
+                </View>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>
+                <Text style={{ color: '#3498db', marginVertical: 10 }}>Create and join other people's Projects</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={signOut}>
+                <Text style={{ color: '#ff0000', marginVertical: 10 }}>Sign Out</Text>
+            </TouchableOpacity>
+            {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
+        </ScrollView>
   );
 }
-
-
 const styles = StyleSheet.create({
     notEditing:{
         flex:1,
         color: "#ffffff"
     },
+    avatarContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap', // Allow avatars to wrap to the next row
+        alignItems: 'center', // Align avatars vertically in the middle of the row
+        marginTop: 10, // Add margin if needed
+      },
     editing:{
         flex:1,
         color: "#99a19b"

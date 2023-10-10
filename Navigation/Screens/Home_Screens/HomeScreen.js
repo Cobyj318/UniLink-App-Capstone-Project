@@ -5,6 +5,7 @@ import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import { primaryColors } from '../../Components/Colors';
 import { fetchUserData} from '../../Components/UserData';
 import EventsScreen from './EventsScreen';
+import updateGroupIds from '../../DBFunctions/updateGroupIds';
 
 const HomeScreen = ({navigation}) => {
   const [users, setUsers] = useState([]);
@@ -23,6 +24,7 @@ const HomeScreen = ({navigation}) => {
     setIsLoading(false); // Set loading state to false when data fetching is complete
   };
   useEffect(() => {
+    updateGroupIds();
     fetchDataAndUserData();      
   },[]);
     return (

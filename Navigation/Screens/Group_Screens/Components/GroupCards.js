@@ -67,8 +67,8 @@ const GroupsCard = ({ item, handlePress }) => {
         </View>
         <View style={cardstyles.cardActions}>
           <IconButton
-            icon={likedProjects.some((likedGroup) => likedGroup.id === item.id) ? 'heart' : 'heart-outline'}
-            color={likedProjects.some((likedGroup) => likedGroup.id === item.id) ? 'red' : 'black'}
+            icon={likedProjects.some((likedGroup) => likedGroup?.id === item?.id) ? 'heart' : 'heart-outline'}
+            color={likedProjects.some((likedGroup) => likedGroup?.id === item?.id) ? 'red' : 'black'}
             size={20}
             onPress={() => handleToggleLike(item)}
           />
