@@ -112,7 +112,7 @@ export default function ProfileScreen({navigation}){
                 <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
                 <View style={styles.avatarContainer}>
                     {userDetails?.Connections?.map((id) => (
-                    <Avatar_profiles user={id} userID={id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} />
+                    <Avatar_profiles user={id} userID={id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} navigation={navigation} />
                     ))}
                 </View>
             </View>
