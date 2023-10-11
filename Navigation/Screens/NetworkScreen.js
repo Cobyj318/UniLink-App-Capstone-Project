@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState} from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, StatusBar, Button, RefreshControl,TextInput, TouchableOpacity, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -9,7 +9,6 @@ import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
 import { firestore, FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 import { Picker } from '@react-native-picker/picker';
-import { notifContext } from './NotifScreen';
 import OthersProfileScreen from './OthersProfileScreen';
 
 export const fetchData = async () => {
@@ -196,8 +195,6 @@ function MutualsScreen() {
     }
     onRefresh();
   }};
-
-  const notifAlarm = useContext(notifContext);
 
   useEffect(() => {
     fetchDataAndUserData();  
