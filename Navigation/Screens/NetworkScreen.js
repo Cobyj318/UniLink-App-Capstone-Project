@@ -17,7 +17,7 @@ export const fetchData = async () => {
     const querySnapshot = await getDocs(eventsRef);
     const usersData = [];
     querySnapshot.forEach((doc) => {
-      const { Email, Password, Username, Major, About_me, Skills, Interests, Connections, Projects} = doc.data();
+      const { Email, Password, Username, Major, About_me, Skills, Interests, Connections, Projects, Experience } = doc.data();
       usersData.push({
         id: doc.id,
         Email,
@@ -28,7 +28,9 @@ export const fetchData = async () => {
         Skills, 
         Interests,
         Projects,
-        Connections
+        Connections,
+        Experience
+
       });
     });
     return usersData;
@@ -43,7 +45,7 @@ export const fetchAllUsers = async () => {
     const querySnapshot = await getDocs(eventsRef);
     const usersData = [];
     querySnapshot.forEach((doc) => {
-      const {FirstName, LastName, Major,Profile_Image,Connections,Id, Skills, Interests, Projects} = doc.data();
+      const {FirstName, LastName, Major,Profile_Image,Connections,Id, Skills, Interests, Projects, Experience} = doc.data();
       usersData.push({
         id:doc.id,
         Id,
@@ -55,6 +57,7 @@ export const fetchAllUsers = async () => {
         Skills,
         Interests,
         Projects, 
+        Experience,
       });
     });
     return usersData;

@@ -27,8 +27,7 @@ export default function ProfileScreen({navigation}){
     
     useEffect(() => {
         fetchDataAndUserData(); 
-        console.log(userDetails?.Connections); 
-        console.log(users);
+
         },[]);
 
     const fetchDataAndUserData = async () => {
