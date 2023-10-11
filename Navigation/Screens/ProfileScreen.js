@@ -86,6 +86,7 @@ export default function ProfileScreen({navigation}){
     const onRefresh = async () => {
         try {
           fetchDataAndUserData();  
+          nEntryEdited(userName);
         } catch (error) {
           console.error('Error refreshing data:', error);
         } finally {
