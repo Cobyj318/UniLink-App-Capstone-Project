@@ -12,6 +12,7 @@ import { fetchFriendData } from '../Components/FriendData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { editData } from '../DBFunctions/editData';
 import { Avatar } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker';
 
 export default function ProfileScreen({navigation}){
     //const submithandler = () => {  
@@ -20,6 +21,7 @@ export default function ProfileScreen({navigation}){
     const [nameEntry, nEntryEdited] = useState("");
     const [Image_, setImage_] = useState("")
     const [refreshing, setRefreshing] = useState(false);
+    const [majorTag, setMajorTag] = useState("");
     const [userDetails, setUserDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
     useEffect(() => {
@@ -61,7 +63,7 @@ export default function ProfileScreen({navigation}){
         isEditing(!edit);
         if (edit === true){
             let newNameEntry= nameEntry.split(' ');
-            editData(newNameEntry);
+            editData(newNameEntry, majorTag);
         }
     }
 
@@ -104,7 +106,30 @@ export default function ProfileScreen({navigation}){
         <View style={Pfstyles.textContainer}>
             {edit ? <TextInput style={Pfstyles.containerItems} editable={true} placeholder={"Name"} value={nameEntry} onChangeText={value => nEntryEdited(value)} /> : <TextInput editable={false} value={nameEntry} style={Pfstyles.containerItems} placeholder={"Name"} />}
 
-            <Text style={Pfstyles.containerItems}>Tags Here</Text>
+            {edit ? <Picker selectedValue={majorTag} onValueChange={(item) => setMajorTag(item)} style={{height:80}} itemStyle={{height:80, fontSize:15}}>
+                <Picker.Item label="Select Major" value="" />
+                <Picker.Item label="Accounting" value="Accounting" />
+                <Picker.Item label="Aerospace Engineering" value="Aerospace Engineering" />
+                <Picker.Item label="Biology" value="Biology" />
+                <Picker.Item label="Biomedical Engineering" value="Biomedical Engineering" />
+                <Picker.Item label="Business Administration" value="Business Administration" />
+                <Picker.Item label="Chemical Engineering" value="Chemical Engineering" />
+                <Picker.Item label="Chemistry" value="Chemistry" />
+                <Picker.Item label="Civil Engineering" value="Civil Engineering" />
+                <Picker.Item label="Computer Engineering" value="Computer Engineering" />
+                <Picker.Item label="Computer Science" value="Computer Science" />
+                <Picker.Item label="Electrical Engineering" value="Electrical Engineering" />
+                <Picker.Item label="Environmental Engineering" value="Environmental Engineering" />
+                <Picker.Item label="Finance" value="Finance" />
+                <Picker.Item label="Industrial Engineering" value="Industrial Engineering" />
+                <Picker.Item label="Information Technology" value="Information Technology" />
+                <Picker.Item label="Marketing" value="Marketing" />
+                <Picker.Item label="Mechanical Engineering" value="Mechanical Engineering" />
+                <Picker.Item label="Physics" value="Physics" />
+                <Picker.Item label="Psychology" value="Psychology" />
+                <Picker.Item label="Software Engineering" value="Software Engineering" />
+            </Picker> 
+            : <Text style={Pfstyles.containerItems}>{majorTag}</Text> }
         </View>
       </View>
               

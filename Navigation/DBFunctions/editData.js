@@ -2,7 +2,7 @@ import { updateDoc, doc, collection, getDocs, query, where } from 'firebase/fire
 import { firestore } from "../../src/firebase_init/firebase";
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 
-export async function editData(newData) {
+export async function editData(newNameData, newMajor) {
     try {
       const userRef = collection(firestore, 'User_data');
       let firestoreQuery = query(userRef);
@@ -14,7 +14,7 @@ export async function editData(newData) {
       const docos = querySnapshot.docs[0];
 
       const docref = doc(firestore, 'User_data', docos.id);
-      updateDoc(docref, {FirstName:newData[0], LastName:newData[1]});
+      updateDoc(docref, {FirstName:newNameData[0], LastName:newNameData[1], Major:newMajor});
       console.log("success")
 
     }catch (error){

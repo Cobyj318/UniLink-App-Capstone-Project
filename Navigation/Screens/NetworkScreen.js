@@ -1,14 +1,15 @@
-import React, { useEffect, View, useState} from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, StatusBar, Button, RefreshControl,TextInput } from 'react-native';
+import React, { useEffect, useState, useContext} from 'react';
+import { StyleSheet, SafeAreaView, ScrollView, StatusBar, Button, RefreshControl,TextInput, TouchableOpacity, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
 import ConnectCard from '../Components/ConnectCard';
 import MutualCard from '../Components/MutualCard';
 import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
-import { firestore } from '../../src/firebase_init/firebase';
+import { firestore, FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { Picker } from '@react-native-picker/picker';
+import { notifContext } from './NotifScreen';
 
 export const fetchData = async () => {
   try {
@@ -127,7 +128,8 @@ function MutualsScreen() {
   const [loading, setLoading] = useState(false);
   const [usersData, setUsersData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
-  const [searchText, setSearchText] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
+  const [selectedMajor, setSelectedMajor] = useState("");
 
 
   const fetchDataAndUserData = async () => {
@@ -169,6 +171,8 @@ function MutualsScreen() {
     onRefresh();
   }};
 
+  const notifAlarm = useContext(notifContext);
+
   useEffect(() => {
     fetchDataAndUserData();  
     fetchData();
@@ -176,24 +180,59 @@ function MutualsScreen() {
 
   let filteredArray = usersData?.filter(item => !userDetails?.Connections.includes(item.id));
 
-  if(searchText==''){
+  if(selectedMajor==''){
     filteredArray=filteredArray?.filter(item=>item.Id!==FIREBASE_AUTH?.currentUser.uid);
   }
   else{
-    filteredArray=filteredArray?.filter(item=>item.FirstName==searchText);
+    filteredArray=filteredArray?.filter(item=>item.Major==selectedMajor);
     
   }
+
+  const togglePicker = () => {
+    setShowPicker(!showPicker);
+  };
+
   return (
     <SafeAreaView style={styles.container}> 
       <ScrollView
       style={styles.scrollView}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />}>
-        <TextInput
-        style={styles.searchInput}
-        placeholder="Search..."
-        onChangeText={(text) => setSearchText(text)}
-        value={searchText}
-      />
+        <TouchableOpacity onPress={togglePicker}>
+          <View style={{ borderWidth: 1, borderColor: 'black', padding: 10 }}>
+            <Text>{selectedMajor || 'Search by Majors'}</Text>
+          </View>
+        </TouchableOpacity>
+          {showPicker && (
+          <Picker
+            selectedValue={selectedMajor}
+            onValueChange={(itemValue) => {
+              setSelectedMajor(itemValue);
+              setShowPicker(false);
+            }}
+          >
+            <Picker.Item label="Select Major" value="" />
+            <Picker.Item label="Accounting" value="Accounting" />
+            <Picker.Item label="Aerospace Engineering" value="Aerospace Engineering" />
+            <Picker.Item label="Biology" value="Biology" />
+            <Picker.Item label="Biomedical Engineering" value="Biomedical Engineering" />
+            <Picker.Item label="Business Administration" value="Business Administration" />
+            <Picker.Item label="Chemical Engineering" value="Chemical Engineering" />
+            <Picker.Item label="Chemistry" value="Chemistry" />
+            <Picker.Item label="Civil Engineering" value="Civil Engineering" />
+            <Picker.Item label="Computer Engineering" value="Computer Engineering" />
+            <Picker.Item label="Computer Science" value="Computer Science" />
+            <Picker.Item label="Electrical Engineering" value="Electrical Engineering" />
+            <Picker.Item label="Environmental Engineering" value="Environmental Engineering" />
+            <Picker.Item label="Finance" value="Finance" />
+            <Picker.Item label="Industrial Engineering" value="Industrial Engineering" />
+            <Picker.Item label="Information Technology" value="Information Technology" />
+            <Picker.Item label="Marketing" value="Marketing" />
+            <Picker.Item label="Mechanical Engineering" value="Mechanical Engineering" />
+            <Picker.Item label="Physics" value="Physics" />
+            <Picker.Item label="Psychology" value="Psychology" />
+            <Picker.Item label="Software Engineering" value="Software Engineering" />
+          </Picker>
+        )}
         {filteredArray?.map((user) => (
           <ConnectCard user = {user} onConnect={() => handleConnect(user, user.id)}/>   
         ))}
