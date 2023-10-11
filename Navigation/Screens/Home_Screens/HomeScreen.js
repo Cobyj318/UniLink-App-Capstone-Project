@@ -22,22 +22,18 @@ const HomeScreen = ({navigation}) => {
     setUserDetails(userData[0]);
     console.log(FIREBASE_AUTH.currentUser?.uid);
     console.log(userData[0]);
-    const currentUser = FIREBASE_AUTH.currentUser;
-      if (currentUser) {
-        const newDisplayName =userDetails.FirstName+" "+userDetails.LastName;
-        updateProfile(currentUser,{
-          displayName: newDisplayName,
-        })
-        .then(() => {
-          console.log("Display name updated successfully:", newDisplayName);
-        })
-        .catch((error) => {
-          console.error("Error updating display name:", error.message);
-        });
-        
-      } else {
-        console.log("No user is currently authenticated.");
-      }
+    const newDisplayName =userData[0].FirstName+" "+userData[0].LastName;
+    updateProfile(FIREBASE_AUTH.currentUser,{
+      displayName: newDisplayName,
+    })
+    .then(() => {
+      console.log("Display name updated successfully:", newDisplayName);
+    })
+    .catch((error) => {
+      console.error("Error updating display name:", error.message);
+    });
+    
+     
     setIsLoading(false); // Set loading state to false when data fetching is complete
   };
   useEffect(() => {
