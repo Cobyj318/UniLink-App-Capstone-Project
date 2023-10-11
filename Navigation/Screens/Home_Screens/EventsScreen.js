@@ -19,7 +19,6 @@ export default function EventsScreen({ navigation,userDetails }) {
       setLoading(true); // Set loading to true while fetching data
       const usersData = await fetchData(); // Call the fetchData function
       setUsers(usersData);
-      console.log(userDetails.FirstName+" "+userDetails.LastName);
       const currentUser = FIREBASE_AUTH.currentUser;
       if (currentUser) {
         const newDisplayName =userDetails.FirstName+" "+userDetails.LastName;
