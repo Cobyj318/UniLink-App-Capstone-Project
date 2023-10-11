@@ -56,10 +56,6 @@ const EventDetailsScreen = () => {
   };
 
   const openGoogleMaps = (location) => {
-    const latitude = 37.7749;
-    const longitude = -122.4194;
-    
-    //const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
     const url = locationUrls[location];
     if (url) {
       Linking.openURL(url)

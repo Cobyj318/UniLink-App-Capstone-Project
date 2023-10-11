@@ -18,7 +18,7 @@ import SignUpScreen from './Screens/First_Screens/SignUpScreen';
 import NotifScreen from './Screens/NotifScreen';
 import PortfolioScreen from './Screens/PortfolioScreen';
 import CollaborationScreen from './Screens/CollaborationScreen';
-
+import UserProfile from './Screens/UserProfile';
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +55,7 @@ function MainStack() {
         <Stack.Screen name={portfolioName} component={PortfolioScreen} options={{headerShown: true}}/>
         <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
         <Stack.Screen name={collaborationName} component={CollaborationScreen} options={{headerShown: true}}/>
+        <Stack.Screen name={"UserProfile"} component={UserProfile} options={{headerShown: true}}/>
     </Stack.Navigator>
     </NavigationContainer>
   );

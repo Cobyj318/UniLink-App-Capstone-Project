@@ -99,10 +99,10 @@ const ConnectCard = ({ user, onConnect }) => {
           {isExpanded && (
             <View style={styles.cardActions}>
               <Button
-                style={styles.cancelButton}
+                style={styles.OtherButton}
                 onPress={handleExpand}
               >
-                Cancel
+                View Profile
               </Button>
               <Button
                 style={styles.connectButton}
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  cancelButton: {
+  OtherButton: {
     flex: 1,
     marginRight: 5,
   },

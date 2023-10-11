@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button, KeyboardAvoidingView, ImageBackground } from "react-native";
+import { View, StyleSheet, Button, KeyboardAvoidingView, ImageBackground,TextInput } from "react-native";
 import { FIREBASE_AUTH } from "../../../src/firebase_init/firebase";
-import { TextInput } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ExistingUser } from "../../MainStack";

@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { fetchData } from '../../DBFunctions/FetchData';
 import { primaryColors } from '../../Components/Colors';
 import RedLine from './Components/RedLine';
+import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
+import { updateProfile } from 'firebase/auth';
 
 export default function EventsScreen({ navigation,userDetails }) {
   const [users, setUsers] = useState([]);
@@ -17,7 +19,22 @@ export default function EventsScreen({ navigation,userDetails }) {
       setLoading(true); // Set loading to true while fetching data
       const usersData = await fetchData(); // Call the fetchData function
       setUsers(usersData);
-      console.log(userDetails.FirstName);
+      const currentUser = FIREBASE_AUTH.currentUser;
+      if (currentUser) {
+        const newDisplayName =userDetails.FirstName+" "+userDetails.LastName;
+        updateProfile(currentUser,{
+          displayName: newDisplayName,
+        })
+        .then(() => {
+          console.log("Display name updated successfully:", newDisplayName);
+        })
+        .catch((error) => {
+          console.error("Error updating display name:", error.message);
+        });
+        
+      } else {
+        console.log("No user is currently authenticated.");
+      }
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {setTimeout(() => {

@@ -6,6 +6,40 @@ import { accentColors, primaryColors } from '../../Components/Colors';
 import RedLine from '../Home_Screens/Components/RedLine';
 import { Image } from 'expo-image';
 
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+const Tab = createMaterialTopTabNavigator();
+
+const Screen1 = () => {
+  return (
+    <View >
+      <Text>Details Screen</Text>
+    </View>
+  );
+};
+
+const Screen2 = () => {
+  return (
+    <View >
+      <Text>Details Screen</Text>
+    </View>
+  );
+};
+
+function TabScreens() {
+  return (
+    <NavigationContainer independent={true}>
+      <Tab.Navigator>
+        <Tab.Screen name="Details" component={Screen1} />
+        <Tab.Screen name="Forum" component={Screen2} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+
 const GroupDetailsScreen = ({ route }) => {
   const { groupDetails } = route.params;
   console.log('Group Details:', groupDetails);
@@ -19,6 +53,7 @@ const GroupDetailsScreen = ({ route }) => {
         <Image source={{uri: groupDetails.Image_Link}} style={styles.image}/>
         {/* Project Details Section */}
         <RedLine />
+        {/* <TabScreens/> */}
         <View style={styles.projectDetailsContainer}>
           <Text style={styles.sectionTitle}>{groupDetails.Title}</Text>
           <Text style={styles.subtitle}>{groupDetails.CreatedDate}</Text>

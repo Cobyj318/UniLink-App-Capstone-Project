@@ -22,6 +22,17 @@ export default function SplashScreen({ navigation }) {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       // If sign-in is successful, update the user state
+      const currentUser = FIREBASE_AUTH.currentUser;
+      if (currentUser) {
+        console.log("User ID:", currentUser.uid);
+        console.log("Display Name:", currentUser.displayName);
+        console.log("Email:", currentUser.email);
+        console.log("Photo URL:", currentUser.photoURL);
+        console.log("Email Verified:", currentUser.emailVerified);
+        console.log("Phone Number:", currentUser.phoneNumber);
+      } else {
+        console.log("No user is currently authenticated.");
+      }
       navigation.replace('TabNavigator');
     } catch (error) {
         console.log(error);

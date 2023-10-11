@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const Tags = ({ tags, color, openDropdown, onDeleteTag, style }) => {
+const Tags = ({ tags, color, openDropdown, onDeleteTag, editable, style }) => {
   const [selectedTag, setSelectedTag] = useState(null);
 
   const openDeleteModal = (tag) => {
@@ -15,18 +15,28 @@ const Tags = ({ tags, color, openDropdown, onDeleteTag, style }) => {
 
   return (
     <View style={[styles.tagsContainer, style]}>
-      {tags.map((tag, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[styles.tag, styles.pill, { borderColor: color }]}
-          onLongPress={() => onDeleteTag(tag)} // Trigger the onDeleteTag function
-        >
-          <Text style={{ color: 'white' }}>{tag}</Text>
+      {tags.map((tag, index) => {
+        // Skip rendering if the tag is empty or null
+        if (!tag) {
+          return null;
+        }
+
+        return (
+          <TouchableOpacity
+            key={index}
+            style={[styles.tag, styles.pill, { borderColor: color }]}
+            onLongPress={() => onDeleteTag(tag)} // Trigger the onDeleteTag function
+          >
+            <Text style={{ color: 'white' }}>{tag}</Text>
+          </TouchableOpacity>
+        );
+      })}
+ 
+ {editable && (
+        <TouchableOpacity style={[styles.addTag, styles.pill, { borderColor: color }]} onPress={openDropdown}>
+          <Ionicons name="add" size={16} color={'white'} />
         </TouchableOpacity>
-      ))}
-      <TouchableOpacity style={[styles.addTag, styles.pill, { borderColor: color }]} onPress={openDropdown}>
-        <Ionicons name="add" size={16} color={'white'} />
-      </TouchableOpacity>
+      )}
 
       {/* Delete Confirmation Modal */}
       <Modal visible={selectedTag !== null} transparent={true} animationType="slide">

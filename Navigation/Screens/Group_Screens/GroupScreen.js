@@ -8,6 +8,7 @@ import ChipTags from './Components/ChipTags';
 import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../../../src/firebase_init/firebase';
+import GroupCreationScreen from './GroupCreationScreen';
 
 export default function GroupsScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
@@ -41,7 +42,7 @@ export default function GroupsScreen({ navigation }) {
 
   // Custom FloatingButton component to navigate to CreateEventScreen
   const FloatingButton = () => (
-    <FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => navigation.navigate('CreateEventScreen', { onRefresh: onRefresh })} />
+    <FAB backgroundColor={'#3498db'} icon="plus" style={styles.fab} onPress={() => navigation.navigate('GroupCreation', { onRefresh: onRefresh })} />
   );
 
   const filterProjectsByTag = (tag) => {
@@ -87,7 +88,7 @@ export default function GroupsScreen({ navigation }) {
           </View>
         )}
       </SafeAreaView>
-      {/* <FloatingButton /> */}
+      <FloatingButton />
     </PaperProvider>
   );
 }
