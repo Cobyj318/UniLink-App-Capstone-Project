@@ -9,6 +9,7 @@ import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
 import { firestore } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import OthersProfileScreen from './OthersProfileScreen';
 
 export const fetchData = async () => {
   try {
@@ -16,14 +17,18 @@ export const fetchData = async () => {
     const querySnapshot = await getDocs(eventsRef);
     const usersData = [];
     querySnapshot.forEach((doc) => {
-      const { Email, Password, Username, Major, About_me} = doc.data();
+      const { Email, Password, Username, Major, About_me, Skills, Interests, Connections, Projects} = doc.data();
       usersData.push({
         id: doc.id,
         Email,
         Password,
         Username,
         Major,
-        About_me
+        About_me, 
+        Skills, 
+        Interests,
+        Projects,
+        Connections
       });
     });
     return usersData;
@@ -38,7 +43,7 @@ export const fetchAllUsers = async () => {
     const querySnapshot = await getDocs(eventsRef);
     const usersData = [];
     querySnapshot.forEach((doc) => {
-      const {FirstName, LastName, Major,Profile_Image,Connections,Id} = doc.data();
+      const {FirstName, LastName, Major,Profile_Image,Connections,Id, Skills, Interests, Projects} = doc.data();
       usersData.push({
         id:doc.id,
         Id,
@@ -47,6 +52,9 @@ export const fetchAllUsers = async () => {
         Major,
         Profile_Image,
         Connections,
+        Skills,
+        Interests,
+        Projects, 
       });
     });
     return usersData;
@@ -61,11 +69,15 @@ function ConnectionsScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [userDetails, setUserDetails] = useState(null);
+  const [usersData, setUsersData] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  
 
   const fetchDataAndUserData = async () => {
     setLoading(true); // Set loading state to true when fetching data
     const usersData = await fetchAllUsers();
     setUsers(usersData);
+    setUsersData(usersData);
     const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
     setUserDetails(userData[0]);
     setLoading(false); // Set loading state to false when data fetching is complete
@@ -105,6 +117,18 @@ function ConnectionsScreen({ navigation }) {
 
   };
 
+  let filteredArrayC = usersData?.filter(item => userDetails?.Connections.includes(item.id));
+
+
+  if(searchText==''){
+    filteredArrayC=filteredArrayC?.filter(item=>item.Id!==FIREBASE_AUTH?.currentUser.uid);
+  }
+  else{
+    filteredArrayC=filteredArrayC?.filter(item=>item.FirstName.includes(searchText));
+    
+  }
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -113,9 +137,11 @@ function ConnectionsScreen({ navigation }) {
           <TextInput
         style={styles.searchInput}
         placeholder="Search..."
+        onChangeText={(text) => setSearchText(text)}
+        value={searchText}
       />
-        {userDetails?.Connections?.map((id) => (
-          <MutualCard user={id} userID={id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} />
+        {filteredArrayC?.map((user) => (
+          <MutualCard user={user.id} userID={user.id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} />
         ))}
       </ScrollView>
     </SafeAreaView>
@@ -180,7 +206,7 @@ function MutualsScreen() {
     filteredArray=filteredArray?.filter(item=>item.Id!==FIREBASE_AUTH?.currentUser.uid);
   }
   else{
-    filteredArray=filteredArray?.filter(item=>item.FirstName==searchText);
+    filteredArray=filteredArray?.filter(item=>item.FirstName.includes(searchText));
     
   }
   return (

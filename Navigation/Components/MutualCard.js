@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Text } from 'react-native-paper';
+import { Avatar, Button, Card, Text } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity} from 'react-native';
 import { Image } from 'expo-image';
 import { accentColors } from './Colors';
+import OthersProfile from './OthersProfile.js';
 const theme = {
   roundness: 4,
   colors: {
@@ -14,6 +15,9 @@ const theme = {
 const MutualCard = ({ user, AllUsers, onDisconnect }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [CardUser, setCardUser] = useState(null);
+  const [ProfileVisible, setProfileVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
 
   const LeftContent = ({ style }) => (
     <View>
@@ -29,13 +33,18 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
     setIsExpanded((prev) => !prev);
   };
 
+  const handleProfilePress = (user) => {
+    setSelectedUser(CardUser);
+    setProfileVisible(true);
+  }
+
   useEffect(() => {
     const foundUser = AllUsers.find(use => use.id === user);
     if (foundUser) {
       console.log("User found:", foundUser);
       setCardUser(foundUser);
     }
-  }, [user]);
+  }, [user]);;
 
   const handleDisconnectPress = () => {
     onDisconnect(user); // Call the onDisconnect callback with the user's name
@@ -62,11 +71,11 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
         {isExpanded && (
           <View style={styles.cardActions}>
             <Button
-              style={styles.cancelButton}
+              style={styles.ViewProfile}
               color='#CB333B'
-              onPress={handleExpand}
+              onPress={() => handleProfilePress(user)}
             >
-              Cancel
+              View Profile
             </Button>
             <Button
               style={styles.connectButton}
@@ -77,6 +86,12 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
             </Button>
           </View>
         )}
+
+<OthersProfile
+        isVisible={ProfileVisible}
+        user={selectedUser}
+        onClose={() => setProfileVisible(false)}
+      />
       </View>
     </TouchableOpacity>
   );
@@ -128,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  cancelButton: {
+  ViewProfile: {
     flex: 1,
     marginRight: 5,
   },
