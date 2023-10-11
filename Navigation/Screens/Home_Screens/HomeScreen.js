@@ -6,6 +6,7 @@ import { primaryColors } from '../../Components/Colors';
 import { fetchUserData} from '../../Components/UserData';
 import EventsScreen from './EventsScreen';
 import updateGroupIds from '../../DBFunctions/updateGroupIds';
+import { updateProfile } from 'firebase/auth';
 
 const HomeScreen = ({navigation}) => {
   const [users, setUsers] = useState([]);
@@ -21,6 +22,22 @@ const HomeScreen = ({navigation}) => {
     setUserDetails(userData[0]);
     console.log(FIREBASE_AUTH.currentUser?.uid);
     console.log(userData[0]);
+    const currentUser = FIREBASE_AUTH.currentUser;
+      if (currentUser) {
+        const newDisplayName =userDetails.FirstName+" "+userDetails.LastName;
+        updateProfile(currentUser,{
+          displayName: newDisplayName,
+        })
+        .then(() => {
+          console.log("Display name updated successfully:", newDisplayName);
+        })
+        .catch((error) => {
+          console.error("Error updating display name:", error.message);
+        });
+        
+      } else {
+        console.log("No user is currently authenticated.");
+      }
     setIsLoading(false); // Set loading state to false when data fetching is complete
   };
   useEffect(() => {
