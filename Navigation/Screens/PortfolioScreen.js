@@ -281,6 +281,7 @@ const deleteTag = async (tagToDelete) => {
     <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Skills</Text>
     <Tags
   tags={skills}
+  editable={true}
   color="#9b59b6"
   openDropdown={() => toggleDropdown('skills')}
   onDeleteTag={(tag) => {
@@ -312,6 +313,7 @@ const deleteTag = async (tagToDelete) => {
       <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Interests</Text>
       <Tags
   tags={interests}
+  editable={true}
   color="#3498db"
   openDropdown={() => toggleDropdown('interests')}
   onDeleteTag={(tag) => {
@@ -323,6 +325,7 @@ const deleteTag = async (tagToDelete) => {
       <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Projects</Text>
       <Tags
   tags={projects}
+  editable={true}
   color="#e74c3c"
   openDropdown={() => toggleDropdown('projects')}
   onDeleteTag={(tag) => {

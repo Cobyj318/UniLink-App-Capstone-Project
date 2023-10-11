@@ -70,7 +70,7 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
   style={imageUploaderStyles.container} // Adjust width and height as needed
 />
         <View style={Pfstyles.textContainer}>
-        <Text style={Pfstyles.containerItems}> {user?.FirstName + "'s" + " Profile"}  </Text>
+        <Text style={Pfstyles.containerItems}> {"Profile: " + user?.FirstName}  </Text>
         </View>
       </View>
 
