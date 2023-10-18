@@ -7,13 +7,14 @@ import PortfolioScreen from './PortfolioScreen';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { editData } from '../DBFunctions/editData';
-// import { Avatar } from 'react-native-paper';
-import MutualCard from '../Components/MutualCard';
+import { editData, deleteSelfData } from '../DBFunctions/editData';
 import Avatar_profiles from '../Components/Avatar_profiles';
 import { RefreshControl } from 'react-native';
 import { fetchAllUsers } from './NetworkScreen';
 import { Picker } from '@react-native-picker/picker';
+import { Modal } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { createStackNavigator } from "@react-navigation/stack";
 
 export default function ProfileScreen({navigation}){
     const [edit, isEditing] = useState(false);
@@ -56,6 +57,19 @@ export default function ProfileScreen({navigation}){
     
       };
 
+    const SettingsButton = ({ onPress }) => (
+        <TouchableOpacity onPress={onPress}>
+            <Icon name="gear" size={24} color="#3498db" />
+        </TouchableOpacity>
+    );
+
+    const profStack = createStackNavigator();
+    const ProfileStack = () => (
+        <profStack.Navigator>
+            <profStack.Screen/>
+        </profStack.Navigator>
+    );
+
     const userName = `${userDetails ? userDetails.FirstName: ''} ${userDetails ? userDetails.LastName: ''}`;
     const userImage = userDetails ? userDetails.Profile_Image : '';
     
@@ -84,6 +98,11 @@ export default function ProfileScreen({navigation}){
             let newNameEntry= nameEntry.split(' ');
             editData(newNameEntry, majorTag);
         }
+    }
+
+    const askDelete = () => {
+        signOut();
+        deleteSelfData();
     }
 
     const onRefresh = async () => {
@@ -148,6 +167,9 @@ export default function ProfileScreen({navigation}){
             </TouchableOpacity>
             <TouchableOpacity onPress={signOut}>
                 <Text style={{ color: '#ff0000', marginVertical: 10 }}>Sign Out</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={askDelete}>
+                <Text>Delete Account</Text>
             </TouchableOpacity>
             {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
         </ScrollView>

@@ -1,6 +1,7 @@
-import { updateDoc, doc, collection, getDocs, query, where } from 'firebase/firestore';
-import { firestore } from "../../src/firebase_init/firebase";
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
+import { updateDoc, doc, getDocs, query, where, deleteDoc, collection } from 'firebase/firestore';
+import { firestore,FIREBASE_AUTH, storage} from "../../src/firebase_init/firebase";
+import { deleteUser } from 'firebase/auth'
+import { ref, deleteObject } from 'firebase/storage';
 
 export async function editData(newNameData, newMajor) {
     try {
@@ -15,9 +16,21 @@ export async function editData(newNameData, newMajor) {
 
       const docref = doc(firestore, 'User_data', docos.id);
       updateDoc(docref, {FirstName:newNameData[0], LastName:newNameData[1], Major:newMajor});
-      console.log("success")
 
     }catch (error){
         console.error('Error editing data:', error);
     }
+}
+
+export async function deleteSelfData(){
+  try{
+    const userRef = doc(firestore, 'User_data', FIREBASE_AUTH.currentUser?.uid);
+    const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/`);
+    deleteObject(storageRef);
+    deleteDoc(userRef);
+    deleteUser(FIREBASE_AUTH.currentUser);
+    
+  }catch(err){
+    console.log(err, "Unsuccessful");
+  }
 }
