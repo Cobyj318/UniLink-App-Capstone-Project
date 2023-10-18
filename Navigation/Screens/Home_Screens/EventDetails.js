@@ -6,6 +6,7 @@ import { CircularImage } from '../../Components/CircleImage';
 import { accentColors, primaryColors } from '../../Components/Colors';
 import RedLine from './Components/RedLine';
 import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
+import CommentSection from '../../Components/CommentSection';
 
 const locationUrls = {
   "Barnes & Noble Bookstore": "https://maps.app.goo.gl/PDGzFzzMJV7bKwdt5",
@@ -122,6 +123,7 @@ const EventDetailsScreen = () => {
             <Text style={styles.eventLocation}>{event.Location}</Text>
           </TouchableOpacity>
           <Text style={styles.eventDescription}>{event.Description}</Text>
+          <CommentSection/>
           {event.Creator === User_ID && (
             <Button onPress={handleEditButton}>Edit</Button>
           )}

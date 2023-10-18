@@ -3,12 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'reac
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import Tags from '../Components/Tags';
-import { app, firestore, FIREBASE_AUTH, FieldValue } from "../../src/firebase_init/firebase";
-import { collection, doc, getDoc, getDocs, updateDoc, arrayUnion } from 'firebase/firestore'; // Import Firestore methods
+import { firestore, FIREBASE_AUTH} from "../../src/firebase_init/firebase";
+import { collection, doc, getDoc, getDocs, updateDoc} from 'firebase/firestore'; // Import Firestore methods
 import { fetchUserData } from '../Components/UserData';
 
-
-auth = FIREBASE_AUTH;
 const PortfolioScreen = () => {
   const [skills, setSkills] = useState([]);
   const [menuSkills, setMenuSkills] = useState([]); // State to hold menuSkills
@@ -20,205 +18,121 @@ const PortfolioScreen = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [userData, setUserData] = useState(null);
   const auth = FIREBASE_AUTH; 
-  const user = auth.currentUser;
   const [experienceDescription, setExperienceDescription] = useState('');
-const [isEditMode, setIsEditMode] = useState(false);
-const [userProjects, setUserProjects] = useState([]);
-const [userDetails, setUserDetails] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
 
 
-useEffect(() => {
-  const fetchUserDataAndTagData = async () => {
-    try {
-      // Fetch user data
-      const user = auth.currentUser;
-      if (user) {
-        const userData = await fetchUserData(user.uid);
-        setUserDetails(userData[0]);
+  useEffect(() => {
+    const fetchUserDataAndTagData = async () => {
+      try {
+        // Fetch user data
+        const user = auth.currentUser;
+        if (user) {
+          const userData = await fetchUserData(user.uid);
+          setUserDetails(userData[0]);
 
-        // Fetch tag data
-        const tagData = await fetchtagData();
-        setMenuSkills(tagData[0].Skills);
-        setMenuInterests(tagData[0].Interests);
+          // Fetch tag data
+          const tagData = await fetchtagData();
+          setMenuSkills(tagData[0].Skills);
+          setMenuInterests(tagData[0].Interests);
 
-        // Set other initial tags from the user's data
-        setSkills(userData[0]?.Skills || []);
-        setInterests(userData[0]?.Interests || []);
-        setProjects(userData[0]?.Projects || []);
-        setExperienceDescription(userData[0]?.Experience || "");
-      } else {
-        console.log('User not authenticated.');
+          // Set other initial tags from the user's data
+          setSkills(userData[0]?.Skills || []);
+          setInterests(userData[0]?.Interests || []);
+          setProjects(userData[0]?.Projects || []);
+          setExperienceDescription(userData[0]?.Experience || "");
+        } else {
+          console.log('User not authenticated.');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
+    };
+
+    fetchUserDataAndTagData();
+  }, [auth.currentUser]);  // Update the dependency to trigger when the user changes
+   
+  const fetchtagData = async () => {
+    try {
+      const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
+      setUserDetails(userData[0]);
+      const eventsRef = collection(firestore, 'Portfolio_tags');
+      const querySnapshot = await getDocs(eventsRef);
+      const tagData = [];
+      querySnapshot.forEach((doc) => {
+        const { Interests, Skills} = doc.data();
+        tagData.push({
+          id: doc.id,
+          Interests,
+          Skills
+        });
+      });
+      return tagData;
     } catch (error) {
       console.error('Error fetching data:', error);
+      return [];
     }
   };
+                                      
+  useEffect(() => {
+    const fetchDataAndUserData = async () => {
+      const tagData = await fetchtagData();
+      setMenuSkills(tagData[0].Skills); // Update menuSkills state
+      setMenuInterests(tagData[0].Interests); // Update menuInterests state
+    };
+    fetchDataAndUserData();
+  }, []);
 
-  fetchUserDataAndTagData();
-}, [auth.currentUser]);  // Update the dependency to trigger when the user changes
-
-  
-const fetchtagData = async () => {
-  try {
-    const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
-    setUserDetails(userData[0]);
-    const eventsRef = collection(firestore, 'Portfolio_tags');
-    const querySnapshot = await getDocs(eventsRef);
-    const tagData = [];
-    querySnapshot.forEach((doc) => {
-      const { Interests, Skills} = doc.data();
-      tagData.push({
-        id: doc.id,
-        Interests,
-        Skills
-      });
-    });
-    return tagData;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return [];
-  }
-};
-
-useEffect(() => {
-  const fetchDataAndUserData = async () => {
-    const tagData = await fetchtagData();
-    setMenuSkills(tagData[0].Skills); // Update menuSkills state
-    setMenuInterests(tagData[0].Interests); // Update menuInterests state
+  const toggleDeleteModal = (category) => {
+    setTagCategory(category)
+    setIsDeleteModalVisible(!isDeleteModalVisible);
   };
-  fetchDataAndUserData();
-}, []);
 
-const toggleDeleteModal = (category) => {
-  setTagCategory(category)
-  setIsDeleteModalVisible(!isDeleteModalVisible);
-};
-
-const deleteSelectedTag = async () => {
-  // Determine the appropriate array based on the selectedTag's category (skills, interests, etc.)
-  let updatedArray = [];
-  switch (tagCategory) {
-    case 'skills':
-      updatedArray = skills.filter((tag) => tag !== selectedTag);
-      setSkills(updatedArray);
-      await deleteTagFromFirebase('Skills', selectedTag);
-      break;
-    case 'interests':
-      updatedArray = interests.filter((tag) => tag !== selectedTag);
-      setInterests(updatedArray);
-      await deleteTagFromFirebase('Interests', selectedTag);
-      break;
-    case 'projects':
-      updatedArray = Projects.filter((tag) => tag !== selectedTag);
-      setProjects(updatedArray);
-      // You can implement a similar function to delete from Firebase for projects if needed
-      break;
-    default:
-      break;
-  }
-
-  // After deletion, close the modal and clear the selected tag
-  setIsDeleteModalVisible(false);
-  setSelectedTag(null);
-};
-
-const deleteTagFromFirebase = async (category, tag) => {
-  try {
-    const user = auth.currentUser;
-    if (user) {
-      const userRef = doc(firestore, 'User_data', userDetails.id);
-      const userSnapshot = await getDoc(userRef);
-      if (userSnapshot.exists()) {
-        const userData = userSnapshot.data();
-        const updatedArray = userData[category].filter(item => item !== tag);
-        await updateDoc(userRef, {
-          [category]: updatedArray,
-        });
-      }
+  const deleteSelectedTag = async () => {
+    // Determine the appropriate array based on the selectedTag's category (skills, interests, etc.)
+    let updatedArray = [];
+    switch (tagCategory) {
+      case 'skills':
+        updatedArray = skills.filter((tag) => tag !== selectedTag);
+        setSkills(updatedArray);
+        await deleteTagFromFirebase('Skills', selectedTag);
+        break;
+      case 'interests':
+        updatedArray = interests.filter((tag) => tag !== selectedTag);
+        setInterests(updatedArray);
+        await deleteTagFromFirebase('Interests', selectedTag);
+        break;
+      case 'projects':
+        updatedArray = Projects.filter((tag) => tag !== selectedTag);
+        setProjects(updatedArray);
+        // You can implement a similar function to delete from Firebase for projects if needed
+        break;
+      default:
+        break;
     }
-  } catch (error) {
-    console.error('Error deleting tag from Firebase:', error);
-  }
-};
+    // After deletion, close the modal and clear the selected tag
+    setIsDeleteModalVisible(false);
+    setSelectedTag(null);
+  };
 
-const deleteTag = async (tagToDelete) => {
-  try {
-    const user = auth.currentUser;
-    if (user) {
-      const userRef = doc(firestore, 'test_data', user.uid);
-      const userSnapshot = await getDoc(userRef);
-      if (userSnapshot.exists()) {
-        const userData = userSnapshot.data();
-        
-        switch (tagCategory) {
-          case 'skills':
-            userData.Skills = userData.Skills.filter(tag => tag !== tagToDelete);
-            break;
-          case 'interests':
-            userData.Interests = userData.Interests.filter(tag => tag !== tagToDelete);
-            break;
-          case 'projects':
-            // Adjust the field name based on your data structure
-            // userData.Projects = userData.Projects.filter(tag => tag !== tagToDelete);
-            break;
-          default:
-            break;
+  const deleteTagFromFirebase = async (category, tag) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(firestore, 'User_data', userDetails.id);
+        const userSnapshot = await getDoc(userRef);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          const updatedArray = userData[category].filter(item => item !== tag);
+          await updateDoc(userRef, {
+            [category]: updatedArray,
+          });
         }
-
-        // Update the Firestore document with the modified userData
-        await updateDoc(userRef, userData);
-
-      // Update the local state to remove the tag
-      switch (tagCategory) {
-        case 'skills':
-          setSkills(skills.filter((tag) => tag !== tagToDelete));
-          break;
-        case 'interests':
-          setInterests(interests.filter((tag) => tag !== tagToDelete));
-          break;
-        case 'projects':
-          setProjects(projects.filter((tag) => tag !== tagToDelete));
-          break;
-        default:
-          break;
       }
-      
-      setSelectedTag(null); // Close the delete confirmation modal
-    }
-  }
-  } catch (error) {
-    console.error('Error deleting tag:', error);
-  }
-};
-  const toggleDropdown = (category) => {
-    setIsDropdownOpen(!isDropdownOpen);
-    setCustomTag('');
-    setTagCategory(category);
-  };
-  const addTag = async (tag) => {
-    if (tag.trim() !== '') {
-      if (!skills.includes(tag) && !interests.includes(tag)) {
-        switch (tagCategory) {
-          case 'skills':
-            setSkills([...skills, tag]);
-            await updateTagInFirebase('skills', tag);
-            break;
-          case 'interests':
-            setInterests([...interests, tag]);
-            await updateTagInFirebase('interests', tag);
-            break;
-          case 'projects':
-            // Projects array is static, so you might not want to add tags to it
-            break;
-          default:
-            break;
-        }
-        setIsDropdownOpen(false);
-      } else {
-        console.log('Tag already exists.');
-      }
+    } catch (error) {
+      console.error('Error deleting tag from Firebase:', error);
     }
   };
   
@@ -226,7 +140,6 @@ const deleteTag = async (tagToDelete) => {
     try {
       const user = auth.currentUser;
       if (user) {
-        
         const userRef = doc(firestore, 'User_data', userDetails.id);
         const userSnapshot = await getDoc(userRef);
         if (userSnapshot.exists()) {
@@ -258,11 +171,14 @@ const deleteTag = async (tagToDelete) => {
   };
 
   const closeDropdown = () => {
-    console.log('Closing dropdown');
     setIsDropdownOpen(false);
     setCustomTag('');
   };
-
+  const toggleDropdown = (category) => {
+    setIsDropdownOpen(!isDropdownOpen);
+    setCustomTag('');
+    setTagCategory(category);
+  };
   const getTagsForCategory = () => {
     switch (tagCategory) {
       case 'skills':
@@ -280,15 +196,15 @@ const deleteTag = async (tagToDelete) => {
     <View style={styles.container}>
     <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Skills</Text>
     <Tags
-  tags={skills}
-  editable={true}
-  color="#9b59b6"
-  openDropdown={() => toggleDropdown('skills')}
-  onDeleteTag={(tag) => {
-    setSelectedTag(tag);
-    toggleDeleteModal('skills');
-  }}
-/>
+      tags={skills}
+      editable={true}
+      color="#9b59b6"
+      openDropdown={() => toggleDropdown('skills')}
+      onDeleteTag={(tag) => {
+        setSelectedTag(tag);
+        toggleDeleteModal('skills');
+      }}
+    />
       <Modal visible={isDropdownOpen} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.dropdownContainer}>
@@ -365,8 +281,7 @@ const deleteTag = async (tagToDelete) => {
   <Text style={styles.experienceText}>{experienceDescription}</Text>
 )}
 
-
-      <Modal visible={isDeleteModalVisible} transparent={true} animationType="slide">
+<Modal visible={isDeleteModalVisible} transparent={true} animationType="slide">
   <View style={styles.deleteModalContainer}>
     <View style={styles.deleteModalContent}>
       <Text style={styles.deleteModalText}>Delete Tag?</Text>
@@ -390,7 +305,7 @@ const deleteTag = async (tagToDelete) => {
     </View>
   </View>
 </Modal>
-    </View>
+</View>
     
     
   );

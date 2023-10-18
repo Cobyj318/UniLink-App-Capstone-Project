@@ -1,11 +1,11 @@
 import React, { useEffect, useState} from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, StatusBar, Button, RefreshControl,TextInput, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl,TextInput, TouchableOpacity, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
 import ConnectCard from '../Components/ConnectCard';
 import MutualCard from '../Components/MutualCard';
-import { updateDoc, doc, collection, getDocs} from '@firebase/firestore';
+import { updateDoc, doc, collection, getDocs,getDoc} from '@firebase/firestore';
 import { firestore, FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
 import { Picker } from '@react-native-picker/picker';
@@ -186,9 +186,28 @@ function MutualsScreen() {
     try {
       userDetails.Connections= [...userDetails?.Connections,selectedUserID];
       const documentRef = doc(firestore,'User_data', userDetails.id);
-      try {
-        await updateDoc(documentRef, userDetails);
+      const notifRef=doc(firestore,'Notifications',selectedUserID);
+      
         
+      try {
+        const docSnapshot = await getDoc(notifRef);
+        let Connects = [];
+        if (docSnapshot.exists()) {
+        // Access the 'Connects' field from the document data
+          Connects = docSnapshot.data()?.Connects||[];
+          console.log('Connects:', Connects);
+        } else {
+          console.log('Document does not exist.');
+        }
+        await updateDoc(documentRef, userDetails);
+        await updateDoc(notifRef,{
+          Connects:[...Connects,{
+            id: userDetails.id,
+            type: "Mutuals",
+            title: userDetails.FirstName,
+            image: userDetails.Profile_Image,
+          }],
+        })
         console.log('Document updated successfully');
       } catch (error) {
         console.error('Error updating document:', error);
