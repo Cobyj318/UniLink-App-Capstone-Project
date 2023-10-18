@@ -25,8 +25,8 @@ const Tags = ({ tags, color, openDropdown, onDeleteTag, editable, style }) => {
           <TouchableOpacity
             key={index}
             style={[styles.tag, styles.pill, { borderColor: color }]}
-            onLongPress={() => onDeleteTag(tag)} // Trigger the onDeleteTag function
-          >
+            onLongPress={editable ? () => onDeleteTag(tag) : null}
+            >
             <Text style={{ color: 'white' }}>{tag}</Text>
           </TouchableOpacity>
         );

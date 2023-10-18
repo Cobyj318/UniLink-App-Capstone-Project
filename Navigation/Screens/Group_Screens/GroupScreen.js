@@ -8,7 +8,6 @@ import ChipTags from './Components/ChipTags';
 import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../../../src/firebase_init/firebase';
-import GroupCreationScreen from './GroupCreationScreen';
 
 export default function GroupsScreen({ navigation }) {
   const [groups, setGroups] = useState([]);

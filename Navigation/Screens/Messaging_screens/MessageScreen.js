@@ -27,7 +27,7 @@ const MessageScreen = () => {
   const onUserPressed = async (user) => {
     const channel = client.channel('messaging', {
       members: [FIREBASE_AUTH.currentUser.uid, user.id],
-      name: `Chat between ${CurrentUser} and ${user.id}`,
+      name: `Group Chat: ${CurrentUser} and ${user.id}`,
     });
     await channel.watch();
     setSelectedChannel(channel);
@@ -70,7 +70,7 @@ const MessageScreen = () => {
       setSearchResults([]);
       return;
     }
-    const response = await client.queryUsers({ id: { $autocomplete: searchText } });
+    const response = await client.queryUsers({ name: { $autocomplete: searchText } });
     setSearchResults(response.users);
   };
 
@@ -101,7 +101,7 @@ const MessageScreen = () => {
               </Channel>
             ) : (
               <View style={styles.container}>
-                <ChannelList filters={{ members: { $in: [CurrentUser] } }} onSelect={onChannelPressed} />
+                <ChannelList filters={{ members: { $in: [FIREBASE_AUTH.currentUser.uid] } }} onSelect={onChannelPressed} />
               </View>
             )}
           </Chat>
@@ -114,7 +114,7 @@ const MessageScreen = () => {
                   <Pressable onPress={() => onUserPressed(item)}>
                     <View style={styles.userItem}>
                       <Image source={{ uri: item.image }} style={styles.userImage} />
-                      <Text>{item.id}</Text>
+                      <Text>{item.name}</Text>
                     </View>
                   </Pressable>
                 )}

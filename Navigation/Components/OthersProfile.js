@@ -51,7 +51,7 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
 
   
   return (
-    console.log(user?.connections),
+    console.log(user?.Experience),
     console.log("-------------------"), 
     <Modal
       animationType="slide"
@@ -109,6 +109,13 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
                   color="#9b59b6"
                   editable={false}
                 />
+              </>
+            )}
+            {user?.Experience && user?.Experience.length > 0 && (
+              <>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Experience</Text>
+                <Text style={styles.experienceText}>{user?.Experience}</Text>
+
               </>
             )}
           </View>
@@ -178,6 +185,14 @@ const styles = StyleSheet.create({
         //paddingLeft:10,
         overflow:'hidden',
     },
+    experienceText: {
+      fontSize: 20,
+      marginBottom: 30,
+      marginHorizontal: 20,
+      marginLeft: 5,
+      textAlign: 'left',
+      lineHeight: 20,
+    }
 });
 
 const Pfstyles = StyleSheet.create({

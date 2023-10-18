@@ -1,43 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
-import { CircularImage } from '../../Components/CircleImage';
-import { accentColors, primaryColors } from '../../Components/Colors';
+import { accentColors} from '../../Components/Colors';
 import RedLine from '../Home_Screens/Components/RedLine';
 import { Image } from 'expo-image';
-
-
-import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import CommentSection from '../../Components/CommentSection';
 
 const Tab = createMaterialTopTabNavigator();
 
-const Screen1 = () => {
-  return (
-    <View >
-      <Text>Details Screen</Text>
-    </View>
-  );
-};
-
-const Screen2 = () => {
-  return (
-    <View >
-      <Text>Details Screen</Text>
-    </View>
-  );
-};
-
-function TabScreens() {
-  return (
-    <NavigationContainer independent={true}>
-      <Tab.Navigator>
-        <Tab.Screen name="Details" component={Screen1} />
-        <Tab.Screen name="Forum" component={Screen2} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
 
 
 const GroupDetailsScreen = ({ route }) => {
@@ -86,6 +57,7 @@ const GroupDetailsScreen = ({ route }) => {
         {groupDetails.Owner === User_ID && (
           <Button onPress={() => console.log('Edit button pressed')}>Edit</Button>
         )}
+        <CommentSection/>
       </ScrollView>
     </KeyboardAvoidingView>
   );

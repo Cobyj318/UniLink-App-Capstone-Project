@@ -54,7 +54,7 @@ const GroupDetailsScreen = ({ route }) => {
                     <Text style={styles.sectionTitle}>Group Schedule</Text>
                     {/* <Schedule/> */}
                     <TouchableOpacity onPress={() => 
-                        navigation.navigate('GroupSchedule')}>
+                        navigation.navigate('GroupSchedule', { groupDetails:groupDetails })}>
                         <Text style={styles.sectionTitle}>Look at Schedule</Text>
                     </TouchableOpacity>
                 </View>
