@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GroupStack } from "./Group_Screens/groupStack";
 import NewsScreen from "./News_screens/NewsTabs";
@@ -6,14 +6,13 @@ import NetworkScreen from "./NetworkScreen";
 import ProfileScreen from "./ProfileScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DrawerNavigation from "./Home_Screens/HomeDrawer";
-import { useEffect } from "react";
-import { collection, getDocs, query, where, onSnapshot } from "firebase/firestore";
+import { useEffect, useState, useRef } from "react";
+import { collection, getDocs, query, where, onSnapshot, doc } from "firebase/firestore";
 import { FIREBASE_AUTH, firestore } from "../../src/firebase_init/firebase";
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-import { useState, useRef } from 'react';
-import { Platform } from 'react-native';
-import { doc } from "firebase/firestore";
+import ProfileStack from "./ProfileStack";
+
 
 
 export const ExistingUser = "TabNavigator"; // Export OldUser separately
@@ -116,7 +115,7 @@ export const TabNavigator = () => {
     <Tab.Screen name={eventsName} component={GroupStack} />
     <Tab.Screen name={newsName} component={NewsScreen}/>
     <Tab.Screen name={networkName} component={NetworkScreen}/>
-    <Tab.Screen name={profileName} component={ProfileScreen}/>
+    <Tab.Screen name={profileName} component={ProfileStack} options={{headerShown: false}}/>
     </Tab.Navigator>
   )
 };

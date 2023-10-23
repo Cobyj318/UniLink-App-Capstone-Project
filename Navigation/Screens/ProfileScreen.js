@@ -6,15 +6,14 @@ import UploadThing from '../Components/uploadThing'
 import PortfolioScreen from './PortfolioScreen';
 import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { editData, deleteSelfData } from '../DBFunctions/editData';
+import { editData } from '../DBFunctions/editData';
 import Avatar_profiles from '../Components/Avatar_profiles';
 import { RefreshControl } from 'react-native';
 import { fetchAllUsers } from './NetworkScreen';
 import { Picker } from '@react-native-picker/picker';
-import { Modal } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createStackNavigator } from "@react-navigation/stack";
+//import { SettingsButton } from './ProfileStack';
+//import SettingsPage from './SettingsPage';
 
 export default function ProfileScreen({navigation}){
     const [edit, isEditing] = useState(false);
@@ -56,40 +55,15 @@ export default function ProfileScreen({navigation}){
     
       };
 
-    const SettingsButton = ({ onPress }) => (
-        <TouchableOpacity onPress={onPress}>
-            <Icon name="gear" size={24} color="#3498db" />
-        </TouchableOpacity>
-    );
-
-    const profStack = createStackNavigator();
-    const ProfileStack = () => (
-        <profStack.Navigator>
-            <profStack.Screen/>
-        </profStack.Navigator>
-    );
-
     const userName = `${userDetails ? userDetails.FirstName: ''} ${userDetails ? userDetails.LastName: ''}`;
     const userImage = userDetails ? userDetails.Profile_Image : '';
+    const userMajor = userDetails ? userDetails.Major : '';
     
     useEffect(() => {
         setImage_(userImage);
         nEntryEdited(userName);
+        setMajorTag(userMajor)
     },[]);
-
-    const signOut = async () => {
-        try {
-            await AsyncStorage.removeItem('userEmail');
-            await AsyncStorage.removeItem('userPassword');
-            console.log('Data deleted from AsyncStorage');      
-            await AsyncStorage.clear();
-            await FIREBASE_AUTH.signOut();
-            // Redirect to the login screen or any other screen after signing out.
-            navigation.replace('SplashScreen');
-        } catch (error) {
-            console.error('Error signing out:', error);
-        }
-    };
 
     const editProfile = () => {
         isEditing(!edit);
@@ -99,15 +73,11 @@ export default function ProfileScreen({navigation}){
         }
     }
 
-    const askDelete = () => {
-        signOut();
-        deleteSelfData();
-    }
-
     const onRefresh = async () => {
         try {
           fetchDataAndUserData();  
           nEntryEdited(userName);
+          setMajorTag(userMajor)
         } catch (error) {
           console.error('Error refreshing data:', error);
         } finally {
@@ -119,6 +89,11 @@ export default function ProfileScreen({navigation}){
 
      return (
         <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />} >
+            {edit ? <TouchableOpacity style={{ borderRadius:99, backgroundColor:"#ffffff", width:36, height:36, justifyContent:"center", paddingLeft:5 }} title={"Edit Profile"} onPress={editProfile}>
+                <Icon name={"check"} size={25} color="#3498db"/>
+            </TouchableOpacity> : <TouchableOpacity style={{ borderRadius:99, backgroundColor:"#fffff", width:36, height:36, justifyContent:"center", paddingLeft:6 }} title={"Save Changes"} onPress={editProfile}>
+                <Icon name={"pencil"} size={25} color="#3498db"/>
+            </TouchableOpacity>}
             <View style={Pfstyles.container}>
                 {edit ? <UploadThing navigation={navigation} isEditing={true} setImage_={setImage_}/> : <UploadThing navigation={navigation} isEditing={false} setImage_={setImage_}/> }
                 <View style={Pfstyles.textContainer}>
@@ -164,13 +139,6 @@ export default function ProfileScreen({navigation}){
             <TouchableOpacity onPress={() => navigation.navigate('CollaborationScreen')}>
                 <Text style={{ color: '#3498db', marginVertical: 10 }}>Create and join other people's Projects</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={signOut}>
-                <Text style={{ color: '#ff0000', marginVertical: 10 }}>Sign Out</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={askDelete}>
-                <Text>Delete Account</Text>
-            </TouchableOpacity>
-            {edit ? <Button style={{ flex: 1 }} title={"Save Changes"} onPress={editProfile} buttonColor={"#3498db"} /> : <Button style={{ flex: 1 }} title={"Edit Profile"} onPress={editProfile} buttonColor={"#3498db"} />}
         </ScrollView>
   );
 }
