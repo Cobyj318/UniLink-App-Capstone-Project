@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GroupStack } from "./Group_Screens/groupStack";
 import NewsScreen from "./News_screens/NewsTabs";
 import NetworkScreen from "./NetworkScreen";
-import ProfileScreen from "./ProfileScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DrawerNavigation from "./Home_Screens/HomeDrawer";
 import { useEffect, useState, useRef } from "react";
