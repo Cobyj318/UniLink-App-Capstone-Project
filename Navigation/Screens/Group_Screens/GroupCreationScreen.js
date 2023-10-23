@@ -63,6 +63,7 @@ export default function GroupCreationScreen({ navigation, route }) {
         MembersID: membersID,
         Image_Link: 'https://picsum.photos/1100',
         Tags: tags,
+        Updates:[],
       };
 	  await CreateGroup(newGroup);
 	  await updateGroupIds();
