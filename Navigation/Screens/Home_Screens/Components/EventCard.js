@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Pressable, StyleSheet, View, Text} from 'react-native';
-import {Button, IconButton } from 'react-native-paper';
 import { updateDoc, deleteDoc,getDoc, doc } from 'firebase/firestore';
 import { firestore } from '../../../../src/firebase_init/firebase';
 import { useNavigation } from '@react-navigation/native';

@@ -7,7 +7,7 @@ import ProfileScreen from "./ProfileScreen";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DrawerNavigation from "./Home_Screens/HomeDrawer";
 import { useEffect, useState, useRef } from "react";
-import { collection, getDocs, query, where, onSnapshot, doc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 import { FIREBASE_AUTH, firestore } from "../../src/firebase_init/firebase";
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
@@ -32,34 +32,29 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
-
-
-
 const Tab = createBottomTabNavigator();
+
 export const TabNavigator = () => { 
+  
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
   const [isInitialMount, setIsInitialMount] = useState(true);
+  
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
     });
-
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
-
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-
 
   useEffect(() => {
     const documentRef = doc(firestore, "Notifications", FIREBASE_AUTH.currentUser.uid); // Replace with your document ID
@@ -78,8 +73,6 @@ export const TabNavigator = () => {
       unsubscribe();
     };
   }, []);
-  
-   
   
   return(
     <Tab.Navigator 
@@ -108,7 +101,6 @@ export const TabNavigator = () => {
           </View>
         );
       },
-      
     })}
   >
     <Tab.Screen name={homeName} component={DrawerNavigation} options={{headerShown:false}}/>

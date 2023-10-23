@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../../../../src/firebase_init/firebase';
 import { FIREBASE_AUTH } from '../../../../src/firebase_init/firebase';
 import { cardstyles } from '../Stylings/GroupCardStyles';
+import { deleteDoc } from 'firebase/firestore';
 
 const GroupsCard = ({ item, handlePress }) => {
   const [likedProjects, setLikedProjects] = useState([]);
@@ -16,13 +17,11 @@ const GroupsCard = ({ item, handlePress }) => {
         const userDoc = await getDoc(userRef);
         const userData = userDoc.data();
         const userLikedProjects = userData.liked_projects || [];
-
         setLikedProjects(userLikedProjects);
       } catch (error) {
         console.error('Error fetching liked projects:', error);
       }
     };
-
     fetchLikedProjects();
   }, []);
 
@@ -52,7 +51,15 @@ const GroupsCard = ({ item, handlePress }) => {
       console.error('Error updating liked projects:', error);
     }
   };
-
+  const handleDeleteProject= async (item)=>{
+    try {
+      const groupRef = doc(firestore, 'Groups', item.id);
+      await deleteDoc(groupRef);
+      alert('Event deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+  }
   return (
     <View style={cardstyles.projectCardContainer}>
       <View style={cardstyles.projectCard}>
@@ -74,6 +81,9 @@ const GroupsCard = ({ item, handlePress }) => {
           />
           <Button onPress={() => handleJoinProject(item.id)}>Join Project</Button>
         </View>
+        {item.MembersID.includes(FIREBASE_AUTH.currentUser.uid) && (
+          <Button onPress={() => handleDeleteProject(item)}>Delete Project</Button>
+        )}
       </View>
     </View>
   );
