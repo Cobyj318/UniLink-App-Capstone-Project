@@ -82,6 +82,7 @@ const RenderNotifTypes = ({ item }) => {
         // Update the true_connections field in Firestore
         await updateDoc(userDocRef, {
           true_connections: updatedTrueConnections
+          
         });
         await updateDoc(otheruserRef,{
           true_connections: updatedotheruserTrueConnections

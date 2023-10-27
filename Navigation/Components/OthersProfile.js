@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const OthersProfile = ({ isVisible, user, onClose, MessageButton}) => {
+const OthersProfile = ({ isVisible, user, onClose, MessageButton, handleNavigate}) => {
     const [edit, isEditing] = React.useState(false);
     const [nameEntry, nEntryEdited] = React.useState("");
     const [bioEntry, bEntryEdited] = React.useState("");
@@ -34,13 +34,6 @@ const OthersProfile = ({ isVisible, user, onClose, MessageButton}) => {
 
 // Drawer navigation to make the message button navigate to message screen 
 const Drawer = createDrawerNavigator();
-
-
-
-
-
-
-
 
 
 
@@ -93,7 +86,7 @@ const Drawer = createDrawerNavigator();
         <Text style={Pfstyles.containerItems}> {user?.FirstName + " " + user?.LastName}  </Text>
         
        
-        <MessagesButton onPress={() => { onClose(); navigation.navigate('Message')}} />
+        <MessagesButton onPressonPress={() => handleNavigate()}/>
 
 </View>
       </View>
