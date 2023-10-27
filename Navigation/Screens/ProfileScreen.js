@@ -72,10 +72,10 @@ export default function ProfileScreen({navigation}){
       };
 
      return (
-        <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />} >
-            {edit ? <TouchableOpacity style={{ borderRadius:99, backgroundColor:"#ffffff", width:36, height:36, justifyContent:"center", paddingLeft:5 }} title={"Edit Profile"} onPress={editProfile}>
+        <ScrollView style={{ flex: 1, alignSelf: 'center', overflow:"scroll"}} showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} />} >
+            {edit ? <TouchableOpacity style={{borderRadius:99, backgroundColor:"#ffffff", width:36, height:36, justifyContent:"center", paddingLeft:5, right:-290, top:20 }} title={"Edit Profile"} onPress={editProfile}>
                 <Icon name={"check"} size={25} color="#3498db"/>
-            </TouchableOpacity> : <TouchableOpacity style={{ borderRadius:99, backgroundColor:"#fffff", width:36, height:36, justifyContent:"center", paddingLeft:6 }} title={"Save Changes"} onPress={editProfile}>
+            </TouchableOpacity> : <TouchableOpacity style={{ borderRadius:99, backgroundColor:"#fffff", width:36, height:36, justifyContent:"center", paddingLeft:6, right:-290, top:20}} title={"Save Changes"} onPress={editProfile}>
                 <Icon name={"pencil"} size={25} color="#3498db"/>
             </TouchableOpacity>}
             <View style={Pfstyles.container}>

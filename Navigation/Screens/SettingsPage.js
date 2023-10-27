@@ -10,11 +10,11 @@ export default function SettingsPage({navigation}){
     const [modalVisibility, setModalVisibility] = useState(false);
     const [tutorVisbility, setTutorVisibilities] = useState(false);
     const tutorScreenshots = [{title: "Welcome to Uni-Link", image: require('../../assets/image.png'), text: "With the Uni-Link app, we want to connect students of different majors to help each other with project needing assistance from other fields of studies" },
-    {title: "Home Page", image:require("../../assets/image.png") , text: "Here on the home page, you can see events going on around campus, your messages, your notifications, events you've RSVP for, and Projects that you like."},
-    {title: "Creating Events", image:require("../../assets/image.png"), text: "With the blue plus, you can create your own events that you wish for others to join. "}, 
-    {title: "Messaging", image: require("../../assets/image.png"), text: "By tapping the message icon in the home page, you can message other users on the app with individual or group messages"},
-    {title: "Projects", image: require("../../assets/image.png"), text: "In the 'Groups' page, you can view all the public groups projects and filter through them based on tags provided. Then, you can like them to know more about them for later or ask to join. All your liked project can be viewed in the home page."},
-    {title: "Profile", image: require("../../assets/image.png"), text: "Here you can customize your profile image and change any personal information"},
+    {title: "Home Page", image:require("../../assets/Home.jpg") , text: "Here on the home page, you can see events going on around campus, your messages, your notifications, events you've RSVP for, and Projects that you like."}, 
+    {title: "Messaging", image: require("../../assets/Messaging.jpg"), text: "By tapping the message icon in the home page, you can message other users on the app with individual or group messages"},
+    {title: "News", image:require("../../assets/News.jpg"), text: "You'll be able to read up on news about our campus"},
+    {title: "Projects", image: require("../../assets/Groups.jpg"), text: "In the 'Groups' page, you can view all the public groups projects and filter through them based on tags provided. Then, you can like them, ask to join, ot make your own with the plus"},
+    {title: "Profile", image: require("../../assets/Profile.jpg"), text: "Here you can customize your profile image and change any personal information"},
                                 ];
 
     const confirmDelete = () => {
