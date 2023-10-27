@@ -115,8 +115,8 @@ export const TabNavigator = () => {
 async function schedulePushNotification() {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "Events Page changed!",
-      body: 'Someone has changed the event page!',
+      title: "You have a new notification!",
+      body: 'Please check the notification screen for your new messages!',
       data: { data: 'goes here' },
     },
     trigger: { seconds: 1 },

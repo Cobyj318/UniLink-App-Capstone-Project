@@ -84,7 +84,7 @@ const RenderNotifTypes = ({ item }) => {
           true_connections: updatedTrueConnections
         });
         await updateDoc(otheruserRef,{
-          true_connections: updatedotheruserTrueConnections
+          true_connections: updatedotheruserTrueConnections,
         });
         await setDoc(notifdocRef, { Connects: newnotifData }, { merge: true });
         console.log("Added to true_connections successfully!");
@@ -134,15 +134,17 @@ const styles = StyleSheet.create({
     backgroundColor:primaryColors.blue,
   },
   item: {
-    flex:1,
-    flexDirection:'row',
-    borderWidth:2,
-    borderRadius:10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center', // vertically centers the content
+    borderWidth: 2,
+    borderRadius: 10,
     backgroundColor: 'white',
     marginVertical: 4,
     marginHorizontal: 16,
     borderColor: primaryColors.red,
-  },
+    padding: 10, // to provide some spacing inside the item
+},
   userPfp: {
     width: 50,
     height: 50,
@@ -181,6 +183,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  viewBtn: {
+    padding: 10,
+    backgroundColor: accentColors.lightblue,
+    borderRadius: 20,
+    marginLeft: 5, // Space between the buttons
+    width: 60,
+    alignItems: 'center', // To center the text within the button           // Elevation for android to give a shadow effect
   },
 });
 

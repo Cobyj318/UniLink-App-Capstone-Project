@@ -7,7 +7,7 @@ import { fetchUserData } from '../../Components/UserData';
 import CreateGroup from '../../DBFunctions/CreateGroup';
 import updateGroupIds from '../../DBFunctions/updateGroupIds';
 import { firestore } from '../../../src/firebase_init/firebase';
-import {doc, getDoc } from 'firebase/firestore';
+import {doc, getDoc,updateDoc } from 'firebase/firestore';
 
 export default function GroupCreationScreen({ navigation, route }) {
   const { onRefresh } = route.params;
@@ -101,6 +101,27 @@ export default function GroupCreationScreen({ navigation, route }) {
         Updates:[],
       };
       console.log("this is all the members",membersID);
+          for (const memberId of membersID) {
+            const newNotification = {
+              id:date,
+              image:"https://picsum.photos/1100",  
+              title:"Join this group:"+title,
+              type:"Connection",
+              user_id:date
+            };
+            console.log("This is merberID",memberId);
+            const notifRef = doc(firestore, 'Notifications', memberId);
+            const docSnapshot = await getDoc(notifRef);
+            let notifications = [];
+            if (docSnapshot.exists()) {
+                notifications = docSnapshot.data()?.Connects || [];
+                await updateDoc(notifRef, {
+                  Connects: [...notifications, newNotification],
+              });
+            } else {
+                console.log('Document does not exist for member:', memberId);
+            }
+      }
 	  CreateGroup(newGroup);
 	  await updateGroupIds();
     console.log('New Group:', newGroup);
