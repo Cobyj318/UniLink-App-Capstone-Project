@@ -17,7 +17,7 @@ const theme = {
   },
 };
 
-const MutualCard = ({ user, AllUsers, onDisconnect, navigation }) => {
+const MutualCard = ({ user, AllUsers, onDisconnect, navigation, handleNavigate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [CardUser, setCardUser] = useState(null);
   const [ProfileVisible, setProfileVisible] = useState(false);
@@ -125,7 +125,7 @@ const MutualCard = ({ user, AllUsers, onDisconnect, navigation }) => {
               setProfileVisible(false)
               
             ) : (
-              <OthersProfile isVisible={ProfileVisible} user={selectedUser} onClose={() => setProfileVisible(false)} MessageButton = {MessageButton} navigation={navigation}/>
+              <OthersProfile isVisible={ProfileVisible} user={selectedUser} onClose={() => setProfileVisible(false)} hadnleNavigate= {(handleNavigate)} navigation={navigation}/>
             )}
           </View>
         </Modal>

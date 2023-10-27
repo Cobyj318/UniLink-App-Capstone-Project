@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl,TextInput, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, StatusBar, RefreshControl,TextInput, TouchableOpacity, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
@@ -17,7 +17,7 @@ export const fetchData = async () => {
     const querySnapshot = await getDocs(eventsRef);
     const usersData = [];
     querySnapshot.forEach((doc) => {
-      const { Email, Password, Username, Major, About_me, Skills, Interests, Connections, Projects, Experience } = doc.data();
+      const { Email, Password, Username, Major, About_me, Skills, Interests, Connections, Projects, Experience, true_connections } = doc.data();
       usersData.push({
         id: doc.id,
         Email,
@@ -29,7 +29,8 @@ export const fetchData = async () => {
         Interests,
         Projects,
         Connections,
-        Experience
+        Experience,
+        true_connections
 
       });
     });
@@ -67,7 +68,8 @@ export const fetchAllUsers = async () => {
   }
 };
 
-function ConnectionsScreen({ navigation }) {
+function ConnectionsScreen({ navigation, route }) {
+  const { handleNavigate } = route.params;
   // Common fetching logic for both screens
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -89,6 +91,7 @@ function ConnectionsScreen({ navigation }) {
   const onRefresh = async () => {
     try {
       fetchDataAndUserData();  
+      userDetails.true_connections = userDetails.Connections;
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {
@@ -120,7 +123,7 @@ function ConnectionsScreen({ navigation }) {
 
   };
 
-  let filteredArrayC = usersData?.filter(item => userDetails?.Connections.includes(item.id));
+  let filteredArrayC = usersData?.filter(item => userDetails?.true_connections.includes(item.id));
 
 
   if(searchText==''){
@@ -144,15 +147,17 @@ function ConnectionsScreen({ navigation }) {
         value={searchText}
       />
         {filteredArrayC?.map((user) => (
-          <MutualCard user={user.id} userID={user.id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} />
+          <MutualCard user={user.id} userID={user.id} AllUsers={users} route={route} handlenavigate= {() => handleNavigate()} onDisconnect={() => handleDisconnect(id)} />
         ))}
+         <Button title="Go to MessageScreen" onPress={() => handleNavigate()} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 // Change- Screen for displaying Mutual connections 
-function MutualsScreen() {
+function MutualsScreen(navigaiton, ) {
+  
   const [loading, setLoading] = useState(false);
   const [usersData, setUsersData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
@@ -172,6 +177,7 @@ function MutualsScreen() {
   const onRefresh = async () => {
     try {
       fetchDataAndUserData();  
+      userDetails.true_connections = userDetails.Connections;
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {
@@ -224,7 +230,7 @@ function MutualsScreen() {
     fetchData();
   }, []);
 
-  let filteredArray = usersData?.filter(item => !userDetails?.Connections.includes(item.id));
+  let filteredArray = usersData?.filter(item => !userDetails?.true_connections.includes(item.id));
 
   if(selectedMajor==''){
     filteredArray=filteredArray?.filter(item=>item.Id!==FIREBASE_AUTH?.currentUser.uid);
@@ -280,7 +286,7 @@ function MutualsScreen() {
           </Picker>
         )}
         {filteredArray?.map((user) => (
-          <ConnectCard user = {user} onConnect={() => handleConnect(user, user.id)}/>   
+          <ConnectCard user = {user} handlenavigate= {() => handleNavigate()}  onConnect={() => handleConnect(user, user.id)}/>   
         ))}
       </ScrollView>
     </SafeAreaView>
@@ -299,14 +305,26 @@ function LatechStackScreen() {
 }
 
 export default function NetworkScreen({ navigation }) {
+  const handleNavigateToMessageScreen = () => {
+    // Navigate to the "MessageScreen"
+    console.log('done');
+    navigation.navigate('Message');
+  };
   return (
-    <NavigationContainer independent={true}>
+     
+    <NavigationContainer independent = {true}>
       <Tab.Navigator>
-        {/* Tab screen for displaying LatechNews */}
-        <Tab.Screen name="Connected People" component={LatechStackScreen} />
-        {/* Tab screen for displaying Mutual Connections */}
-        <Tab.Screen name="People you may know" component={MutualsScreen} />
-      </Tab.Navigator>
+  <Tab.Screen
+    name="Connected People"
+    component={ConnectionsScreen}
+    initialParams={{ handleNavigate: handleNavigateToMessageScreen }}
+  />
+  <Tab.Screen
+    name="People you may know"
+    component={MutualsScreen}
+    initialParams={{ handleNavigate: handleNavigateToMessageScreen }}
+  />
+</Tab.Navigator>
     </NavigationContainer>
   );
 }

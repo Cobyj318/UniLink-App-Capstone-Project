@@ -28,7 +28,7 @@ const theme = {
 import { useNavigation } from '@react-navigation/native';  // Import useNavigation from '@react-navigation/native'
 
 
-const ConnectCard = ({ user, onConnect }) => {
+const ConnectCard = ({ user, onConnect, handlenavigate }) => {
   const LeftContent = () => (
     <View>
       {user.Profile_Image ? (
@@ -75,7 +75,7 @@ const ConnectCard = ({ user, onConnect }) => {
     }
   };
 
-  const handleProfilePress = (user) => {
+  const handleProfilePress = (user, handleNavigate) => {
     setSelectedUser(CardUser)
     setProfileVisible(true);
   }
@@ -116,7 +116,7 @@ const ConnectCard = ({ user, onConnect }) => {
               <Button
                 style={styles.ViewProfile}
                 color='#CB333B'
-                onPress={() => handleProfilePress(user)}
+                onPress={() => handleProfilePress(user, handleNavigate)}
               >
                 View Profile
               </Button>
