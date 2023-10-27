@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { accentColors } from './Colors';
 
-const Avatar_profiles = ({ user, AllUsers, onDisconnect, navigation }) => {
+const Avatar_profiles = ({ user, AllUsers, navigation }) => {
   const [CardUser, setCardUser] = useState(null);
 
   useEffect(() => {

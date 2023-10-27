@@ -19,6 +19,9 @@ import NotifScreen from './Screens/NotifScreen';
 import PortfolioScreen from './Screens/PortfolioScreen';
 import CollaborationScreen from './Screens/CollaborationScreen';
 import UserProfile from './Screens/UserProfile';
+import ConnectCard from './Components/ConnectCard';
+import MutualCard from './Components/MutualCard';
+
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////Variable Names for the Screens////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +56,14 @@ function MainStack() {
         <Stack.Screen name={Notifications} component={NotifScreen} options={{headerShown: true}}/>
         <Stack.Screen name={collaborationName} component={CollaborationScreen} options={{headerShown: true}}/>
         <Stack.Screen name={"UserProfile"} component={UserProfile} options={{headerShown: true}}/>
+        <Stack.Screen name={"ConnectCard"} component={ConnectCard} />
+        <Stack.Screen
+  name="MutualCard"
+  component={MutualCard}
+  options={({ route, navigation }) => ({
+  })}
+/>
+
     </Stack.Navigator>
     </NavigationContainer>
   );

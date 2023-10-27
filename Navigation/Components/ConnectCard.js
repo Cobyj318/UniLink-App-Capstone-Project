@@ -14,6 +14,8 @@ import {
 import { firestore } from '../../src/firebase_init/firebase';
 import { Image } from 'expo-image';
 import { primaryColors,accentColors } from './Colors';
+import OthersProfile from './OthersProfile.js';
+import MessageScreen from '../Screens/Messaging_screens/MessageScreen';
 
 const theme = {
   roundness: 4,
@@ -22,6 +24,9 @@ const theme = {
     accent: '#f1c40f',
   },
 };
+
+import { useNavigation } from '@react-navigation/native';  // Import useNavigation from '@react-navigation/native'
+
 
 const ConnectCard = ({ user, onConnect }) => {
   const LeftContent = () => (
@@ -35,6 +40,10 @@ const ConnectCard = ({ user, onConnect }) => {
   );
   const [isExpanded, setIsExpanded] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [ProfileVisible, setProfileVisible] = useState(false);
+  const navigation = useNavigation();
+
 
   const fetchConnectionsByEmail = async (email) => {
     try {
@@ -65,6 +74,12 @@ const ConnectCard = ({ user, onConnect }) => {
       onConnect(user);
     }
   };
+
+  const handleProfilePress = (user) => {
+    setSelectedUser(CardUser)
+    setProfileVisible(true);
+  }
+
 
   useEffect(() => {
     const currentUserEmail = 'Ava'; // Replace with the current user's email
@@ -99,8 +114,9 @@ const ConnectCard = ({ user, onConnect }) => {
           {isExpanded && (
             <View style={styles.cardActions}>
               <Button
-                style={styles.OtherButton}
-                onPress={handleExpand}
+                style={styles.ViewProfile}
+                color='#CB333B'
+                onPress={() => handleProfilePress(user)}
               >
                 View Profile
               </Button>
@@ -113,6 +129,10 @@ const ConnectCard = ({ user, onConnect }) => {
             </View>
           )}
         </View>
+
+        
+
+      
       </TouchableOpacity>
     )
   );
@@ -165,6 +185,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   OtherButton: {
+    flex: 1,
+    marginRight: 5,
+  },
+  ViewProfile: {
     flex: 1,
     marginRight: 5,
   },

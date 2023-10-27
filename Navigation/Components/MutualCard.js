@@ -4,6 +4,11 @@ import { View, StyleSheet, TouchableOpacity} from 'react-native';
 import { Image } from 'expo-image';
 import { accentColors } from './Colors';
 import OthersProfile from './OthersProfile.js';
+import { useNavigation } from '@react-navigation/native';  // Import useNavigation from '@react-navigation/native'
+import Modal from 'react-native-modal';
+import { createStackNavigator } from '@react-navigation/stack';
+import MessageScreen from '../Screens/Messaging_screens/MessageScreen';
+
 const theme = {
   roundness: 4,
   colors: {
@@ -12,11 +17,28 @@ const theme = {
   },
 };
 
-const MutualCard = ({ user, AllUsers, onDisconnect }) => {
+const MutualCard = ({ user, AllUsers, onDisconnect, navigation }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [CardUser, setCardUser] = useState(null);
   const [ProfileVisible, setProfileVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const [showMessageScreen, setShowMessageScreen] = useState(false); // New state variable
+  
+
+  const ModalContentStack = createStackNavigator();
+
+
+  const MessageButton = () => {
+    
+      setProfileVisible(false);
+      // Navigate to the message screen
+      navigation.navigate('Message')
+  };
+  
+  
+
+
 
 
   const LeftContent = ({ style }) => (
@@ -35,8 +57,16 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
 
   const handleProfilePress = (user) => {
     setSelectedUser(CardUser);
-    setProfileVisible(true);
-  }
+    setProfileVisible(true); // Set ProfileVisible to true first
+    setShowMessageScreen(false); // Set the initial content to OthersProfile
+    console.log("Should be false but it's:", showMessageScreen);
+  };
+  
+
+  const handleMessagePress = () => {
+    setShowMessageScreen(true); // Show the MessageScreen content
+    console.log("Pressed");
+  };
 
   useEffect(() => {
     const foundUser = AllUsers.find(use => use.id === user);
@@ -47,6 +77,7 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
   }, [user]);;
 
   const handleDisconnectPress = () => {
+    console.log(user);
     onDisconnect(user); // Call the onDisconnect callback with the user's name
   };
 
@@ -87,11 +118,18 @@ const MutualCard = ({ user, AllUsers, onDisconnect }) => {
           </View>
         )}
 
-<OthersProfile
-        isVisible={ProfileVisible}
-        user={selectedUser}
-        onClose={() => setProfileVisible(false)}
-      />
+
+<Modal isVisible={ProfileVisible}>
+          <View style={{ flex: 1, justifyContent: 'center', height: 300}}>
+            {showMessageScreen ? ( // Conditional rendering based on state
+              setProfileVisible(false)
+              
+            ) : (
+              <OthersProfile isVisible={ProfileVisible} user={selectedUser} onClose={() => setProfileVisible(false)} MessageButton = {MessageButton} navigation={navigation}/>
+            )}
+          </View>
+        </Modal>
+
       </View>
     </TouchableOpacity>
   );

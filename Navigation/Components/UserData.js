@@ -11,7 +11,7 @@ export async function fetchUserData(searchID) {
     if (querySnapshot.empty) {return [];}
     // Access the first document directly (assuming there's only one matching document)
     const doc = querySnapshot.docs[0];
-    const { FirstName, LastName, Major,Profile_Image,Connections, Skills, Interests } = doc.data();
+    const { FirstName, LastName, Major,Profile_Image,Connections, Skills, Interests,true_connections } = doc.data();
     const userData = {
       id: doc.id,
       FirstName,
@@ -20,7 +20,8 @@ export async function fetchUserData(searchID) {
       Profile_Image,
       Connections,
       Skills, 
-      Interests
+      Interests,
+      true_connections
     };
     return [userData]; // Return an array with the single user data object
   } catch (error) {

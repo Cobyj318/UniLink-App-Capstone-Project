@@ -206,6 +206,7 @@ function MutualsScreen() {
             type: "Mutuals",
             title: userDetails.FirstName,
             image: userDetails.Profile_Image,
+            user_id:selectedUserID
           }],
         })
         console.log('Document updated successfully');
