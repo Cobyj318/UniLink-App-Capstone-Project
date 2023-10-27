@@ -8,6 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import { storage } from '../../../src/firebase_init/firebase';
 import HandleUserSubmit from '../../../src/firebase_init/handleUserSubmit';
@@ -21,6 +22,7 @@ import {
   getDownloadURL,
 } from 'firebase/storage';
 import { Picker } from '@react-native-picker/picker';
+import CheckBox from '@react-native-community/checkbox';
 
 const NewUserScreen = ({ navigation }) => {
   const [Image_, setImage_] = useState('');
@@ -28,9 +30,14 @@ const NewUserScreen = ({ navigation }) => {
   const [FirstName, setFirst] = useState('');
   const [LastName, setLast] = useState('');
   const [Major, SetMajor] = useState('');
+  const [emailVisibility, setEmailVisibility] = useState('');
+  const [experience, setExperience] = useState('');
+  const [otherPlatforms, setOtherPlatforms] = useState([]);
 
-  const submitHandler = async (FirstName, LastName, Major) => {
-    if (FirstName === '' || LastName === '' || Major === '') {
+  var listOfMedias = ["Discord", "Instagram", "Facebook", "Twitter", "LinkedIn"]
+
+  const submitHandler = async (FirstName, LastName, Major, Experience) => {
+    if (FirstName === '' || LastName === '' || Major === '' || Experience === '') {
       Alert.alert('Missing Entries', 'You have empty entries', [{ text: 'OK' }]);
     } else {
       const storageRef = ref(storage, `images/${FIREBASE_AUTH.currentUser?.uid}/${Date.now()}.jpg`);
@@ -45,7 +52,8 @@ const NewUserScreen = ({ navigation }) => {
           LastName,
           Major,
           FIREBASE_AUTH.currentUser?.uid,
-          downloadURL
+          downloadURL,
+          Experience
         );
         setUploading(true);
         navigation.replace(ExistingUser);
@@ -61,6 +69,7 @@ const NewUserScreen = ({ navigation }) => {
       source={require('../../../assets/image.png')}
       style={styles.backgroundImage}
     >
+      <ScrollView>
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.container}>
           <View style={styles.uploadContainer}>
@@ -81,33 +90,41 @@ const NewUserScreen = ({ navigation }) => {
             placeholder="Last Name"
           />
           <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={Major}
-            style={styles.picker}
-            onValueChange={(itemValue) => SetMajor(itemValue)}
-          >
-            <Picker.Item label="Select Major" value="" />
-  <Picker.Item label="Computer Science" value="Computer Science" />
-  <Picker.Item label="Mechanical Engineering" value="Mechanical Engineering" />
-  <Picker.Item label="Electrical Engineering" value="Electrical Engineering" />
-  <Picker.Item label="Civil Engineering" value="Civil Engineering" />
-  <Picker.Item label="Chemical Engineering" value="Chemical Engineering" />
-  <Picker.Item label="Biomedical Engineering" value="Biomedical Engineering" />
-  <Picker.Item label="Industrial Engineering" value="Industrial Engineering" />
-  <Picker.Item label="Aerospace Engineering" value="Aerospace Engineering" />
-  <Picker.Item label="Computer Engineering" value="Computer Engineering" />
-  <Picker.Item label="Software Engineering" value="Software Engineering" />
-  <Picker.Item label="Environmental Engineering" value="Environmental Engineering" />
-  <Picker.Item label="Information Technology" value="Information Technology" />
-  <Picker.Item label="Business Administration" value="Business Administration" />
-  <Picker.Item label="Marketing" value="Marketing" />
-  <Picker.Item label="Finance" value="Finance" />
-  <Picker.Item label="Accounting" value="Accounting" />
-  <Picker.Item label="Biology" value="Biology" />
-  <Picker.Item label="Chemistry" value="Chemistry" />
-  <Picker.Item label="Physics" value="Physics" />
-  <Picker.Item label="Psychology" value="Psychology" />
-          </Picker>
+            <Picker
+              selectedValue={Major}
+              style={styles.picker}
+              onValueChange={(itemValue) => SetMajor(itemValue)}
+            >
+              <Picker.Item label="Select Major" value="" />
+              <Picker.Item label="Accounting" value="Accounting" />
+              <Picker.Item label="Aerospace Engineering" value="Aerospace Engineering" />
+              <Picker.Item label="Biology" value="Biology" />
+              <Picker.Item label="Biomedical Engineering" value="Biomedical Engineering" />
+              <Picker.Item label="Business Administration" value="Business Administration" />
+              <Picker.Item label="Chemical Engineering" value="Chemical Engineering" />
+              <Picker.Item label="Chemistry" value="Chemistry" />
+              <Picker.Item label="Civil Engineering" value="Civil Engineering" />
+              <Picker.Item label="Computer Engineering" value="Computer Engineering" />
+              <Picker.Item label="Computer Science" value="Computer Science" />
+              <Picker.Item label="Electrical Engineering" value="Electrical Engineering" />
+              <Picker.Item label="Environmental Engineering" value="Environmental Engineering" />
+              <Picker.Item label="Finance" value="Finance" />
+              <Picker.Item label="Industrial Engineering" value="Industrial Engineering" />
+              <Picker.Item label="Information Technology" value="Information Technology" />
+              <Picker.Item label="Marketing" value="Marketing" />
+              <Picker.Item label="Mechanical Engineering" value="Mechanical Engineering" />
+              <Picker.Item label="Physics" value="Physics" />
+              <Picker.Item label="Psychology" value="Psychology" />
+              <Picker.Item label="Software Engineering" value="Software Engineering" />
+            </Picker>
+          </View>
+          <TextInput 
+            style={styles.input} 
+            onChange={(val) => setExperience(val)} 
+            placeholder='Any Prior Experience? (Separate with commas)'
+          />
+          <View style={{flex:1, flexDirection: 'row'}}>
+            <CheckBox disabled={false} />
           </View>
           <Button
             title="Submit"
@@ -115,6 +132,7 @@ const NewUserScreen = ({ navigation }) => {
           />
         </View>
       </KeyboardAvoidingView>
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -148,6 +166,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: "#fff",
     marginVertical: 4,
+    height:150,
+    justifyContent: 'center'
   },
   pickerContainer: {
    

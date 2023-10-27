@@ -26,7 +26,7 @@ const ProfileStack = () => (
                 </View>
               </View>
             ),
-          })}/>
+            headerLeft: () => null})}/>
         <profStack.Screen name={"Settings"} component={SettingsPage} />
     </profStack.Navigator>
 );

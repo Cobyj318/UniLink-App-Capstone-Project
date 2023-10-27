@@ -1,7 +1,7 @@
 import { setDoc, doc, collection } from "@firebase/firestore";
 import { firestore } from "./firebase";
 
-const HandleUserSubmit = (FirstName, LastName, Major, IdData, AvatarData) => {
+const HandleUserSubmit = (FirstName, LastName, Major, IdData, AvatarData, experienceData) => {
   const userRef = doc(firestore, "User_data", IdData); // Specify the custom ID here
   const notifRef = doc(firestore, "Notifications", IdData); // Specify the custom ID here
 
@@ -13,7 +13,7 @@ const HandleUserSubmit = (FirstName, LastName, Major, IdData, AvatarData) => {
     Skills: [],
     Projects: [],
     Interests: [],
-    Experience: "",
+    Experience: experienceData,
     Profile_Image: AvatarData,
     Id:IdData,
   };
