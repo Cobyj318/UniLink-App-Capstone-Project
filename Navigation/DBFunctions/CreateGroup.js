@@ -1,4 +1,4 @@
-import { addDoc, collection,serverTimestamp } from "@firebase/firestore"
+import { addDoc, collection} from "@firebase/firestore"
 import { firestore } from "../../src/firebase_init/firebase";
 
 const CreateGroup = (Group) => {

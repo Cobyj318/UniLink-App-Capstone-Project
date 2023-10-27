@@ -19,7 +19,6 @@ export default function ProfileScreen({navigation}){
     const [edit, isEditing] = useState(false);
     const [nameEntry, nEntryEdited] = useState("");
     const [Image_, setImage_] = useState("")
-    const [refreshing, setRefreshing] = useState(false);
     const [majorTag, setMajorTag] = useState("");
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -36,24 +35,9 @@ export default function ProfileScreen({navigation}){
         setUsers(usersData);
         const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
         setUserDetails(userData[0]);
+        console.log("THIS IS USERDATA",userData[0]);
         setLoading(false); // Set loading state to false when data fetching is complete
     };
-    const handleDisconnect = async (userToRemove) => {
-        try {
-          userDetails.Connections = userDetails.Connections?.filter(item => item !== userToRemove);
-          const documentRef = doc(firestore,'User_data', userDetails.id);
-          try {
-            await updateDoc(documentRef, userDetails);
-            console.log('Document updated successfully');
-          } catch (error) {
-            console.error('Error updating document:', error);
-          }
-        } catch (error) {
-          console.error('Error disconnecting user', error);
-        }
-        onRefresh();
-    
-      };
 
     const userName = `${userDetails ? userDetails.FirstName: ''} ${userDetails ? userDetails.LastName: ''}`;
     const userImage = userDetails ? userDetails.Profile_Image : '';
@@ -131,8 +115,8 @@ export default function ProfileScreen({navigation}){
             <View style={styles.Bio}>
                 <Text style={{fontSize:30, fontWeight:"700", alignSelf:'center'}}>Connections</Text>
                 <View style={styles.avatarContainer}>
-                    {userDetails?.Connections?.map((id) => (
-                    <Avatar_profiles user={id} userID={id} AllUsers={users} onDisconnect={() => handleDisconnect(id)} navigation={navigation} />
+                    {userDetails?.true_connections?.map((id) => (
+                    <Avatar_profiles user={id} userID={id} AllUsers={users} navigation={navigation} />
                     ))}
                 </View>
             </View>

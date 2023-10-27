@@ -6,6 +6,8 @@ import { FIREBASE_AUTH } from '../../../src/firebase_init/firebase';
 import { fetchUserData } from '../../Components/UserData';
 import CreateGroup from '../../DBFunctions/CreateGroup';
 import updateGroupIds from '../../DBFunctions/updateGroupIds';
+import { firestore } from '../../../src/firebase_init/firebase';
+import {doc, getDoc } from 'firebase/firestore';
 
 export default function GroupCreationScreen({ navigation, route }) {
   const { onRefresh } = route.params;
@@ -19,12 +21,45 @@ export default function GroupCreationScreen({ navigation, route }) {
   const [membersID, setMembersID] = useState([]);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchMember, setSearchMember] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [availableFriends, setAvailableFriends] = useState([]);
 
+  const searchForMembers = async (query) => {
+    const results = availableFriends.filter(member => member.name.toLowerCase().includes(query.toLowerCase()));
+    setSearchResults(results);
+  };
+
+  const addMember = (member) => {
+    if (!membersID.includes(member.id)) {
+      setMembers([...members, member.name]);
+      setMembersID([...membersID, member.id]);
+      setSearchMember(''); // Clear the search input
+      setSearchResults([]); // Clear the search results
+    } else {
+      console.log("Member already added.");
+    }
+  };
   const fetchDataAndUserData = async () => {
     try {
       setLoading(true);
       const userData = await fetchUserData(FIREBASE_AUTH.currentUser?.uid);
       setUserDetails(userData[0]);
+      console.log(userData[0].true_connections);
+      // Check if true_connections exist and is not empty
+      if (userData[0]?.true_connections) {
+        // Retrieve friends' details using their document IDs from true_connections
+        const friendsDataPromises = userData[0].true_connections.map(async docId => {
+          const docSnapshot = await getDoc(doc(firestore, 'User_data', docId));
+          const friendData = docSnapshot.data();
+          return { 
+            id: docId, 
+            name: `${friendData?.FirstName} ${friendData?.LastName}`
+          };
+        });
+      const friendsData = await Promise.all(friendsDataPromises);
+      setAvailableFriends(friendsData);
+      }  
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -65,25 +100,25 @@ export default function GroupCreationScreen({ navigation, route }) {
         Tags: tags,
         Updates:[],
       };
-	  await CreateGroup(newGroup);
+      console.log("this is all the members",membersID);
+	  CreateGroup(newGroup);
 	  await updateGroupIds();
-      console.log('New Group:', newGroup);
-      setTitle("");
-      setDesc("");
-      setSponser("");
-      setDate("");
-      setMembers([]);
-      setMembersID([]);
-      setTags([]);
-      navigation.goBack();
-
-      if (onRefresh) {
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
+    console.log('New Group:', newGroup);
+    setTitle("");
+    setDesc("");
+    setSponser("");
+    setDate("");
+    setMembers([]);
+    setMembersID([]);
+    setTags([]);
+    navigation.goBack();
+    if (onRefresh) {
+      onRefresh();
     }
-  };
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -98,7 +133,28 @@ export default function GroupCreationScreen({ navigation, route }) {
               <TextInput placeholder="Sponsor" value={sponser} onChangeText={setSponser} style={styles.input} />
               <TextInput placeholder="Major" value={major} onChangeText={setMajor} style={styles.input} />
               <ChipInputs selectedTags={tags} setSelectedTags={setTags} />
+              <TextInput 
+  placeholder="Search member" 
+  value={searchMember} 
+  onChangeText={(text) => {
+    setSearchMember(text);
+    searchForMembers(text);
+  }} 
+  style={styles.input} 
+/>
 
+{searchResults.map(member => (
+  <TouchableOpacity key={member.id} onPress={() => addMember(member)}>
+    <Text>{member.name}</Text>
+  </TouchableOpacity>
+))}
+
+<View>
+  <Text>Added Members:</Text>
+  {members.map((memberName, index) => (
+    <Text key={index}>{memberName}</Text>
+  ))}
+</View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={() => {
