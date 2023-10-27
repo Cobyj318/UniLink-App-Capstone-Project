@@ -2,21 +2,16 @@ import * as React from 'react' ;
 import { useState, useEffect } from 'react';
 import { View, Text, Modal, Image, Button, TextInput, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler'; // Import TouchableOpacity for custom button styling
-import handleUserSubmit from '../../src/firebase_init/handleUserSubmit';
-import {UploadThing} from '../Components/uploadThing'
-import PortfolioScreen from '../Screens/PortfolioScreen';
-import { fetchData } from '../DBFunctions/FetchData';
-import { FIREBASE_AUTH } from '../../src/firebase_init/firebase';
 import { fetchUserData } from '../Components/UserData';
-import { CircularImage } from '../Components/CircleImage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tags from './Tags';
-import CircleProfileList from './CircleProfileList';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from "@react-navigation/stack";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 
 
-
-const OthersProfile = ({ isVisible, user, onClose }) => {
+const OthersProfile = ({ isVisible, user, onClose, MessageButton}) => {
     const [edit, isEditing] = React.useState(false);
     const [nameEntry, nEntryEdited] = React.useState("");
     const [bioEntry, bEntryEdited] = React.useState("");
@@ -25,7 +20,30 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [userDetails, setUserDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // State to track if data is being fetched
+    const homeStack = createStackNavigator(); 
+    const navigation = useNavigation();
     
+
+    const MessagesButton = ({ onPress }) => (
+      <TouchableOpacity onPress={onPress}>
+        <Icon name="comment-o" size={24} color="#3498db" />
+      </TouchableOpacity>
+    );
+
+
+
+// Drawer navigation to make the message button navigate to message screen 
+const Drawer = createDrawerNavigator();
+
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         const fetchUserDataAndTagData = async () => {
           try {
@@ -47,12 +65,11 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
   if (user && !isVisible) {
     fetchUserDataAndTagData();
   }
-}, [user]);
-
+}, [user]);       
   
   return (
-    console.log(user?.Experience),
-    console.log("-------------------"), 
+ 
+    
     <Modal
       animationType="slide"
       transparent={false}
@@ -60,6 +77,7 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
       onRequestClose={() => onClose()}
       
     >
+
         <View style={{ flex: 1, backgroundColor: '#003087' }}> 
    
       <ScrollView style={{ flex: 1, alignSelf: 'center'}} showsVerticalScrollIndicator={false}>
@@ -69,9 +87,15 @@ const OthersProfile = ({ isVisible, user, onClose }) => {
   source={{ uri: user?.Profile_Image }} // Replace with your image URL
   style={imageUploaderStyles.container} // Adjust width and height as needed
 />
+
+
         <View style={Pfstyles.textContainer}>
-        <Text style={Pfstyles.containerItems}> {"Profile: " + user?.FirstName}  </Text>
-        </View>
+        <Text style={Pfstyles.containerItems}> {user?.FirstName + " " + user?.LastName}  </Text>
+        
+       
+        <MessagesButton onPress={() => { onClose(); navigation.navigate('Message')}} />
+
+</View>
       </View>
 
       <View style={styles.Bio}>
@@ -192,6 +216,19 @@ const styles = StyleSheet.create({
       marginLeft: 5,
       textAlign: 'left',
       lineHeight: 20,
+    },
+    messageButton: {
+      backgroundColor: '#3498db',
+      padding: 5,
+      borderRadius: 10,
+      marginTop: 20,
+      alignItems: 'center',
+      width: 140
+    },
+    messageButtonText: {
+      color: '#ffffff',
+      fontSize: 18,
+      fontWeight: 'bold',
     }
 });
 
@@ -227,5 +264,6 @@ const Pfstyles = StyleSheet.create({
         color: '#A72B2A',
     }
 });
+
 
 export default OthersProfile;
