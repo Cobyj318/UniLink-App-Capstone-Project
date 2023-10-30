@@ -58,12 +58,7 @@ export default function SettingsPage({navigation}){
             <TouchableOpacity onPress={askDelete}>
                 <Text style={{ color: '#ff0000', marginVertical: 10 }}>Delete Account</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
-                <Text style={{ color: '#ff0000', marginVertical: 10 }}>Block Users</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text style={{ color: '#000000', marginVertical: 10 }}>Set Visibility</Text>
-            </TouchableOpacity>
+           
             <TouchableOpacity onPress={openTutorial}>
                 <Text style={{ color: '#000000', marginVertical: 10 }}>View Tutorial</Text>
             </TouchableOpacity>

@@ -124,7 +124,6 @@ const NewUserScreen = ({ navigation }) => {
             placeholder='Any Prior Experience? (Separate with commas)'
           />
           <View style={{flex:1, flexDirection: 'row'}}>
-            <CheckBox disabled={false} />
           </View>
           <Button
             title="Submit"
